@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بن الغرباوي - اطلب أوردرك أونلاين</title>
+    <link rel="manifest" href="/manifest.json">
+    <!-- مكتبة تيلويند سي إس إس -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
+        const branchAddressesMap = {
+            "أم المصريين": "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة",
+            "فيصل": "عمارة الفيصلية شارع فيصل المريوطية امام حلواني الفاليرو، الجيزة",
+            "عباس العقاد": "مدينة نصر امتداد شارع عباس العقاد ميدان انبي، القاهرة",
+            "مصر الجديدة": "مصر الجديدة شارع الميرغني أمام أبو شقرة، القاهرة",
+            "المقطم": "المقطم شارع 9 تقاطع بنونة بجوار حديقة الاندلس، القاهرة",
+            "حلوان": "حلوان شارع المعادي تقاطع شارع راغب امام مول دارك مول، القاهرة",
+            "حدائق حلوان": "حدائق حلوان امام محطة المترو بجوار النمرسي، القاهرة",
+            "الجزائر": "المعادي الجديدة 8ص شارع الجزائر بجوار الشبراوي، القاهرة",
+            "العرب": "عرب المعادي بجوار المحكمة، القاهرة",
+            "ثكنات المعادي": "شارع 9 بجوار محطة مترو ثكنات المعادي، القاهرة",
+            "حدائق المعادي": "شارع 9 امام محطة مترو حدائق المعادي، القاهرة",
+            "زهراء المعادي": "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة"
+        };
+
+        function updateBranchAddress() {
+            const selectedBranch = document.getElementById('region').value;
+            const addressBox = document.getElementById('branchAddressBox');
+            if (branchAddressesMap[selectedBranch]) {
+                addressBox.textContent = branchAddressesMap[selectedBranch];
+            } else {
+                addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
+            }
+        }
+
+    </script>
+    <!-- مكتبة Supabase JS للربط بقاعدة البيانات -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+        const branchAddressesMap = {
+            "أم المصريين": "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة",
+            "فيصل": "عمارة الفيصلية شارع فيصل المريوطية امام حلواني الفاليرو، الجيزة",
+            "عباس العقاد": "مدينة نصر امتداد شارع عباس العقاد ميدان انبي، القاهرة",
+            "مصر الجديدة": "مصر الجديدة شارع الميرغني أمام أبو شقرة، القاهرة",
+            "المقطم": "المقطم شارع 9 تقاطع بنونة بجوار حديقة الاندلس، القاهرة",
+            "حلوان": "حلوان شارع المعادي تقاطع شارع راغب امام مول دارك مول، القاهرة",
+            "حدائق حلوان": "حدائق حلوان امام محطة المترو بجوار النمرسي، القاهرة",
+            "الجزائر": "المعادي الجديدة 8ص شارع الجزائر بجوار الشبراوي، القاهرة",
+            "العرب": "عرب المعادي بجوار المحكمة، القاهرة",
+            "ثكنات المعادي": "شارع 9 بجوار محطة مترو ثكنات المعادي، القاهرة",
+            "حدائق المعادي": "شارع 9 امام محطة مترو حدائق المعادي، القاهرة",
+            "زهراء المعادي": "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة"
+        };
+
+        function updateBranchAddress() {
+            const selectedBranch = document.getElementById('region').value;
+            const addressBox = document.getElementById('branchAddressBox');
+            if (branchAddressesMap[selectedBranch]) {
+                addressBox.textContent = branchAddressesMap[selectedBranch];
+            } else {
+                addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
+            }
+        }
+
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- شريط العرض العلوي مع اللوجو وزر التتبع -->
+    <header class="bg-amber-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-white px-2 py-1 rounded-lg shadow-sm flex items-center justify-center">
+                    <img src="https://i.postimg.cc/VvnhkQhY/logo-01.png" alt="بن الغرباوي" class="h-9 w-auto object-contain">
+                </div>
+                <h1 class="text-lg font-bold">بن الغرباوي</h1>
+                <span class="text-xs bg-amber-800 px-2.5 py-1 rounded-full text-amber-200 hidden sm:inline-block">من 12 صباحاً حتى 12 مساءً</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="https://jobapplication-psi.vercel.app/" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
+                    <span>💼 التقديم لوظيفة (الأبلكيشن)</span>
+                </a>
+                <a href="https://github.com/algharabawyc-commits/algharabawy-1/raw/6c59ad2231cfcbc88828e120e841f62d5fbf931d/AlgharabawyOrders%201.apk" download class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
+                    <span>📥 تحميل الأبلكيشن APK</span>
+                </a>
+                <button onclick="openTrackModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
+                    <span>🔍 تتبع طلبك وتعديله</span>
+                </button>
+                <div class="text-xs sm:text-sm bg-amber-950 px-3 py-1.5 rounded-lg border border-amber-800 hidden md:block">
+                    <span>التوصيل متاح لجميع فروع القاهرة والجيزة</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 mt-4">
+
+        <!-- القسم الأيمن: فئات قائمة الطعام ومعلومات التواصل -->
+        <div class="space-y-4 lg:col-span-1">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 h-fit">
+                <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base">فئات المنتجات</h3>
+                <ul class="space-y-2 text-sm text-gray-700" id="categoryList">
+                    <li onclick="switchCategory('basic', this)" class="bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition">🔥 التوليفات الأساسية</li>
+                    <li onclick="switchCategory('arabica', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">🌟 الأربيكات</li>
+                    <li onclick="switchCategory('french', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">☕ الأنواع الفرنسية والإسبريسو</li>
+                    <li onclick="switchCategory('flavors', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">🍫 النكهات والإضافات (بندق، شوكولاتة)</li>
+                    <li onclick="switchCategory('herbs', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">🌿 أعشاب ونسكافيه</li>
+                </ul>
+            </div>
+
+                        <!-- بطاقة نبذة عن الشركة -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 space-y-2">
+                <h3 class="font-bold text-amber-900 border-b pb-2 text-sm">☕ عن بن الغرباوي</h3>
+                <p class="text-xs text-gray-700 leading-relaxed text-justify">
+                    شركة الغرباوي هي شركة مصرية متخصصة في مجال البن خبرة أكثر من 50 عاماً. تأسست عام 1968 وتوارثها الأجيال حتى وصلت إلى الآن لتكون الشركة متخصصة في طحن وتجهيز جميع أنواع البن. ومن هذا المنطق فإننا نهتم بأدق التفاصيل ونعمل بشكل مختلف على توليفات ممتازة لنرتقي بجودة البن.
+                </p>
+                <p class="text-xs text-gray-700 leading-relaxed text-justify">
+                    استراتيجية الشركة مبنية على تقديم أفضل أنواع البن بأسعار معقولة وتنافسية من خلال الطحن والتغليف بأحدث التقنيات والحلول الجديدة والمبتكرة، وتعمل الشركة على اتساع نقاط الانتشار بوجود فروعنا.
+                </p>
+            </div>
+
+            <!-- بطاقة بيانات التواصل -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 space-y-3">
+                <h3 class="font-bold text-amber-900 border-b pb-2 text-sm">📞 تواصل معنا</h3>
+                <div class="space-y-2 text-xs text-gray-700">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold">📱 رقم التواصل:</span>
+                        <a href="tel:01021800025" dir="ltr" class="text-amber-800 font-semibold hover:underline">01021800025</a>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold">💬 واتساب:</span>
+                        <a href="https://wa.me/201021800025" target="_blank" dir="ltr" class="text-emerald-700 font-semibold hover:underline">01021800025</a>
+                    </div>
+                    <div class="pt-1 border-t flex justify-around gap-2">
+                        <a href="https://www.facebook.com/algharabawycoffee" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1.5 rounded text-[11px] font-bold transition flex-1 text-center">فيسبوك</a>
+                        <a href="https://www.instagram.com/algharabawycoffee?stkn=bXVuc3piNHIyM3V1" target="_blank" class="bg-pink-600 hover:bg-pink-700 text-white px-2 py-1.5 rounded text-[11px] font-bold transition flex-1 text-center">انستجرام</a>
+                        <a href="https://www.tiktok.com/@algharabawycoffee?is_from_webapp=1&sender_device=pc" target="_blank" class="bg-gray-900 hover:bg-black text-white px-2 py-1.5 rounded text-[11px] font-bold transition flex-1 text-center">تيك توك</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- القسم الأوسط: قائمة المنتجات والأصناف -->
+        <div class="lg:col-span-2 space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <h2 class="text-lg font-bold text-amber-900 mb-3" id="categoryTitle">🔥 التوليفات الأساسية</h2>
+                
+                <!-- ملاحظة قسم الأربيكات -->
+                <div id="arabicaNotice" class="hidden bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs font-bold text-amber-900 mb-3 flex items-center gap-2 shadow-sm">
+                    <span>🌟</span>
+                    <span>ملاحظة هامة: جميع أصناف الأربيكات متوفرة بدرجة تحميص (وسط) فقط لضمان أفضل طعم ومذاق للقهوة.</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="productsGrid">
+                    <!-- يتم تعبئتها تلقائياً بواسطة JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- القسم الأيسر: سلة المشتريات واستمارة إتمام الأوردر -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 h-fit lg:col-span-1">
+            <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base">🛒 سلة مشترياتك</h3>
+            
+            <form id="orderForm" class="space-y-3">
+                <div id="cartItemsContainer" class="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500">
+                    لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.
+                </div>
+
+                <div id="cartTotalSummary" class="hidden bg-amber-900 text-white p-3 rounded-lg text-xs font-bold space-y-1 shadow-inner">
+                    <div class="flex justify-between items-center">
+                        <span>إجمالي الفاتورة:</span>
+                        <span id="totalAmountText" class="text-amber-200 text-sm font-extrabold">0.00 ج.م</span>
+                    </div>
+                    <div class="text-[11px] text-amber-200/90 text-center border-t border-amber-800 pt-1 font-normal">
+                        + مصاريف الشحن
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل أساسي (للبحث)</label>
+                        <input type="tel" id="phone1" required placeholder="012xxxxxxxx" class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-amber-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل إضافي</label>
+                        <input type="tel" id="phone2" placeholder="011xxxxxxx" class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">اسم العميل</label>
+                    <input type="text" id="customerName" required placeholder="مثال: أ. طه حسين" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">العنوان بالتفصيل</label>
+                    <textarea id="customerAddress" rows="2" required placeholder="الشارع، العمارة، الدور..." class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">اختر الفرع الأقرب</label>
+                    <select id="region" onchange="updateBranchAddress()" class="w-full px-3 py-2 text-sm border rounded-lg bg-white focus:outline-none">
+                        <option value="أم المصريين">أم المصريين</option>
+                        <option value="فيصل">فيصل</option>
+                        <option value="عباس العقاد">عباس العقاد</option>
+                        <option value="مصر الجديدة">مصر الجديدة</option>
+                        <option value="المقطم">المقطم</option>
+                        <option value="حلوان">حلوان</option>
+                        <option value="حدائق حلوان">حدائق حلوان</option>
+                        <option value="الجزائر">الجزائر</option>
+                        <option value="العرب">العرب</option>
+                        <option value="ثكنات المعادي">ثكنات المعادي</option>
+                        <option value="حدائق المعادي">حدائق المعادي</option>
+                        <option value="زهراء المعادي">زهراء المعادي</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">📍 عنوان الفرع التفصيلي</label>
+                    <div id="branchAddressBox" class="w-full px-3 py-2 text-xs bg-amber-50 border border-amber-200 rounded-lg text-amber-900 font-semibold min-h-[38px] flex items-center">
+                        <!-- يتم تحديثه تلقائياً -->
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2.5 rounded-lg font-bold text-sm transition shadow-md">
+                    تأكيد وإرسال الأوردر
+                </button>
+            </form>
+
+            <div id="successMsg" class="hidden p-4 mt-3 bg-green-50 border border-green-200 text-green-800 text-center rounded-lg text-xs font-semibold space-y-2">
+                <p>تم استلام طلبك بنجاح وتم حفظه في قاعدة البيانات! ☕</p>
+                <button onclick="openTrackModal()" class="bg-amber-700 hover:bg-amber-800 text-white px-3 py-1 rounded text-xs font-bold">تتبع طلبك أو تعديله الآن</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- نافذة منبثقة (Modal) لتخصيص الصنف -->
+    <div id="customizerModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <h3 class="text-lg font-bold text-amber-900" id="modalTitle">تخصيص الطلب</h3>
+            
+            <div id="subtypeWrapper">
+                <label class="block text-xs font-semibold text-gray-700 mb-1">النوع (سادة / محوج)</label>
+                <select id="modalSubtype" onchange="updateModalPricePreview()" class="w-full p-2.5 border rounded-lg text-sm bg-white">
+                    <option value="سادة">سادة</option>
+                    <option value="محوج" selected>محوج</option>
+                </select>
+            </div>
+
+            <div id="roastWrapper">
+                <label class="block text-xs font-semibold text-gray-700 mb-1">درجة التحميص</label>
+                <select id="modalRoast" onchange="updateModalPricePreview()" class="w-full p-2.5 border rounded-lg text-sm bg-white">
+                    <option value="فاتح">فاتح</option>
+                    <option value="وسط" selected>وسط</option>
+                    <option value="غامق">غامق</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">الوزن / الكمية</label>
+                <select id="modalWeight" onchange="checkCustomWeight(this); updateModalPricePreview();" class="w-full p-2.5 border rounded-lg text-sm bg-white">
+                    <option value="تمن كيلو (125 جرام)">تمن كيلو (125 جرام)</option>
+                    <option value="ربع كيلو (250 جرام)">ربع كيلو (250 جرام)</option>
+                    <option value="ربعين (نصف كيلو / 500 جرام)" selected>ربعين (نصف كيلو / 500 جرام)</option>
+                    <option value="ثلاث أرباع كيلو (750 جرام)">ثلاث أرباع كيلو (750 جرام)</option>
+                    <option value="كيلو (1000 جرام)">كيلو (1000 جرام)</option>
+                    <option value="أخرى">أخرى (حدد الوزن يدوياً)</option>
+                </select>
+            </div>
+
+            <div id="customWeightWrapper" class="hidden">
+                <label class="block text-xs font-semibold text-gray-700 mb-1">اكتب الوزن المطلوب (مثال: 100 جرام)</label>
+                <input type="text" id="modalCustomWeight" oninput="updateModalPricePreview()" placeholder="اكتب الوزن هنا..." class="w-full p-2.5 border rounded-lg text-sm bg-white">
+            </div>
+
+            <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 flex justify-between items-center text-xs font-bold text-amber-900">
+                <span>سعر الكيلو: <span id="modalKiloPrice">0</span> ج.م</span>
+                <span>إجمالي الصنف: <span id="modalItemTotalPrice" class="text-sm font-extrabold text-amber-700">0.00</span> ج.م</span>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeCustomizer()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-bold text-sm">إلغاء</button>
+                <button onclick="addItemToCart()" class="w-1/2 bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg font-bold text-sm shadow">إضافة للسلة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة (Modal) لتتبع الطلب وتقييمه وتعديله وإلغائه -->
+    <div id="trackModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-bold text-amber-900">🔍 تتبع طلبك وتعديله وتقييمه</h3>
+                <button onclick="closeTrackModal()" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
+            </div>
+
+            <div class="space-y-3">
+                <label class="block text-xs font-bold text-gray-700">ادخل رقم الهاتف المستخدم في الطلب:</label>
+                <div class="flex gap-2">
+                    <input type="text" id="trackPhoneInput" placeholder="مثال: 01012345678" class="flex-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-amber-600">
+                    <button onclick="searchOrdersForTracking()" class="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded-lg text-xs font-bold transition">بحث</button>
+                </div>
+            </div>
+
+            <!-- حاوية عرض الطلبات وجلسة التقييم والتعديل والإلغاء -->
+            <div id="trackResultsContainer" class="space-y-3 pt-2">
+                <p class="text-center text-xs text-gray-400">أدخل رقم الهاتف واضغط بحث لعرض تفاصيل طلباتك وحالتها من قاعدة البيانات.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة (Modal) لتعديل تفاصيل الطلب وبيانات العميل -->
+    <div id="editOrderModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-bold text-amber-900">✏️ تعديل الطلب رقم: <span id="editOrderIdDisplay"></span></h3>
+                <button onclick="closeEditModal()" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
+            </div>
+
+            <form id="editOrderForm" class="space-y-3" onsubmit="saveOrderChanges(event)">
+                <input type="hidden" id="editOriginalId">
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">المنتجات والطلبات (يمكنك تعديلها كتابةً)</label>
+                    <textarea id="editOrderDetails" rows="3" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-amber-600"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل أساسي</label>
+                        <input type="tel" id="editPhone1" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-amber-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل إضافي</label>
+                        <input type="tel" id="editPhone2" class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">اسم العميل</label>
+                    <input type="text" id="editCustomerName" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">العنوان بالتفصيل</label>
+                    <textarea id="editCustomerAddress" rows="2" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">اختر الفرع</label>
+                    <select id="editRegion" class="w-full px-3 py-2 text-xs border rounded-lg bg-white focus:outline-none">
+                        <option value="أم المصريين">أم المصريين</option>
+                        <option value="فيصل">فيصل</option>
+                        <option value="عباس العقاد">عباس العقاد</option>
+                        <option value="مصر الجديدة">مصر الجديدة</option>
+                        <option value="المقطم">المقطم</option>
+                        <option value="حلوان">حلوان</option>
+                        <option value="حدائق حلوان">حدائق حلوان</option>
+                        <option value="الجزائر">الجزائر</option>
+                        <option value="العرب">العرب</option>
+                        <option value="ثكنات المعادي">ثكنات المعادي</option>
+                        <option value="حدائق المعادي">حدائق المعادي</option>
+                        <option value="زهراء المعادي">زهراء المعادي</option>
+                    </select>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeEditModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-bold text-xs">إلغاء</button>
+                    <button type="submit" class="w-1/2 bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg font-bold text-xs shadow">حفظ التعديلات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // إعدادات اتصال Supabase
+        const SUPABASE_URL = 'https://csroadhvynbSksqncrur.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGcXPVopb4DItZ2LY6V1vQ_bQ3vf30C';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        const categoriesData = {
+            basic: {
+                title: "🔥 التوليفات الأساسية",
+                items: [
+                    { name: 'شرقي', desc: 'طعم البن الشرقي التقليدي العريق.', kiloPrice: 720, img: 'https://i.postimg.cc/C5tpC1vL/Whats-App-Image-2026-10-03-at-5-50-39-PM-(2).jpg' },
+                    { name: 'مخصوص', desc: 'توليفة خاصة تناسب المزاج الرايق.', kiloPrice: 960, img: 'https://i.postimg.cc/J0gC3nTj/Whats-App-Image-2026-10-03-at-5-50-40-PM.jpg' },
+                    { name: 'اسبشيل', desc: 'مذاق فريد ومميز لمحبي التميز.', kiloPrice: 1015, img: 'https://i.postimg.cc/C5tpC1vL/Whats-App-Image-2026-10-03-at-5-50-39-PM-(2).jpg' },
+                    { name: 'الغرباوي', desc: 'توليفة مميزة ومضبوطة تناسب عشاق القهوة الثقيلة.', kiloPrice: 1145, img: 'https://i.postimg.cc/J0gC3nTj/Whats-App-Image-2026-10-03-at-5-50-40-PM.jpg' }
+                ]
+            },
+            french: {
+                title: "☕ الأنواع الفرنسية والإسبريسو",
+                items: [
+                    { name: 'فرنساوي ساده', desc: 'بن فرنساوي ناعم ومميز.', kiloPrice: 815, img: 'https://i.postimg.cc/sx8CPXng/Whats-App-Image-2026-10-03-at-5-50-39-PM-(3).jpg' },
+                    { name: 'اسبرسو', desc: 'بن مخصص لتحضير الإسبريسو.', kiloPrice: 1320, img: 'https://i.postimg.cc/V0JnmJ8B/Whats-App-Image-2026-10-02-at-6-06-13-PM-(1).jpg' }
+                ]
+            },
+            flavors: {
+                title: "🍫 النكهات والإضافات",
+                items: [
+                    { name: 'بندق', desc: 'بن مطحون بنكهة البندق الغنية.', kiloPrice: 870, img: 'https://i.postimg.cc/BtbxxV1w/Whats-App-Image-2026-10-02-at-6-06-13-PM-(2).jpg' },
+                    { name: 'بندق قطع', desc: 'بن مع قطع بندق أصلية.', kiloPrice: 970, img: 'https://i.postimg.cc/N2KmBKc6/Whats-App-Image-2026-10-02-at-6-06-13-PM-(3).jpg' },
+                    { name: 'شوكولاته', desc: 'بن برائحة ومذاق الشوكولاتة.', kiloPrice: 870, img: 'https://i.postimg.cc/zvMYwBdy/Whats-App-Image-2026-10-03-at-5-50-40-PM-(1).jpg' },
+                    { name: 'فانيليا', desc: 'بن بنكهة الفانيليا العطرة.', kiloPrice: 870, img: 'https://i.postimg.cc/T1Svjwk2/Whats-App-Image-2026-10-03-at-5-50-39-PM-(1).jpg' },
+                    { name: 'كارميل', desc: 'بن بنكهة الكراميل السلسة.', kiloPrice: 870, img: 'https://i.postimg.cc/L57FkXy1/Whats-App-Image-2026-10-03-at-5-50-40-PM-(3).jpg' }
+                ]
+            },
+            arabica: {
+                title: "🌟 الأربيكات",
+                items: [
+                    { name: 'برازيلي', desc: 'بن برازيلي أرابيكا فاخر بتحميص وسط.', kiloPrice: 845, img: 'https://i.postimg.cc/C5tpC1vL/Whats-App-Image-2026-10-03-at-5-50-39-PM-(2).jpg' },
+                    { name: 'حبشي', desc: 'بن حبشي أرابيكا أصيل بتحميص وسط.', kiloPrice: 930, img: 'https://i.postimg.cc/J0gC3nTj/Whats-App-Image-2026-10-03-at-5-50-40-PM.jpg' },
+                    { name: 'كولومبي', desc: 'بن كولومبي أرابيكا غني بتحميص وسط.', kiloPrice: 1160, img: 'https://i.postimg.cc/C5tpC1vL/Whats-App-Image-2026-10-03-at-5-50-39-PM-(2).jpg' },
+                    { name: 'هندي ارابيكا', desc: 'بن هندي أرابيكا مميز بتحميص وسط.', kiloPrice: 1100, img: 'https://i.postimg.cc/J0gC3nTj/Whats-App-Image-2026-10-03-at-5-50-40-PM.jpg' },
+                    { name: 'يمني', desc: 'بن يمني أرابيكا فاخر بتحميص وسط.', kiloPrice: 1270, img: 'https://i.postimg.cc/C5tpC1vL/Whats-App-Image-2026-10-03-at-5-50-39-PM-(2).jpg' },
+                    { name: 'جواتيمالي', desc: 'بن جواتيمالي أرابيكا فريد بتحميص وسط.', kiloPrice: 1320, img: 'https://i.postimg.cc/J0gC3nTj/Whats-App-Image-2026-10-03-at-5-50-40-PM.jpg' },
+                    { name: 'هندي نيبال', desc: 'بن هندي نيبال أرابيكا فاخر بتحميص وسط.', kiloPrice: 1375, img: 'https://i.postimg.cc/C5tpC1vL/Whats-App-Image-2026-10-03-at-5-50-39-PM-(2).jpg' },
+                    { name: 'كوستاريكي', desc: 'بن كوستاريكي أرابيكا أصيل بتحميص وسط.', kiloPrice: 1320, img: 'https://i.postimg.cc/J0gC3nTj/Whats-App-Image-2026-10-03-at-5-50-40-PM.jpg' }
+                ]
+            },
+            herbs: {
+                title: "🌿 أعشاب ونسكافيه",
+                items: [
+                    { name: 'نسكافيه كلاسيك', desc: 'نسكافيه كلاسيكي سريع التحضير.', kiloPrice: 1485, img: 'https://i.postimg.cc/mkqW3Ddr/Whats-App-Image-2026-10-03-at-5-50-39-PM.jpg' },
+                    { name: 'نسكافيه جولد', desc: 'نسكافيه جولد فاخر.', kiloPrice: 2200, img: 'https://i.postimg.cc/TPVWW64P/Whats-App-Image-2026-10-02-at-6-06-13-PM.jpg' },
+                    { name: 'اخضر تخسيس', desc: 'بن أخضر نقي للمساعدة على الحرق.', kiloPrice: 870, img: 'https://i.postimg.cc/V0JnmJ8B/Whats-App-Image-2026-10-02-at-6-06-13-PM-(1).jpg' },
+                    { name: 'عربي حبهان', desc: 'بن عربي أصيل بالهيل الحبهان.', kiloPrice: 935, img: 'https://i.postimg.cc/D0D3QZCJ/Whats-App-Image-2026-10-03-at-5-50-40-PM-(2).jpg' }
+                ]
+            }
+        };
+
+        const basicItems = ['شرقي', 'مخصوص', 'اسبشيل', 'الغرباوي'];
+        const arabicaItems = ['برازيلي', 'حبشي', 'كولومبي', 'هندي ارابيكا', 'يمني', 'جواتيمالي', 'هندي نيبال', 'كوستاريكي'];
+        let cart = [];
+        let activeItemName = '';
+
+        function getPricePerKilo(itemName, subtype, roast) {
+            if (itemName === 'برازيلي') return subtype === 'سادة' ? 845 : 910;
+            if (itemName === 'حبشي') return subtype === 'سادة' ? 930 : 985;
+            if (itemName === 'كولومبي') return subtype === 'سادة' ? 1160 : 1230;
+            if (itemName === 'هندي ارابيكا') return subtype === 'سادة' ? 1100 : 1120;
+            if (itemName === 'يمني') return subtype === 'سادة' ? 1270 : 1325;
+            if (itemName === 'جواتيمالي') return subtype === 'سادة' ? 1320 : 1375;
+            if (itemName === 'هندي نيبال') return subtype === 'سادة' ? 1375 : 1430;
+            if (itemName === 'كوستاريكي') return subtype === 'سادة' ? 1320 : 1375;
+            if (itemName === 'شرقي') {
+                if (roast === 'فاتح') return subtype === 'سادة' ? 720 : 810;
+                if (roast === 'وسط') return subtype === 'سادة' ? 735 : 820;
+                if (roast === 'غامق') return subtype === 'سادة' ? 745 : 830;
+            }
+            if (itemName === 'مخصوص') {
+                if (roast === 'فاتح' || roast === 'وسط') return subtype === 'سادة' ? 960 : 1015;
+                if (roast === 'غامق') return subtype === 'سادة' ? 970 : 1025;
+            }
+            if (itemName === 'اسبشيل') {
+                if (roast === 'فاتح' || roast === 'وسط') return subtype === 'سادة' ? 1015 : 1090;
+                if (roast === 'غامق') return subtype === 'سادة' ? 1025 : 1100;
+            }
+            if (itemName === 'الغرباوي') {
+                return subtype === 'سادة' ? 1145 : 1235;
+            }
+            if (itemName === 'اسبرسو') return 1320;
+            if (itemName === 'فرنساوي ساده') return 815;
+            if (itemName === 'بندق' || itemName === 'كارميل' || itemName === 'فانيليا' || itemName === 'شوكولاته') return 870;
+            if (itemName === 'بندق قطع') return 970;
+            if (itemName === 'نسكافيه كلاسيك') return 1485;
+            if (itemName === 'نسكافيه جولد') return 2200;
+            if (itemName === 'اخضر تخسيس') return 870;
+            if (itemName === 'عربي حبهان') return 935;
+            return 800;
+        }
+
+        function parseWeightInKg(weightStr) {
+            if (weightStr.includes('تمن')) return 0.125;
+            if (weightStr.includes('ربع')) {
+                if (weightStr.includes('ربعين') || weightStr.includes('نصف')) return 0.5;
+                return 0.25;
+            }
+            if (weightStr.includes('ثلاث أرباع')) return 0.75;
+            if (weightStr.includes('كيلو') && !weightStr.includes('تمن') && !weightStr.includes('ربع') && !weightStr.includes('أرباع')) {
+                let match = weightStr.match(/([\d.]+)\s*كيلو/);
+                if (match) return parseFloat(match[1]);
+                return 1.0;
+            }
+            let gramMatch = weightStr.match(/([\d.]+)\s*جرام/);
+            if (gramMatch) return parseFloat(gramMatch[1]) / 1000;
+            
+            let kgMatch = weightStr.match(/([\d.]+)\s*(كجم|كيلو|kg)/i);
+            if (kgMatch) return parseFloat(kgMatch[1]);
+            
+            let numMatch = weightStr.match(/([\d.]+)/);
+            if (numMatch) {
+                let val = parseFloat(numMatch[1]);
+                if (val > 10) return val / 1000;
+                return val;
+            }
+            return 0.5;
+        }
+
+        function switchCategory(categoryKey, element) {
+            document.querySelectorAll('#categoryList li').forEach(li => {
+                li.className = "hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition";
+            });
+            element.className = "bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition";
+
+            const cat = categoriesData[categoryKey];
+            document.getElementById('categoryTitle').textContent = cat.title;
+
+            const arabicaNotice = document.getElementById('arabicaNotice');
+            if (categoryKey === 'arabica') {
+                arabicaNotice.classList.remove('hidden');
+            } else {
+                arabicaNotice.classList.add('hidden');
+            }
+
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            cat.items.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-gray-200 rounded-2xl p-3 flex flex-col justify-between hover:shadow-lg transition relative overflow-hidden";
+                card.innerHTML = `
+                    <div class="relative bg-gray-50 rounded-xl p-2 h-40 flex items-center justify-center mb-3">
+                        <img src="${prod.img}" alt="${prod.name}" class="h-full w-full object-contain rounded-lg">
+                        <button onclick="openCustomizer('${prod.name}')" class="absolute bottom-2 left-2 bg-white text-amber-800 hover:bg-amber-800 hover:text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-md transition border border-gray-200">+</button>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-gray-900 text-sm">${prod.name}</h4>
+                            <span class="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md">سعر الكيلو: ${prod.kiloPrice} ج.م</span>
+                        </div>
+                        <p class="text-xs text-gray-500 line-clamp-2">${prod.desc}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openCustomizer(itemName) {
+            activeItemName = itemName;
+            document.getElementById('modalTitle').textContent = 'تخصيص: ' + itemName;
+            
+            const subtypeWrapper = document.getElementById('subtypeWrapper');
+            const roastWrapper = document.getElementById('roastWrapper');
+            
+            if (basicItems.includes(itemName)) {
+                subtypeWrapper.classList.remove('hidden');
+                roastWrapper.classList.remove('hidden');
+            } else if (arabicaItems.includes(itemName)) {
+                subtypeWrapper.classList.remove('hidden');
+                roastWrapper.classList.add('hidden');
+            } else {
+                subtypeWrapper.classList.add('hidden');
+                roastWrapper.classList.add('hidden');
+            }
+
+            document.getElementById('modalWeight').value = 'ربعين (نصف كيلو / 500 جرام)';
+            document.getElementById('customWeightWrapper').classList.add('hidden');
+            document.getElementById('modalCustomWeight').value = '';
+
+            updateModalPricePreview();
+            document.getElementById('customizerModal').classList.remove('hidden');
+        }
+
+        function updateModalPricePreview() {
+            let subtype = document.getElementById('modalSubtype').value;
+            let roast = document.getElementById('modalRoast').value;
+            let weightSelection = document.getElementById('modalWeight').value;
+            
+            if (weightSelection === 'أخرى') {
+                const customW = document.getElementById('modalCustomWeight').value.trim();
+                if (customW) {
+                    weightSelection = customW;
+                }
+            }
+
+            const kiloPrice = getPricePerKilo(activeItemName, subtype, roast);
+            const weightKg = parseWeightInKg(weightSelection);
+            const itemTotal = kiloPrice * weightKg;
+
+            document.getElementById('modalKiloPrice').textContent = kiloPrice.toLocaleString();
+            document.getElementById('modalItemTotalPrice').textContent = itemTotal.toFixed(2);
+        }
+
+        function checkCustomWeight(select) {
+            const customWrapper = document.getElementById('customWeightWrapper');
+            if (select.value === 'أخرى') {
+                customWrapper.classList.remove('hidden');
+            } else {
+                customWrapper.classList.add('hidden');
+            }
+        }
+
+        function closeCustomizer() {
+            document.getElementById('customizerModal').classList.add('hidden');
+        }
+
+        function addItemToCart() {
+            let weight = document.getElementById('modalWeight').value;
+            if (weight === 'أخرى') {
+                const customW = document.getElementById('modalCustomWeight').value.trim();
+                if (!customW) {
+                    alert('الرجاء كتابة الوزن المطلوب في خانة "أخرى"!');
+                    return;
+                }
+                weight = customW;
+            }
+
+            let subtype = document.getElementById('modalSubtype').value;
+            let roast = document.getElementById('modalRoast').value;
+            let itemString = '';
+            let kiloP = getPricePerKilo(activeItemName, subtype, roast);
+            let wKg = parseWeightInKg(weight);
+            let itemTotal = kiloP * wKg;
+
+            if (basicItems.includes(activeItemName)) {
+                itemString = `${weight} ${activeItemName} ${subtype} (${roast})`;
+            } else if (arabicaItems.includes(activeItemName)) {
+                itemString = `${weight} ${activeItemName} ${subtype} (وسط)`;
+            } else {
+                itemString = `${weight} ${activeItemName}`;
+            }
+
+            cart.push({
+                text: itemString,
+                price: itemTotal
+            });
+
+            renderCart();
+            closeCustomizer();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItemsContainer');
+            const totalSummary = document.getElementById('cartTotalSummary');
+            const totalAmountText = document.getElementById('totalAmountText');
+
+            if (cart.length === 0) {
+                container.className = "bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500";
+                container.textContent = "لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.";
+                totalSummary.classList.add('hidden');
+                return;
+            }
+
+            container.className = "bg-amber-100/70 p-3 rounded-lg border border-amber-300 text-right text-xs text-amber-900 space-y-2";
+            container.innerHTML = '';
+
+            let grandTotal = 0;
+
+            cart.forEach((cartItem, index) => {
+                grandTotal += cartItem.price;
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center bg-white p-2 rounded border border-amber-200";
+                div.innerHTML = `
+                    <div class="space-y-0.5">
+                        <span class="font-bold block">☕ ${cartItem.text}</span>
+                        <span class="text-[11px] text-amber-800 font-semibold">${cartItem.price.toFixed(2)} ج.م</span>
+                    </div>
+                    <button type="button" onclick="removeFromCart(${index})" class="text-red-600 font-bold px-2 py-0.5 rounded hover:bg-red-50">✕</button>
+                `;
+                container.appendChild(div);
+            });
+
+            totalSummary.classList.remove('hidden');
+            totalAmountText.textContent = grandTotal.toFixed(2) + ' ج.م';
+        }
+
+        document.getElementById('phone1').addEventListener('input', async function() {
+            let phone = this.value.trim();
+            if (phone.length >= 8) {
+                try {
+                    let { data, error } = await supabaseClient
+                        .from('customers')
+                        .select('*')
+                        .eq('phone1', phone)
+                        .maybeSingle();
+
+                    if (data) {
+                        document.getElementById('customerName').value = data.name || '';
+                        if (data.phone2) {
+                            document.getElementById('phone2').value = data.phone2;
+                        }
+                        document.getElementById('customerAddress').value = data.address || '';
+                        
+                        let branchSelect = document.getElementById('region');
+                        for (let i = 0; i < branchSelect.options.length; i++) {
+                            if (branchSelect.options[i].value === data.region) {
+                                branchSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.error('خطأ في جلب بيانات العميل:', err);
+                }
+            }
+        });
+
+        function openTrackModal() {
+            document.getElementById('trackModal').classList.remove('hidden');
+        }
+        function closeTrackModal() {
+            document.getElementById('trackModal').classList.add('hidden');
+        }
+
+        function openEditModal(orderId, name, phone1, phone2, address, region, details) {
+            document.getElementById('editOriginalId').value = orderId;
+            document.getElementById('editOrderIdDisplay').textContent = orderId;
+            document.getElementById('editCustomerName').value = name;
+            document.getElementById('editPhone1').value = phone1;
+            document.getElementById('editPhone2').value = phone2 !== 'undefined' ? phone2 : '';
+            document.getElementById('editCustomerAddress').value = address;
+            document.getElementById('editOrderDetails').value = details;
+
+            let regionSelect = document.getElementById('editRegion');
+            for (let i = 0; i < regionSelect.options.length; i++) {
+                if (regionSelect.options[i].value === region) {
+                    regionSelect.selectedIndex = i;
+                    break;
+                }
+            }
+
+            document.getElementById('editOrderModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editOrderModal').classList.add('hidden');
+        }
+
+        async function saveOrderChanges(e) {
+            e.preventDefault();
+            const orderId = document.getElementById('editOriginalId').value;
+            const details = document.getElementById('editOrderDetails').value.trim();
+            const phone1 = document.getElementById('editPhone1').value.trim();
+            const phone2 = document.getElementById('editPhone2').value.trim();
+            const name = document.getElementById('editCustomerName').value.trim();
+            const address = document.getElementById('editCustomerAddress').value.trim();
+            const region = document.getElementById('editRegion').value;
+
+            try {
+                let { error } = await supabaseClient
+                    .from('orders')
+                    .update({
+                        details: details,
+                        phone1: phone1,
+                        phone2: phone2,
+                        name: name,
+                        address: address,
+                        region: region
+                    })
+                    .eq('id', orderId);
+
+                if (error) {
+                    alert('حدث خطأ أثناء حفظ التعديلات: ' + error.message);
+                    return;
+                }
+
+                alert('تم تعديل الطلب وبياناتك بنجاح! ☕');
+                closeEditModal();
+                searchOrdersForTracking();
+            } catch (err) {
+                console.error('خطأ:', err);
+                alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
+            }
+        }
+
+        async function cancelOrder(orderId) {
+            if (!confirm('هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟')) {
+                return;
+            }
+
+            try {
+                let { error } = await supabaseClient
+                    .from('orders')
+                    .update({ status: 'ملغي بواسطة العميل' })
+                    .eq('id', orderId);
+
+                if (error) {
+                    alert('حدث خطأ أثناء إلغاء الطلب: ' + error.message);
+                    return;
+                }
+
+                alert('تم إلغاء الطلب بنجاح.');
+                searchOrdersForTracking();
+            } catch (err) {
+                console.error('خطأ:', err);
+                alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
+            }
+        }
+
+        async function searchOrdersForTracking() {
+            let phone = document.getElementById('trackPhoneInput').value.trim();
+            const container = document.getElementById('trackResultsContainer');
+
+            if (!phone) {
+                alert('الرجاء إدخال رقم الهاتف للبحث');
+                return;
+            }
+
+            container.innerHTML = `<p class="text-center text-xs text-gray-500">جاري البحث في قاعدة البيانات...</p>`;
+
+            try {
+                let { data: orders, error } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .or(`phone1.eq.${phone},phone2.eq.${phone}`)
+                    .order('created_at', { ascending: false });
+
+                if (error || !orders || orders.length === 0) {
+                    container.innerHTML = `
+                        <div class="bg-gray-50 border p-4 rounded-xl text-center text-xs text-gray-500">
+                            لم يتم العثور على أوردرات مسجلة بهذا الرقم في قاعدة البيانات.
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = '';
+                orders.forEach(order => {
+                    let statusText = order.status || '';
+                    let isDelivered = statusText.includes('تم التسليم');
+                    let isCancelled = statusText.includes('ملغي');
+                    let isOutForDelivery = statusText.includes('الطريق') || statusText.includes('توصيل') || statusText.includes('الدليفري') || statusText.includes('الدلفري') || statusText.includes('دلفري');
+                    
+                    let canEditOrCancel = !isOutForDelivery && !isDelivered && !isCancelled;
+
+                    let ratingHtml = '';
+                    if (isDelivered) {
+                        if (order.rating) {
+                            ratingHtml = `
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg space-y-1">
+                                    <p class="text-xs font-bold text-emerald-800">⭐ تقييمك المسجل:</p>
+                                    <div class="text-amber-600 text-xs font-bold">${'⭐'.repeat(order.rating)} (${order.rating}/5)</div>
+                                    ${order.feedback ? `<p class="text-xs text-gray-600">ملاحظتك: "${order.feedback}"</p>` : ''}
+                                </div>
+                            `;
+                        } else {
+                            ratingHtml = `
+                                <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg space-y-2">
+                                    <p class="text-xs font-bold text-amber-900">🎉 تم تسليم طلبك بنجاح! شاركنا رأيك:</p>
+                                    <select id="rate_${order.id}" class="w-full bg-white border text-xs p-1.5 rounded">
+                                        <option value="5">⭐⭐⭐⭐⭐ (ممتاز جداً)</option>
+                                        <option value="4">⭐⭐⭐⭐ (جيد جداً)</option>
+                                        <option value="3">⭐⭐⭐ (مقبول)</option>
+                                        <option value="2">⭐⭐ (ضعيف)</option>
+                                        <option value="1">⭐ (سيء)</option>
+                                    </select>
+                                    <input type="text" id="feedback_${order.id}" placeholder="اكتب ملاحظتك (اختياري)..." class="w-full bg-white border text-xs p-1.5 rounded">
+                                    <button onclick="submitClientRating('${order.id}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 rounded text-xs font-bold">إرسال التقييم للمحل</button>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        ratingHtml = `
+                            <p class="text-xs text-gray-400 text-center bg-gray-50 p-2 rounded">⏳ ستتمكن من تقييم الطلب فور اكتمال التسليم.</p>
+                        `;
+                    }
+
+                    let actionButtonHtml = '';
+                    if (canEditOrCancel) {
+                        actionButtonHtml = `
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="openEditModal('${order.id}', '${order.name || ''}', '${order.phone1 || ''}', '${order.phone2 || ''}', \`${order.address || ''}\`, '${order.region || ''}', \`${order.details || ''}\`)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 border border-amber-300">
+                                    <span>✏️ تعديل الطلب</span>
+                                </button>
+                                <button onclick="cancelOrder('${order.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 border border-red-300">
+                                    <span>❌ إلغاء الطلب</span>
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        actionButtonHtml = `
+                            <p class="text-center text-[11px] text-gray-400 bg-gray-100 p-1.5 rounded">🔒 الطلب منتهي (تم تسليمه أو إلغاؤه مسبقاً).</p>
+                        `;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = "bg-gray-50 border border-gray-200 rounded-xl p-3 space-y-2 text-xs";
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <span class="font-bold text-amber-900">طلب رقم: ${order.id}</span>
+                            <span class="px-2 py-0.5 rounded font-bold ${
+                                statusText.includes('جديد') ? 'bg-blue-100 text-blue-800' :
+                                statusText.includes('تجهيز') ? 'bg-amber-100 text-amber-800' :
+                                statusText.includes('توصيل') || statusText.includes('الدلفري') || statusText.includes('دلفري') ? 'bg-purple-100 text-purple-800' :
+                                statusText.includes('ملغي') ? 'bg-red-100 text-red-800' :
+                                'bg-green-100 text-green-800'
+                            }">${order.status}</span>
+                        </div>
+                        <p>👤 العميل: <b>${order.name}</b> | 📞 ${order.phone1}</p>
+                        <p>📍 الفرع: <b>${order.region}</b> - العنوان: ${order.address}</p>
+                        <p>☕ الطلبات: <b>${order.details}</b></p>
+                        ${order.total_price ? `<p class="font-bold text-amber-900">💰 إجمالي الفاتورة: ${order.total_price} ج.م</p>` : ''}
+                        ${actionButtonHtml}
+                        ${ratingHtml}
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error('خطأ في جلب الطلبات:', err);
+                container.innerHTML = `<p class="text-center text-xs text-red-600">حدث خطأ أثناء الاتصال بقاعدة البيانات.</p>`;
+            }
+        }
+
+        async function submitClientRating(orderId) {
+            let ratingVal = parseInt(document.getElementById('rate_' + orderId).value);
+            let feedbackText = document.getElementById('feedback_' + orderId).value;
+
+            try {
+                let { error } = await supabaseClient
+                    .from('orders')
+                    .update({ rating: ratingVal, feedback: feedbackText })
+                    .eq('id', orderId);
+
+                if (error) {
+                    alert('حدث خطأ أثناء إرسال التقييم.');
+                    return;
+                }
+
+                alert('شكراً لك! تم إرسال تقييمك إلى لوحة فرع بن الغرباوي بنجاح 🌟');
+                searchOrdersForTracking();
+            } catch (err) {
+                console.error('خطأ:', err);
+            }
+        }
+
+        window.onload = function() {
+            updateBranchAddress();
+            switchCategory('basic', document.querySelector('#categoryList li'));
+        };
+
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (cart.length === 0) {
+                alert('الرجاء إضافة منتج واحد على الأقل إلى السلة بالضغط على علامة (+) !');
+                return;
+            }
+
+            const phone1Val = document.getElementById('phone1').value.trim();
+            const phone2Val = document.getElementById('phone2').value.trim();
+            const nameVal = document.getElementById('customerName').value.trim();
+            const addressVal = document.getElementById('customerAddress').value.trim();
+            const selectedBranch = document.getElementById('region').value;
+            
+            const combinedDetails = cart.map(item => item.text).join(' + ');
+            const grandTotal = cart.reduce((sum, item) => sum + item.price, 0);
+            const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+
+            try {
+                await supabaseClient.from('customers').upsert({
+                    phone1: phone1Val,
+                    name: nameVal,
+                    phone2: phone2Val,
+                    address: addressVal,
+                    region: selectedBranch
+                }, { onConflict: 'phone1' });
+
+                const { error: orderError } = await supabaseClient.from('orders').insert({
+                    id: orderId,
+                    name: nameVal,
+                    phone1: phone1Val,
+                    phone2: phone2Val,
+                    details: combinedDetails,
+                    total_price: grandTotal.toFixed(2) + ' ج.م',
+                    address: addressVal,
+                    region: selectedBranch,
+                    status: 'جديد (في انتظار الاستلام)'
+                });
+
+                if (orderError) {
+                    alert('حدث خطأ أثناء إرسال الطلب: ' + orderError.message);
+                    return;
+                }
+
+                document.getElementById('orderForm').style.display = 'none';
+                document.getElementById('successMsg').classList.remove('hidden');
+
+            } catch (err) {
+                console.error('خطأ في إرسال الأوردر:', err);
+                alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
+            }
+        });
+    
+        const branchAddressesMap = {
+            "أم المصريين": "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة",
+            "فيصل": "عمارة الفيصلية شارع فيصل المريوطية امام حلواني الفاليرو، الجيزة",
+            "عباس العقاد": "مدينة نصر امتداد شارع عباس العقاد ميدان انبي، القاهرة",
+            "مصر الجديدة": "مصر الجديدة شارع الميرغني أمام أبو شقرة، القاهرة",
+            "المقطم": "المقطم شارع 9 تقاطع بنونة بجوار حديقة الاندلس، القاهرة",
+            "حلوان": "حلوان شارع المعادي تقاطع شارع راغب امام مول دارك مول، القاهرة",
+            "حدائق حلوان": "حدائق حلوان امام محطة المترو بجوار النمرسي، القاهرة",
+            "الجزائر": "المعادي الجديدة 8ص شارع الجزائر بجوار الشبراوي، القاهرة",
+            "العرب": "عرب المعادي بجوار المحكمة، القاهرة",
+            "ثكنات المعادي": "شارع 9 بجوار محطة مترو ثكنات المعادي، القاهرة",
+            "حدائق المعادي": "شارع 9 امام محطة مترو حدائق المعادي، القاهرة",
+            "زهراء المعادي": "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة"
+        };
+
+        function updateBranchAddress() {
+            const selectedBranch = document.getElementById('region').value;
+            const addressBox = document.getElementById('branchAddressBox');
+            if (branchAddressesMap[selectedBranch]) {
+                addressBox.textContent = branchAddressesMap[selectedBranch];
+            } else {
+                addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
+            }
+        }
+
+    </script>
+</body>
+</html>
