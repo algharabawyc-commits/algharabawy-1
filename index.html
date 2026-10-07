@@ -5,61 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بن الغرباوي - اطلب أوردرك أونلاين</title>
     <!-- مكتبة تيلويند سي إس إس -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
-        const branchAddressesMap = {
-            "أم المصريين": "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة",
-            "فيصل": "عمارة الفيصلية شارع فيصل المريوطية امام حلواني الفاليرو، الجيزة",
-            "عباس العقاد": "مدينة نصر امتداد شارع عباس العقاد ميدان انبي، القاهرة",
-            "مصر الجديدة": "مصر الجديدة شارع الميرغني أمام أبو شقرة، القاهرة",
-            "المقطم": "المقطم شارع 9 تقاطع بنونة بجوار حديقة الاندلس، القاهرة",
-            "حلوان": "حلوان شارع المعادي تقاطع شارع راغب امام مول دارك مول، القاهرة",
-            "حدائق حلوان": "حدائق حلوان امام محطة المترو بجوار النمرسي، القاهرة",
-            "الجزائر": "المعادي الجديدة 8ص شارع الجزائر بجوار الشبراوي، القاهرة",
-            "العرب": "عرب المعادي بجوار المحكمة، القاهرة",
-            "ثكنات المعادي": "شارع 9 بجوار محطة مترو ثكنات المعادي، القاهرة",
-            "حدائق المعادي": "شارع 9 امام محطة مترو حدائق المعادي، القاهرة",
-            "زهراء المعادي": "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة"
-        };
-
-        function updateBranchAddress() {
-            const selectedBranch = document.getElementById('region').value;
-            const addressBox = document.getElementById('branchAddressBox');
-            if (branchAddressesMap[selectedBranch]) {
-                addressBox.textContent = branchAddressesMap[selectedBranch];
-            } else {
-                addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
-            }
-        }
-
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- مكتبة Supabase JS للربط بقاعدة البيانات -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-        const branchAddressesMap = {
-            "أم المصريين": "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة",
-            "فيصل": "عمارة الفيصلية شارع فيصل المريوطية امام حلواني الفاليرو، الجيزة",
-            "عباس العقاد": "مدينة نصر امتداد شارع عباس العقاد ميدان انبي، القاهرة",
-            "مصر الجديدة": "مصر الجديدة شارع الميرغني أمام أبو شقرة، القاهرة",
-            "المقطم": "المقطم شارع 9 تقاطع بنونة بجوار حديقة الاندلس، القاهرة",
-            "حلوان": "حلوان شارع المعادي تقاطع شارع راغب امام مول دارك مول، القاهرة",
-            "حدائق حلوان": "حدائق حلوان امام محطة المترو بجوار النمرسي، القاهرة",
-            "الجزائر": "المعادي الجديدة 8ص شارع الجزائر بجوار الشبراوي، القاهرة",
-            "العرب": "عرب المعادي بجوار المحكمة، القاهرة",
-            "ثكنات المعادي": "شارع 9 بجوار محطة مترو ثكنات المعادي، القاهرة",
-            "حدائق المعادي": "شارع 9 امام محطة مترو حدائق المعادي، القاهرة",
-            "زهراء المعادي": "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة"
-        };
-
-        function updateBranchAddress() {
-            const selectedBranch = document.getElementById('region').value;
-            const addressBox = document.getElementById('branchAddressBox');
-            if (branchAddressesMap[selectedBranch]) {
-                addressBox.textContent = branchAddressesMap[selectedBranch];
-            } else {
-                addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
-            }
-        }
-
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Cairo', sans-serif; }</style>
 </head>
@@ -79,8 +27,8 @@
                 <a href="https://jobapplication-psi.vercel.app/" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
                     <span>💼 التقديم لوظيفة (الأبلكيشن)</span>
                 </a>
-                <a href="https://github.com/algharabawyc-commits/algharabawy-1/releases/download/v1.0/AlgharabawyOrders.1.apk" download class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
-                    <span>📥 تحميل تطبيق أوردرات الغرباوي</span>
+                <a href="https://github.com/algharabawyc-commits/algharabawy-1/raw/d619c10c5c5b7e2ae9f717cadffd430b5aa16c19/AlgharabawyOrders%201.apk" download class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
+                    <span>📥 تحميل الأبلكيشن APK</span>
                 </a>
                 <button onclick="openTrackModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
                     <span>🔍 تتبع طلبك وتعديله</span>
@@ -108,7 +56,7 @@
                 </ul>
             </div>
 
-                        <!-- بطاقة نبذة عن الشركة -->
+            <!-- بطاقة نبذة عن الشركة -->
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 space-y-2">
                 <h3 class="font-bold text-amber-900 border-b pb-2 text-sm">☕ عن بن الغرباوي</h3>
                 <p class="text-xs text-gray-700 leading-relaxed text-justify">
@@ -125,11 +73,11 @@
                 <div class="space-y-2 text-xs text-gray-700">
                     <div class="flex items-center gap-2">
                         <span class="font-bold">📱 رقم التواصل:</span>
-                        <a href="tel:01021800025" dir="ltr" class="text-amber-800 font-semibold hover:underline">01021800025</a>
+                        <a href="tel:01021855525" dir="ltr" class="text-amber-800 font-semibold hover:underline">01021855525</a>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="font-bold">💬 واتساب:</span>
-                        <a href="https://wa.me/201021800025" target="_blank" dir="ltr" class="text-emerald-700 font-semibold hover:underline">01021800025</a>
+                        <a href="https://wa.me/201021855525" target="_blank" dir="ltr" class="text-emerald-700 font-semibold hover:underline">01021855525</a>
                     </div>
                     <div class="pt-1 border-t flex justify-around gap-2">
                         <a href="https://www.facebook.com/algharabawycoffee" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1.5 rounded text-[11px] font-bold transition flex-1 text-center">فيسبوك</a>
@@ -377,6 +325,31 @@
         const SUPABASE_URL = 'https://csroadhvynbSksqncrur.supabase.co';
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGcXPVopb4DItZ2LY6V1vQ_bQ3vf30C';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        const branchAddressesMap = {
+            "أم المصريين": "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة",
+            "فيصل": "عمارة الفيصلية شارع فيصل المريوطية امام حلواني الفاليرو، الجيزة",
+            "عباس العقاد": "مدينة نصر امتداد شارع عباس العقاد ميدان انبي، القاهرة",
+            "مصر الجديدة": "مصر الجديدة شارع الميرغني أمام أبو شقرة، القاهرة",
+            "المقطم": "المقطم شارع 9 تقاطع بنونة بجوار حديقة الاندلس، القاهرة",
+            "حلوان": "حلوان شارع المعادي تقاطع شارع راغب امام مول دارك مول، القاهرة",
+            "حدائق حلوان": "حدائق حلوان امام محطة المترو بجوار النمرسي، القاهرة",
+            "الجزائر": "المعادي الجديدة 8ص شارع الجزائر بجوار الشبراوي، القاهرة",
+            "العرب": "عرب المعادي بجوار المحكمة، القاهرة",
+            "ثكنات المعادي": "شارع 9 بجوار محطة مترو ثكنات المعادي، القاهرة",
+            "حدائق المعادي": "شارع 9 امام محطة مترو حدائق المعادي، القاهرة",
+            "زهراء المعادي": "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة"
+        };
+
+        function updateBranchAddress() {
+            const selectedBranch = document.getElementById('region').value;
+            const addressBox = document.getElementById('branchAddressBox');
+            if (branchAddressesMap[selectedBranch]) {
+                addressBox.textContent = branchAddressesMap[selectedBranch];
+            } else {
+                addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
+            }
+        }
 
         const categoriesData = {
             basic: {
@@ -987,32 +960,6 @@
                 alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
             }
         });
-    
-        const branchAddressesMap = {
-            "أم المصريين": "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة",
-            "فيصل": "عمارة الفيصلية شارع فيصل المريوطية امام حلواني الفاليرو، الجيزة",
-            "عباس العقاد": "مدينة نصر امتداد شارع عباس العقاد ميدان انبي، القاهرة",
-            "مصر الجديدة": "مصر الجديدة شارع الميرغني أمام أبو شقرة، القاهرة",
-            "المقطم": "المقطم شارع 9 تقاطع بنونة بجوار حديقة الاندلس، القاهرة",
-            "حلوان": "حلوان شارع المعادي تقاطع شارع راغب امام مول دارك مول، القاهرة",
-            "حدائق حلوان": "حدائق حلوان امام محطة المترو بجوار النمرسي، القاهرة",
-            "الجزائر": "المعادي الجديدة 8ص شارع الجزائر بجوار الشبراوي، القاهرة",
-            "العرب": "عرب المعادي بجوار المحكمة، القاهرة",
-            "ثكنات المعادي": "شارع 9 بجوار محطة مترو ثكنات المعادي، القاهرة",
-            "حدائق المعادي": "شارع 9 امام محطة مترو حدائق المعادي، القاهرة",
-            "زهراء المعادي": "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة"
-        };
-
-        function updateBranchAddress() {
-            const selectedBranch = document.getElementById('region').value;
-            const addressBox = document.getElementById('branchAddressBox');
-            if (branchAddressesMap[selectedBranch]) {
-                addressBox.textContent = branchAddressesMap[selectedBranch];
-            } else {
-                addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
-            }
-        }
-
     </script>
 </body>
 </html>
