@@ -88,8 +88,13 @@
             </div>
         </div>
 
-        <!-- القسم الأوسط: قائمة المنتجات والأصناف -->
+        <!-- القسم الأوسط: شريط البحث وقائمة المنتجات -->
         <div class="lg:col-span-2 space-y-4">
+            <!-- شريط البحث السريع -->
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200">
+                <input type="text" id="productSearchInput" oninput="searchProducts(this.value)" placeholder="🔍 ابحث عن أي صنف بن أو نكهة..." class="w-full px-4 py-2 text-sm border rounded-xl focus:outline-none focus:border-amber-700 bg-gray-50">
+            </div>
+
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                 <h2 class="text-lg font-bold text-amber-900 mb-3" id="categoryTitle">🔥 التوليفات الأساسية</h2>
                 
@@ -127,11 +132,11 @@
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل أساسي (للبحث)</label>
-                        <input type="tel" id="phone1" required placeholder="012xxxxxxxx" class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-amber-600">
+                        <input type="tel" id="phone1" required maxlength="11" placeholder="010xxxxxxxx" class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-amber-600">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل إضافي</label>
-                        <input type="tel" id="phone2" placeholder="011xxxxxxx" class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none">
+                        <input type="tel" id="phone2" maxlength="11" placeholder="011xxxxxxx" class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none">
                     </div>
                 </div>
 
@@ -285,11 +290,11 @@
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل أساسي</label>
-                        <input type="tel" id="editPhone1" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-amber-600">
+                        <input type="tel" id="editPhone1" required maxlength="11" class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-amber-600">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل إضافي</label>
-                        <input type="tel" id="editPhone2" class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none">
+                        <input type="tel" id="editPhone2" maxlength="11" class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none">
                     </div>
                 </div>
 
@@ -413,8 +418,27 @@
 
         const basicItems = ['شرقي', 'مخصوص', 'اسبشيل', 'الغرباوي'];
         const arabicaItems = ['برازيلي', 'حبشي', 'كولومبي', 'هندي ارابيكا', 'يمني', 'جواتيمالي', 'هندي نيبال', 'كوستاريكي'];
+        
         let cart = [];
         let activeItemName = '';
+        let currentCategoryKey = 'basic';
+
+        // استرجاع السلة المحفوظة محلياً عند فتح الصفحة
+        function loadCartFromLocalStorage() {
+            const saved = localStorage.getItem('gharbawee_cart');
+            if (saved) {
+                try {
+                    cart = JSON.parse(saved);
+                } catch(e) {
+                    cart = [];
+                }
+            }
+        }
+
+        // حفظ السلة محلياً
+        function saveCartToLocalStorage() {
+            localStorage.setItem('gharbawee_cart', JSON.stringify(cart));
+        }
 
         function getPricePerKilo(itemName, subtype, roast) {
             if (itemName === 'برازيلي') return subtype === 'سادة' ? 845 : 910;
@@ -479,11 +503,70 @@
             return 0.5;
         }
 
+        // دالة البحث السريع الفوري عن المنتجات
+        function searchProducts(query) {
+            query = query.trim().toLowerCase();
+            const grid = document.getElementById('productsGrid');
+            const searchInput = document.getElementById('productSearchInput');
+            grid.innerHTML = '';
+
+            if (!query) {
+                const activeLi = document.querySelector('#categoryList li.bg-amber-50');
+                if (activeLi) {
+                    switchCategory(currentCategoryKey, activeLi);
+                } else {
+                    switchCategory('basic', document.querySelector('#categoryList li'));
+                }
+                return;
+            }
+
+            document.getElementById('categoryTitle').textContent = 'نتائج البحث عن: "' + query + '"';
+            document.getElementById('arabicaNotice').classList.add('hidden');
+
+            let foundItems = [];
+            Object.keys(categoriesData).forEach(catKey => {
+                categoriesData[catKey].items.forEach(prod => {
+                    if (prod.name.toLowerCase().includes(query) || prod.desc.toLowerCase().includes(query)) {
+                        foundItems.push(prod);
+                    }
+                });
+            });
+
+            if (foundItems.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 text-xs">عذراً، لم يتم العثور على منتجات تطابق بحثك.</div>`;
+                return;
+            }
+
+            foundItems.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-gray-200 rounded-2xl p-3 flex flex-col justify-between hover:shadow-lg transition relative overflow-hidden";
+                card.innerHTML = `
+                    <div class="relative bg-gray-50 rounded-xl p-2 h-40 flex items-center justify-center mb-3">
+                        <img src="${prod.img}" alt="${prod.name}" class="h-full w-full object-contain rounded-lg">
+                        <button onclick="openCustomizer('${prod.name}')" class="absolute bottom-2 left-2 bg-white text-amber-800 hover:bg-amber-800 hover:text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-md transition border border-gray-200">+</button>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-gray-900 text-sm">${prod.name}</h4>
+                            <span class="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md">سعر الكيلو: ${prod.kiloPrice} ج.م</span>
+                        </div>
+                        <p class="text-xs text-gray-500 line-clamp-2">${prod.desc}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
         function switchCategory(categoryKey, element) {
+            currentCategoryKey = categoryKey;
+            document.getElementById('productSearchInput').value = '';
+
             document.querySelectorAll('#categoryList li').forEach(li => {
                 li.className = "hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition";
             });
-            element.className = "bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition";
+            if (element) {
+                element.className = "bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition";
+            }
 
             const cat = categoriesData[categoryKey];
             document.getElementById('categoryTitle').textContent = cat.title;
@@ -608,16 +691,17 @@
                 price: itemTotal
             });
 
+            saveCartToLocalStorage();
             renderCart();
             closeCustomizer();
         }
 
         function removeFromCart(index) {
             cart.splice(index, 1);
+            saveCartToLocalStorage();
             renderCart();
         }
 
-        // دالة التمرير للسلة عند الضغط على الزر العائم
         function scrollToCart() {
             document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' });
         }
@@ -627,7 +711,6 @@
             const totalSummary = document.getElementById('cartTotalSummary');
             const totalAmountText = document.getElementById('totalAmountText');
             
-            // عناصر الزر العائم للموبايل
             const floatingBtn = document.getElementById('floatingCartBtn');
             const floatCount = document.getElementById('floatingCartCount');
             const floatTotal = document.getElementById('floatingCartTotal');
@@ -637,7 +720,6 @@
                 container.textContent = "لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.";
                 totalSummary.classList.add('hidden');
                 
-                // إخفاء الزر العائم إذا كانت السلة فارغة
                 if (floatingBtn) floatingBtn.classList.add('hidden');
                 return;
             }
@@ -664,7 +746,6 @@
             totalSummary.classList.remove('hidden');
             totalAmountText.textContent = grandTotal.toFixed(2) + ' ج.م';
 
-            // تحديث وإظهار الزر العائم للموبايل
             if (floatingBtn) {
                 floatingBtn.classList.remove('hidden');
                 floatCount.textContent = cart.length + ' أصناف';
@@ -743,6 +824,12 @@
             const name = document.getElementById('editCustomerName').value.trim();
             const address = document.getElementById('editCustomerAddress').value.trim();
             const region = document.getElementById('editRegion').value;
+
+            const phoneRegex = /^01[0125][0-9]{8}$/;
+            if (!phoneRegex.test(phone1)) {
+                alert('رقم الهاتف الأساسي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
+                return;
+            }
 
             try {
                 let { error } = await supabaseClient
@@ -934,6 +1021,8 @@
 
         window.onload = function() {
             updateBranchAddress();
+            loadCartFromLocalStorage();
+            renderCart();
             switchCategory('basic', document.querySelector('#categoryList li'));
         };
 
@@ -950,6 +1039,20 @@
             const nameVal = document.getElementById('customerName').value.trim();
             const addressVal = document.getElementById('customerAddress').value.trim();
             const selectedBranch = document.getElementById('region').value;
+
+            // التحقق من صحة رقم الهاتف الأساسي (مصر: 11 رقم ويبدأ بـ 010, 011, 012, 015)
+            const phoneRegex = /^01[0125][0-9]{8}$/;
+            if (!phoneRegex.test(phone1Val)) {
+                alert('رقم الهاتف الأساسي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
+                document.getElementById('phone1').focus();
+                return;
+            }
+
+            if (phone2Val && !phoneRegex.test(phone2Val)) {
+                alert('رقم الهاتف الإضافي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
+                document.getElementById('phone2').focus();
+                return;
+            }
             
             const combinedDetails = cart.map(item => item.text).join(' + ');
             const grandTotal = cart.reduce((sum, item) => sum + item.price, 0);
@@ -980,6 +1083,11 @@
                     alert('حدث خطأ أثناء إرسال الطلب: ' + orderError.message);
                     return;
                 }
+
+                // مسح السلة والذاكرة المحلية بعد إتمام الطلب بنجاح
+                cart = [];
+                localStorage.removeItem('gharbawee_cart');
+                renderCart();
 
                 document.getElementById('orderForm').style.display = 'none';
                 document.getElementById('successMsg').classList.remove('hidden');
