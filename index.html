@@ -89,11 +89,25 @@
             </div>
         </div>
 
-        <!-- القسم الأوسط: شريط البحث وقائمة المنتجات أو مبتكر التوليفات -->
+        <!-- القسم الأوسط: شريط البحث الأقسام والأكثر مبيعاً -->
         <div class="lg:col-span-2 space-y-4">
             <!-- شريط البحث السريع -->
             <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200">
                 <input type="text" id="productSearchInput" oninput="searchProducts(this.value)" placeholder="🔍 ابحث عن أي صنف بن أو نكهة..." class="w-full px-4 py-2 text-sm border rounded-xl focus:outline-none focus:border-amber-700 bg-gray-50">
+            </div>
+
+            <!-- قسم الأصناف الأعلى تقييماً (ديناميكي بالكامل يتغير حسب الأصناف الحاوية على أعلى التقييمات) -->
+            <div id="bestSellersSection" class="bg-gradient-to-r from-amber-900 to-amber-800 text-white p-4 rounded-xl shadow-md border border-amber-900 space-y-3">
+                <div class="flex justify-between items-center border-b border-amber-700/60 pb-2">
+                    <h3 class="font-bold text-sm flex items-center gap-1.5">
+                        <span>📊</span>
+                        <span>الأعلى تقييماً بآراء العملاء</span>
+                    </h3>
+                    <span class="text-[11px] bg-amber-700 px-2 py-0.5 rounded-full text-amber-200">تحديث تلقائي</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-xs" id="topRatedContainer">
+                    <div class="col-span-3 text-center text-amber-200 text-xs py-2">جاري تحميل الأصناف الأعلى تقييماً...</div>
+                </div>
             </div>
 
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
@@ -234,7 +248,7 @@
 
             <div id="successMsg" class="hidden p-4 mt-3 bg-green-50 border border-green-200 text-green-800 text-center rounded-lg text-xs font-semibold space-y-2">
                 <p>تم استلام طلبك بنجاح وتم حفظه في قاعدة البيانات! ☕</p>
-                <button onclick="openTrackModal()" class="bg-amber-700 hover:bg-amber-800 text-white px-3 py-1 rounded text-xs font-bold">تتبع طلبك أو تعديله الآن</button>
+                <button onclick="openTrackModal()" class="w-full bg-amber-700 hover:bg-amber-800 text-white px-3 py-2 rounded-lg text-xs font-bold transition">🔍 تتبع طلبك أو تعديله الآن</button>
             </div>
         </div>
 
@@ -268,6 +282,17 @@
                     <option value="فاتح">فاتح</option>
                     <option value="وسط" selected>وسط</option>
                     <option value="غامق">غامق</option>
+                </select>
+            </div>
+
+            <!-- دليل وطحنة الإسبريسو (تظهر فقط عند اختيار إسبريسو) -->
+            <div id="espressoGrindWrapper" class="hidden">
+                <label class="block text-xs font-bold text-amber-900 mb-1">☕ دليل طحن الإسبريسو (اختر طريقة التحضير):</label>
+                <select id="modalEspressoGrind" class="w-full p-2.5 border border-amber-300 rounded-lg text-xs bg-amber-50 font-semibold text-amber-900">
+                    <option value="طحنة إسبريسو (ماكينة إسبيرسو)" selected>ماكينة إسبريسو (طحنة إسبريسو)</option>
+                    <option value="طحنة متوسطة (فلتر / V60)">فلتر / V60 (طحنة متوسطة)</option>
+                    <option value="طحنة خشنة (فرنش بريس)">فرنش بريس (طحنة خشنة)</option>
+                    <option value="حبوب كاملة (بدون طحن)">حبوب كاملة (بدون طحن)</option>
                 </select>
             </div>
 
@@ -463,7 +488,7 @@
                 title: "☕ الأنواع الفرنسية والإسبريسو",
                 items: [
                     { name: 'فرنساوي ساده', desc: 'بن فرنساوي ناعم ومميز.', kiloPrice: 815, img: 'https://i.postimg.cc/sx8CPXng/Whats-App-Image-2026-10-03-at-5-50-39-PM-(3).jpg' },
-                    { name: 'اسبرسو', desc: 'بن مخصص لتحضير الإسبريسو.', kiloPrice: 1320, img: 'https://i.postimg.cc/V0JnmJ8B/Whats-App-Image-2026-10-02-at-6-06-13-PM-(1).jpg' }
+                    { name: 'اسبرسو', desc: 'بن مخصص لتحضير الإسبريسو بطحنات متنوعة.', kiloPrice: 1320, img: 'https://i.postimg.cc/V0JnmJ8B/Whats-App-Image-2026-10-02-at-6-06-13-PM-(1).jpg' }
                 ]
             },
             flavors: {
@@ -520,6 +545,16 @@
             "ثلاث أرباع كيلو (750 جرام)",
             "كيلو (1000 جرام)"
         ];
+
+        function getAllCatalogProducts() {
+            let all = [];
+            Object.keys(categoriesData).forEach(catKey => {
+                categoriesData[catKey].items.forEach(p => {
+                    all.push(p);
+                });
+            });
+            return all;
+        }
 
         function getBlendAllowedCoffees() {
             let list = [];
@@ -729,6 +764,73 @@
             return 0.5;
         }
 
+        // جلب وحساب التقييمات التلقائية لكل أصناف المنيو وعرض الأعلى 3 تقييماً
+        async function fetchBestSellersRatings() {
+            const container = document.getElementById('topRatedContainer');
+            try {
+                let { data: orders, error } = await supabaseClient
+                    .from('orders')
+                    .select('details, rating')
+                    .not('rating', 'is', null);
+
+                let catalog = getAllCatalogProducts();
+                let productStats = {};
+
+                catalog.forEach(p => {
+                    productStats[p.name] = { name: p.name, kiloPrice: p.kiloPrice, sumRating: 0, count: 0, avg: 0 };
+                });
+
+                if (orders && orders.length > 0) {
+                    orders.forEach(o => {
+                        if (o.details && o.rating) {
+                            catalog.forEach(p => {
+                                if (o.details.includes(p.name)) {
+                                    productStats[p.name].sumRating += o.rating;
+                                    productStats[p.name].count += 1;
+                                }
+                            });
+                        }
+                    });
+
+                    Object.keys(productStats).forEach(k => {
+                        if (productStats[k].count > 0) {
+                            productStats[k].avg = productStats[k].sumRating / productStats[k].count;
+                        }
+                    });
+                }
+
+                // ترتيب الأصناف ديناميكياً: الأصناف التي تم تقييمها أولاً ثم أعلى متوسط ثم عدد التقييمات
+                let sortedProducts = Object.values(productStats).sort((a, b) => {
+                    if (b.avg !== a.avg) return b.avg - a.avg;
+                    return b.count - a.count;
+                });
+
+                let top3 = sortedProducts.slice(0, 3);
+
+                container.innerHTML = '';
+                top3.forEach(prod => {
+                    let avgDisplay = prod.count > 0 ? prod.avg.toFixed(1) : "5.0";
+                    let roundedStars = prod.count > 0 ? Math.round(prod.avg) : 5;
+                    let starsStr = '⭐'.repeat(roundedStars);
+                    let countText = prod.count > 0 ? `(${prod.count} تقييم)` : `(مقترح)`;
+
+                    const div = document.createElement('div');
+                    div.className = "bg-amber-950/60 hover:bg-amber-950 p-2.5 rounded-lg border border-amber-700/50 cursor-pointer transition flex flex-col justify-between";
+                    div.onclick = function() { openCustomizer(prod.name); };
+                    div.innerHTML = `
+                        <span class="block font-bold text-amber-200">🏆 ${prod.name}</span>
+                        <span class="block text-[10px] text-amber-300 mt-0.5">${starsStr} (${avgDisplay})</span>
+                        <span class="block text-[10px] text-amber-300/80">${countText}</span>
+                        <span class="block text-[11px] font-semibold mt-1 text-amber-100 border-t border-amber-800/80 pt-1">${prod.kiloPrice} ج.م/ك</span>
+                    `;
+                    container.appendChild(div);
+                });
+
+            } catch (err) {
+                console.error('خطأ في جلب تقييمات المنتجات:', err);
+            }
+        }
+
         function searchProducts(query) {
             query = query.trim().toLowerCase();
             const grid = document.getElementById('productsGrid');
@@ -845,7 +947,14 @@
             
             const subtypeWrapper = document.getElementById('subtypeWrapper');
             const roastWrapper = document.getElementById('roastWrapper');
+            const espressoWrapper = document.getElementById('espressoGrindWrapper');
             
+            if (itemName === 'اسبرسو') {
+                espressoWrapper.classList.remove('hidden');
+            } else {
+                espressoWrapper.classList.add('hidden');
+            }
+
             if (basicItems.includes(itemName)) {
                 subtypeWrapper.classList.remove('hidden');
                 roastWrapper.classList.remove('hidden');
@@ -916,7 +1025,10 @@
             let wKg = parseWeightInKg(weight);
             let itemTotal = kiloP * wKg;
 
-            if (basicItems.includes(activeItemName)) {
+            if (activeItemName === 'اسبرسو') {
+                let grindOption = document.getElementById('modalEspressoGrind').value;
+                itemString = `${weight} اسبرسو (${grindOption})`;
+            } else if (basicItems.includes(activeItemName)) {
                 itemString = `${weight} ${activeItemName} ${subtype} (${roast})`;
             } else if (arabicaItems.includes(activeItemName)) {
                 itemString = `${weight} ${activeItemName} ${subtype} (وسط)`;
@@ -1301,6 +1413,7 @@
 
                 alert('شكراً لك! تم إرسال تقييمك إلى لوحة فرع بن الغرباوي بنجاح 🌟');
                 searchOrdersForTracking();
+                fetchBestSellersRatings(); // تحديث قائمة الأعلى تقييماً ديناميكياً
             } catch (err) {
                 console.error('خطأ:', err);
             }
@@ -1311,6 +1424,7 @@
             loadCartFromLocalStorage();
             renderCart();
             switchCategory('basic', document.querySelector('#categoryList li'));
+            fetchBestSellersRatings();
         };
 
         document.getElementById('orderForm').addEventListener('submit', async function(e) {
