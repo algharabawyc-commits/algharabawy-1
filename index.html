@@ -115,6 +115,13 @@
             <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base">🛒 سلة مشترياتك</h3>
             
             <form id="orderForm" class="space-y-3">
+                <!-- بانر إعادة الطلب السريع -->
+                <div id="quickReorderBanner" class="hidden bg-amber-50 border border-amber-300 p-3 rounded-xl text-xs space-y-2 shadow-sm">
+                    <p class="font-bold text-amber-900">✨ أهلاً بك مجدداً! وجدنا آخر أوردر لك:</p>
+                    <p id="quickReorderText" class="text-gray-700 font-semibold"></p>
+                    <button type="button" onclick="applyQuickReorder()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-1.5 rounded-lg text-xs font-bold transition shadow">إعادة طلب هذا الأوردر بضغطة واحدة ⚡</button>
+                </div>
+
                 <div id="cartItemsContainer" class="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500">
                     لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.
                 </div>
@@ -189,7 +196,7 @@
     </main>
 
     <!-- زر السلة العائم للهواتف المحمولة -->
-    <div id="floatingCartBtn" onclick="scrollToCart()" class="fixed bottom-4 left-4 right-4 bg-amber-900 text-white px-4 py-3 rounded-2xl shadow-2xl border-2 border-amber-400 z-40 flex justify-between items-center cursor-pointer hidden lg:hidden animate-bounce">
+    <div id="floatingCartBtn" onclick="scrollToCart()" class="fixed bottom-4 left-4 right-4 bg-amber-900 text-white px-4 py-3 rounded-2xl shadow-2xl border-2 border-amber-400 z-40 flex justify-between items-center cursor-pointer hidden lg:hidden transition-transform duration-300">
         <div class="flex items-center gap-2">
             <span class="bg-amber-700 text-amber-200 text-xs px-2.5 py-1 rounded-xl font-bold" id="floatingCartCount">0 أصناف</span>
             <span class="text-xs font-bold">🛒 عرض سلة المشتريات</span>
@@ -422,6 +429,7 @@
         let cart = [];
         let activeItemName = '';
         let currentCategoryKey = 'basic';
+        let cachedLastOrder = null; // لتخزين بيانات آخر أوردر للعميل
 
         // استرجاع السلة المحفوظة محلياً عند فتح الصفحة
         function loadCartFromLocalStorage() {
@@ -507,7 +515,6 @@
         function searchProducts(query) {
             query = query.trim().toLowerCase();
             const grid = document.getElementById('productsGrid');
-            const searchInput = document.getElementById('productSearchInput');
             grid.innerHTML = '';
 
             if (!query) {
@@ -694,6 +701,15 @@
             saveCartToLocalStorage();
             renderCart();
             closeCustomizer();
+
+            // تأثير بصري حركي على زر السلة العائم عند الإضافة (Idea 4)
+            const floatingBtn = document.getElementById('floatingCartBtn');
+            if (floatingBtn) {
+                floatingBtn.classList.add('scale-110');
+                setTimeout(() => {
+                    floatingBtn.classList.remove('scale-110');
+                }, 300);
+            }
         }
 
         function removeFromCart(index) {
@@ -753,6 +769,7 @@
             }
         }
 
+        // إدخال الهاتف وجلب بيانات العميل + فحص آخر أوردر لإعادة الطلب السريع (Idea 1)
         document.getElementById('phone1').addEventListener('input', async function() {
             let phone = this.value.trim();
             if (phone.length >= 8) {
@@ -778,11 +795,47 @@
                             }
                         }
                     }
+
+                    // جلب آخر طلب لهذا الرقم لتفعيل إعادة الطلب السريع
+                    let { data: lastOrders } = await supabaseClient
+                        .from('orders')
+                        .select('*')
+                        .eq('phone1', phone)
+                        .order('created_at', { ascending: false })
+                        .limit(1);
+
+                    if (lastOrders && lastOrders.length > 0) {
+                        cachedLastOrder = lastOrders[0];
+                        document.getElementById('quickReorderText').textContent = `${cachedLastOrder.details} (الإجمالي: ${cachedLastOrder.total_price || '0 ج.م'})`;
+                        document.getElementById('quickReorderBanner').classList.remove('hidden');
+                    } else {
+                        hideQuickReorderBanner();
+                    }
                 } catch (err) {
-                    console.error('خطأ في جلب بيانات العميل:', err);
+                    console.error('خطأ في جلب بيانات العميل أو الطلبات:', err);
                 }
+            } else {
+                hideQuickReorderBanner();
             }
         });
+
+        function hideQuickReorderBanner() {
+            cachedLastOrder = null;
+            document.getElementById('quickReorderBanner').classList.add('hidden');
+        }
+
+        function applyQuickReorder() {
+            if (!cachedLastOrder) return;
+            let priceNum = parseFloat(cachedLastOrder.total_price) || 0;
+            cart.push({
+                text: cachedLastOrder.details,
+                price: priceNum
+            });
+            saveCartToLocalStorage();
+            renderCart();
+            hideQuickReorderBanner();
+            alert('تمت إضافة تفاصيل آخر أوردر إلى سلة المشتريات بنجاح! ☕');
+        }
 
         function openTrackModal() {
             document.getElementById('trackModal').classList.remove('hidden');
@@ -1040,7 +1093,6 @@
             const addressVal = document.getElementById('customerAddress').value.trim();
             const selectedBranch = document.getElementById('region').value;
 
-            // التحقق من صحة رقم الهاتف الأساسي (مصر: 11 رقم ويبدأ بـ 010, 011, 012, 015)
             const phoneRegex = /^01[0125][0-9]{8}$/;
             if (!phoneRegex.test(phone1Val)) {
                 alert('رقم الهاتف الأساسي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
@@ -1084,7 +1136,6 @@
                     return;
                 }
 
-                // مسح السلة والذاكرة المحلية بعد إتمام الطلب بنجاح
                 cart = [];
                 localStorage.removeItem('gharbawee_cart');
                 renderCart();
