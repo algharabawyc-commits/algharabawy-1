@@ -53,6 +53,7 @@
                     <li onclick="switchCategory('french', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">☕ الأنواع الفرنسية والإسبريسو</li>
                     <li onclick="switchCategory('flavors', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">🍫 النكهات والإضافات (بندق، شوكولاتة)</li>
                     <li onclick="switchCategory('herbs', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">🌿 أعشاب ونسكافيه</li>
+                    <li onclick="switchCategory('customBlend', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition text-amber-800 font-bold">🧪 مبتكر التوليفات الخاصة</li>
                 </ul>
             </div>
 
@@ -88,7 +89,7 @@
             </div>
         </div>
 
-        <!-- القسم الأوسط: شريط البحث وقائمة المنتجات -->
+        <!-- القسم الأوسط: شريط البحث وقائمة المنتجات أو مبتكر التوليفات -->
         <div class="lg:col-span-2 space-y-4">
             <!-- شريط البحث السريع -->
             <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200">
@@ -102,6 +103,47 @@
                 <div id="arabicaNotice" class="hidden bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs font-bold text-amber-900 mb-3 flex items-center gap-2 shadow-sm">
                     <span>🌟</span>
                     <span>ملاحظة هامة: جميع أصناف الأربيكات متوفرة بدرجة تحميص (وسط) فقط لضمان أفضل طعم ومذاق للقهوة.</span>
+                </div>
+
+                <!-- قسم مبتكر التوليفات الخاصة بالأوزان والتحميص والسادة/المحوج -->
+                <div id="customBlendSection" class="hidden space-y-3">
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-xs space-y-3">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <p class="font-bold text-amber-900 text-sm">🧪 صمم توليفَتك الخاصة (الشرقي + الأربيكات):</p>
+                            <button type="button" onclick="addBlendRow()" class="bg-amber-800 hover:bg-amber-900 text-white px-3 py-1.5 rounded-lg font-bold transition text-xs">+ إضافة صنف آخر</button>
+                        </div>
+
+                        <!-- إعدادات التحميص والنوع للتوليفة بالكامل -->
+                        <div class="grid grid-cols-2 gap-2 bg-white p-3 rounded-lg border border-amber-200">
+                            <div>
+                                <label class="block font-semibold mb-1">نوع التوليفة:</label>
+                                <select id="blendSubtype" onchange="calculateCustomBlendTotal()" class="w-full p-2 text-xs border rounded bg-white">
+                                    <option value="محوج" selected>محوج</option>
+                                    <option value="سادة">سادة</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">درجة التحميص:</label>
+                                <select id="blendRoast" onchange="calculateCustomBlendTotal()" class="w-full p-2 text-xs border rounded bg-white">
+                                    <option value="وسط" selected>وسط</option>
+                                    <option value="فاتح">فاتح</option>
+                                    <option value="غامق">غامق</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- حاوية صفوف الأصناف -->
+                        <div id="blendRowsContainer" class="space-y-2">
+                            <!-- يتم تعبئتها ديناميكياً بواسطة JavaScript -->
+                        </div>
+
+                        <div class="bg-white p-3 rounded-lg border border-amber-300 flex justify-between items-center font-bold text-amber-900">
+                            <span>إجمالي وزن التوليفة: <span id="blendTotalWeightText">0 جرام</span></span>
+                            <span>إجمالي السعر: <span id="blendTotalPrice" class="text-sm font-extrabold text-amber-700">0.00</span> ج.م</span>
+                        </div>
+
+                        <button type="button" onclick="addCustomBlendToCart()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2.5 rounded-lg font-bold shadow transition text-sm">إضافة التوليفة الخاصة للسلة 🛒</button>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="productsGrid">
@@ -122,7 +164,7 @@
                     <button type="button" onclick="applyQuickReorder()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-1.5 rounded-lg text-xs font-bold transition shadow">إعادة طلب هذا الأوردر بضغطة واحدة ⚡</button>
                 </div>
 
-                <div id="cartItemsContainer" class="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500">
+                <div id="cartItemsContainer" class="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500 transition-all duration-300">
                     لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.
                 </div>
 
@@ -158,7 +200,10 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">اختر الفرع الأقرب</label>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-xs font-semibold text-gray-700">اختر الفرع الأقرب</label>
+                        <button type="button" onclick="findNearestBranch()" class="text-[11px] text-amber-700 font-bold hover:underline flex items-center gap-1">📍 تحديد أقرب فرع بالـ GPS</button>
+                    </div>
                     <select id="region" onchange="updateBranchAddress()" class="w-full px-3 py-2 text-sm border rounded-lg bg-white focus:outline-none">
                         <option value="أم المصريين">أم المصريين</option>
                         <option value="فيصل">فيصل</option>
@@ -347,29 +392,61 @@
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGcXPVopb4DItZ2LY6V1vQ_bQ3vf30C';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-        const branchAddressesMap = {
-            "أم المصريين": "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة",
-            "فيصل": "عمارة الفيصلية شارع فيصل المريوطية امام حلواني الفاليرو، الجيزة",
-            "عباس العقاد": "مدينة نصر امتداد شارع عباس العقاد ميدان انبي، القاهرة",
-            "مصر الجديدة": "مصر الجديدة شارع الميرغني أمام أبو شقرة، القاهرة",
-            "المقطم": "المقطم شارع 9 تقاطع بنونة بجوار حديقة الاندلس، القاهرة",
-            "حلوان": "حلوان شارع المعادي تقاطع شارع راغب امام مول دارك مول، القاهرة",
-            "حدائق حلوان": "حدائق حلوان امام محطة المترو بجوار النمرسي، القاهرة",
-            "الجزائر": "المعادي الجديدة 8ص شارع الجزائر بجوار الشبراوي، القاهرة",
-            "العرب": "عرب المعادي بجوار المحكمة، القاهرة",
-            "ثكنات المعادي": "شارع 9 بجوار محطة مترو ثكنات المعادي، القاهرة",
-            "حدائق المعادي": "شارع 9 امام محطة مترو حدائق المعادي، القاهرة",
-            "زهراء المعادي": "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة"
+        const branchLocations = {
+            "أم المصريين": { lat: 30.0131, lng: 31.2089, address: "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة" },
+            "فيصل": { lat: 30.0012, lng: 31.1734, address: "عمارة الفيصلية شارع فيصل المريوطية امام حلواني الفاليرو، الجيزة" },
+            "عباس العقاد": { lat: 30.0712, lng: 31.3321, address: "مدينة نصر امتداد شارع عباس العقاد ميدان انبي، القاهرة" },
+            "مصر الجديدة": { lat: 30.0911, lng: 31.3267, address: "مصر الجديدة شارع الميرغني أمام أبو شقرة، القاهرة" },
+            "المقطم": { lat: 30.0245, lng: 31.2789, address: "المقطم شارع 9 تقاطع بنونة بجوار حديقة الاندلس، القاهرة" },
+            "حلوان": { lat: 29.8496, lng: 31.3342, address: "حلوان شارع المعادي تقاطع شارع راغب امام مول دارك مول، القاهرة" },
+            "حدائق حلوان": { lat: 29.8732, lng: 31.3120, address: "حدائق حلوان امام محطة المترو بجوار النمرسي، القاهرة" },
+            "الجزائر": { lat: 29.9612, lng: 31.2845, address: "المعادي الجديدة 8ص شارع الجزائر بجوار الشبراوي، القاهرة" },
+            "العرب": { lat: 29.9734, lng: 31.2567, address: "عرب المعادي بجوار المحكمة، القاهرة" },
+            "ثكنات المعادي": { lat: 29.9567, lng: 31.2543, address: "شارع 9 بجوار محطة مترو ثكنات المعادي، القاهرة" },
+            "حدائق المعادي": { lat: 29.9412, lng: 31.2654, address: "شارع 9 امام محطة مترو حدائق المعادي، القاهرة" },
+            "زهراء المعادي": { lat: 29.9523, lng: 31.3102, address: "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة" }
         };
 
         function updateBranchAddress() {
             const selectedBranch = document.getElementById('region').value;
             const addressBox = document.getElementById('branchAddressBox');
-            if (branchAddressesMap[selectedBranch]) {
-                addressBox.textContent = branchAddressesMap[selectedBranch];
+            if (branchLocations[selectedBranch]) {
+                addressBox.textContent = branchLocations[selectedBranch].address;
             } else {
                 addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
             }
+        }
+
+        function findNearestBranch() {
+            if (!navigator.geolocation) {
+                alert('متصفحك لا يدعم خاصية تحديد الموقع الجغرافي.');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(position => {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+
+                let nearestBranch = '';
+                let minDistance = Infinity;
+
+                Object.keys(branchLocations).forEach(branchName => {
+                    const b = branchLocations[branchName];
+                    const dist = Math.sqrt(Math.pow(userLat - b.lat, 2) + Math.pow(userLng - b.lng, 2));
+                    if (dist < minDistance) {
+                        minDistance = dist;
+                        nearestBranch = branchName;
+                    }
+                });
+
+                if (nearestBranch) {
+                    document.getElementById('region').value = nearestBranch;
+                    updateBranchAddress();
+                    alert(`تم تحديد أقرب فرع إليك بنجاح: "${nearestBranch}" 📍`);
+                }
+            }, error => {
+                alert('تعذر الوصول لموقعك الجغرافي. تأكد من السماح للمتصفح بالوصول لموقعك.');
+            });
         }
 
         const categoriesData = {
@@ -429,9 +506,147 @@
         let cart = [];
         let activeItemName = '';
         let currentCategoryKey = 'basic';
-        let cachedLastOrder = null; // لتخزين بيانات آخر أوردر للعميل
+        let cachedLastOrder = null;
 
-        // استرجاع السلة المحفوظة محلياً عند فتح الصفحة
+        let blendRows = [
+            { coffee: 'شرقي', weight: 'ربع كيلو (250 جرام)' },
+            { coffee: 'كولومبي', weight: 'ربع كيلو (250 جرام)' }
+        ];
+
+        const standardWeights = [
+            "تمن كيلو (125 جرام)",
+            "ربع كيلو (250 جرام)",
+            "ربعين (نصف كيلو / 500 جرام)",
+            "ثلاث أرباع كيلو (750 جرام)",
+            "كيلو (1000 جرام)"
+        ];
+
+        function getBlendAllowedCoffees() {
+            let list = [];
+            list.push({ name: 'شرقي', price: getCoffeePriceByName('شرقي') });
+            arabicaItems.forEach(name => {
+                list.push({ name: name, price: getCoffeePriceByName(name) });
+            });
+            return list;
+        }
+
+        function renderBlendRows() {
+            const container = document.getElementById('blendRowsContainer');
+            container.innerHTML = '';
+            let allowedCoffees = getBlendAllowedCoffees();
+
+            blendRows.forEach((row, index) => {
+                const div = document.createElement('div');
+                div.className = "flex gap-2 items-center bg-white p-2.5 rounded-lg border border-amber-200";
+                
+                let optionsHtml = '';
+                allowedCoffees.forEach(c => {
+                    let selected = (c.name === row.coffee) ? 'selected' : '';
+                    optionsHtml += `<option value="${c.name}" ${selected}>${c.name} (${c.price} ج.م/كيلو)</option>`;
+                });
+
+                let isStandard = standardWeights.includes(row.weight);
+                let selectVal = isStandard ? row.weight : "أخرى (حدد بالجرام)";
+                let customVal = isStandard ? "" : row.weight;
+
+                let weightsHtml = '';
+                standardWeights.forEach(w => {
+                    let selected = (w === selectVal) ? 'selected' : '';
+                    weightsHtml += `<option value="${w}" ${selected}>${w}</option>`;
+                });
+                weightsHtml += `<option value="أخرى (حدد بالجرام)" ${!isStandard ? 'selected' : ''}>أخرى (حدد بالجرام يدوياً)</option>`;
+
+                div.innerHTML = `
+                    <select onchange="updateBlendRowData(${index}, 'coffee', this.value)" class="flex-1 p-2 text-xs border rounded bg-white font-semibold">
+                        ${optionsHtml}
+                    </select>
+                    <div class="flex flex-col gap-1 w-44">
+                        <select onchange="handleBlendWeightSelect(${index}, this.value)" class="p-1.5 text-xs border rounded bg-white">
+                            ${weightsHtml}
+                        </select>
+                        <input type="text" id="custom_weight_${index}" value="${customVal}" oninput="updateBlendCustomWeight(${index}, this.value)" placeholder="مثال: 150 جرام" class="p-1.5 text-xs border rounded bg-white ${isStandard ? 'hidden' : ''}">
+                    </div>
+                    ${blendRows.length > 1 ? `<button type="button" onclick="removeBlendRow(${index})" class="text-red-600 font-bold px-2 py-1 rounded hover:bg-red-50 text-xs">✕</button>` : '<div class="w-6"></div>'}
+                `;
+                container.appendChild(div);
+            });
+
+            calculateCustomBlendTotal();
+        }
+
+        function handleBlendWeightSelect(index, val) {
+            const customInput = document.getElementById(`custom_weight_${index}`);
+            if (val === 'أخرى (حدد بالجرام)') {
+                customInput.classList.remove('hidden');
+                blendRows[index].weight = customInput.value.trim() || '100 جرام';
+            } else {
+                customInput.classList.add('hidden');
+                blendRows[index].weight = val;
+            }
+            calculateCustomBlendTotal();
+        }
+
+        function updateBlendCustomWeight(index, val) {
+            blendRows[index].weight = val.trim();
+            calculateCustomBlendTotal();
+        }
+
+        function addBlendRow() {
+            let allowed = getBlendAllowedCoffees();
+            blendRows.push({ coffee: allowed[0].name, weight: 'ربع كيلو (250 جرام)' });
+            renderBlendRows();
+        }
+
+        function removeBlendRow(index) {
+            blendRows.splice(index, 1);
+            renderBlendRows();
+        }
+
+        function updateBlendRowData(index, field, value) {
+            blendRows[index][field] = value;
+            calculateCustomBlendTotal();
+        }
+
+        function calculateCustomBlendTotal() {
+            let grandTotal = 0;
+            let totalGrams = 0;
+            let blendSubtype = document.getElementById('blendSubtype').value;
+            let blendRoast = document.getElementById('blendRoast').value;
+
+            blendRows.forEach(row => {
+                let pricePerKilo = getPricePerKilo(row.coffee, blendSubtype, blendRoast);
+                let weightKg = parseWeightInKg(row.weight);
+                grandTotal += (pricePerKilo * weightKg);
+                totalGrams += (weightKg * 1000);
+            });
+
+            document.getElementById('blendTotalPrice').textContent = grandTotal.toFixed(2);
+            document.getElementById('blendTotalWeightText').textContent = totalGrams >= 1000 ? (totalGrams/1000) + ' كيلو' : totalGrams + ' جرام';
+        }
+
+        function addCustomBlendToCart() {
+            if (blendRows.length === 0) {
+                alert('الرجاء إضافة صنف واحد على الأقل للتوليفة!');
+                return;
+            }
+
+            let blendSubtype = document.getElementById('blendSubtype').value;
+            let blendRoast = document.getElementById('blendRoast').value;
+            let partsDesc = blendRows.map(r => `${r.weight} ${r.coffee}`).join(' + ');
+            let totalP = parseFloat(document.getElementById('blendTotalPrice').textContent);
+
+            let blendDescription = `توليفة خاصة (${partsDesc}) - ${blendSubtype} (تحميص ${blendRoast})`;
+
+            cart.push({
+                text: blendDescription,
+                price: totalP
+            });
+
+            saveCartToLocalStorage();
+            renderCart();
+            alert('تمت إضافة توليفَتَك الخاصة إلى السلة بنجاح! 🧪☕');
+        }
+
         function loadCartFromLocalStorage() {
             const saved = localStorage.getItem('gharbawee_cart');
             if (saved) {
@@ -443,9 +658,18 @@
             }
         }
 
-        // حفظ السلة محلياً
         function saveCartToLocalStorage() {
             localStorage.setItem('gharbawee_cart', JSON.stringify(cart));
+        }
+
+        function getCoffeePriceByName(name) {
+            let price = 800;
+            Object.keys(categoriesData).forEach(catKey => {
+                categoriesData[catKey].items.forEach(prod => {
+                    if (prod.name === name) price = prod.kiloPrice;
+                });
+            });
+            return price;
         }
 
         function getPricePerKilo(itemName, subtype, roast) {
@@ -473,18 +697,12 @@
             if (itemName === 'الغرباوي') {
                 return subtype === 'سادة' ? 1145 : 1235;
             }
-            if (itemName === 'اسبرسو') return 1320;
-            if (itemName === 'فرنساوي ساده') return 815;
-            if (itemName === 'بندق' || itemName === 'كارميل' || itemName === 'فانيليا' || itemName === 'شوكولاته') return 870;
-            if (itemName === 'بندق قطع') return 970;
-            if (itemName === 'نسكافيه كلاسيك') return 1485;
-            if (itemName === 'نسكافيه جولد') return 2200;
-            if (itemName === 'اخضر تخسيس') return 870;
-            if (itemName === 'عربي حبهان') return 935;
-            return 800;
+            return getCoffeePriceByName(itemName);
         }
 
         function parseWeightInKg(weightStr) {
+            if (!weightStr) return 0.25;
+            weightStr = String(weightStr);
             if (weightStr.includes('تمن')) return 0.125;
             if (weightStr.includes('ربع')) {
                 if (weightStr.includes('ربعين') || weightStr.includes('نصف')) return 0.5;
@@ -511,11 +729,12 @@
             return 0.5;
         }
 
-        // دالة البحث السريع الفوري عن المنتجات
         function searchProducts(query) {
             query = query.trim().toLowerCase();
             const grid = document.getElementById('productsGrid');
+            const customBlendSec = document.getElementById('customBlendSection');
             grid.innerHTML = '';
+            customBlendSec.classList.add('hidden');
 
             if (!query) {
                 const activeLi = document.querySelector('#categoryList li.bg-amber-50');
@@ -575,17 +794,29 @@
                 element.className = "bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition";
             }
 
+            const grid = document.getElementById('productsGrid');
+            const customBlendSec = document.getElementById('customBlendSection');
+            const arabicaNotice = document.getElementById('arabicaNotice');
+
+            if (categoryKey === 'customBlend') {
+                document.getElementById('categoryTitle').textContent = '🧪 مبتكر التوليفات الخاصة (بالأوزان والتحميص)';
+                arabicaNotice.classList.add('hidden');
+                grid.innerHTML = '';
+                customBlendSec.classList.remove('hidden');
+                renderBlendRows();
+                return;
+            }
+
+            customBlendSec.classList.add('hidden');
             const cat = categoriesData[categoryKey];
             document.getElementById('categoryTitle').textContent = cat.title;
 
-            const arabicaNotice = document.getElementById('arabicaNotice');
             if (categoryKey === 'arabica') {
                 arabicaNotice.classList.remove('hidden');
             } else {
                 arabicaNotice.classList.add('hidden');
             }
 
-            const grid = document.getElementById('productsGrid');
             grid.innerHTML = '';
 
             cat.items.forEach(prod => {
@@ -702,7 +933,12 @@
             renderCart();
             closeCustomizer();
 
-            // تأثير بصري حركي على زر السلة العائم عند الإضافة (Idea 4)
+            const cartContainer = document.getElementById('cartItemsContainer');
+            cartContainer.classList.add('bg-amber-200', 'scale-[1.02]');
+            setTimeout(() => {
+                cartContainer.classList.remove('bg-amber-200', 'scale-[1.02]');
+            }, 400);
+
             const floatingBtn = document.getElementById('floatingCartBtn');
             if (floatingBtn) {
                 floatingBtn.classList.add('scale-110');
@@ -732,7 +968,7 @@
             const floatTotal = document.getElementById('floatingCartTotal');
 
             if (cart.length === 0) {
-                container.className = "bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500";
+                container.className = "bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500 transition-all duration-300";
                 container.textContent = "لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.";
                 totalSummary.classList.add('hidden');
                 
@@ -740,7 +976,7 @@
                 return;
             }
 
-            container.className = "bg-amber-100/70 p-3 rounded-lg border border-amber-300 text-right text-xs text-amber-900 space-y-2";
+            container.className = "bg-amber-100/70 p-3 rounded-lg border border-amber-300 text-right text-xs text-amber-900 space-y-2 transition-all duration-300";
             container.innerHTML = '';
 
             let grandTotal = 0;
@@ -769,7 +1005,6 @@
             }
         }
 
-        // إدخال الهاتف وجلب بيانات العميل + فحص آخر أوردر لإعادة الطلب السريع (Idea 1)
         document.getElementById('phone1').addEventListener('input', async function() {
             let phone = this.value.trim();
             if (phone.length >= 8) {
@@ -796,7 +1031,6 @@
                         }
                     }
 
-                    // جلب آخر طلب لهذا الرقم لتفعيل إعادة الطلب السريع
                     let { data: lastOrders } = await supabaseClient
                         .from('orders')
                         .select('*')
