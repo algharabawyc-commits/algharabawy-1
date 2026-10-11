@@ -13,7 +13,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen pb-20 lg:pb-0">
 
-    <!-- شريط العرض العلوي مع اللوجو وزر التتبع والحساب -->
+    <!-- شريط العرض العلوي مع اللوجو وزر الحساب فقط -->
     <header class="bg-amber-900 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -28,15 +28,9 @@
                 <button onclick="openAuthModal()" id="authNavBtn" class="bg-amber-700 hover:bg-amber-800 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
                     <span>👤 حسابي</span>
                 </button>
-                <a href="https://jobapplication-psi.vercel.app/" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow hidden sm:flex items-center gap-1">
-                    <span>💼 التقديم لوظيفة (الأبلكيشن)</span>
-                </a>
                 <a href="https://github.com/algharabawyc-commits/algharabawy-1/raw/d619c10c5c5b7e2ae9f717cadffd430b5aa16c19/AlgharabawyOrders%201.apk" download class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow hidden md:flex items-center gap-1">
                     <span>📥 تحميل الأبلكيشن APK</span>
                 </a>
-                <button onclick="openTrackModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
-                    <span>🔍 تتبع طلبك وتعديله</span>
-                </button>
                 <div class="text-xs sm:text-sm bg-amber-950 px-3 py-1.5 rounded-lg border border-amber-800 hidden lg:block">
                     <span>التوصيل متاح لجميع فروع القاهرة والجيزة</span>
                 </div>
@@ -47,7 +41,7 @@
     <!-- المحتوى الرئيسي -->
     <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 mt-4">
 
-        <!-- القسم الأيمن: فئات قائمة الطعام ومعلومات التواصل -->
+        <!-- القسم الأيمن: فئات قائمة الطعام ونبذة عن الشركة فقط -->
         <div class="space-y-4 lg:col-span-1">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 h-fit">
                 <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base">فئات المنتجات</h3>
@@ -71,26 +65,6 @@
                     استراتيجية الشركة مبنية على تقديم أفضل أنواع البن بأسعار معقولة وتنافسية من خلال الطحن والتغليف بأحدث التقنيات والحلول الجديدة والمبتكرة، وتعمل الشركة على اتساع نقاط الانتشار بوجود فروعنا.
                 </p>
             </div>
-
-            <!-- بطاقة بيانات التواصل -->
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 space-y-3">
-                <h3 class="font-bold text-amber-900 border-b pb-2 text-sm">📞 تواصل معنا</h3>
-                <div class="space-y-2 text-xs text-gray-700">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold">📱 رقم التواصل:</span>
-                        <a href="tel:01021855525" dir="ltr" class="text-amber-800 font-semibold hover:underline">01021855525</a>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold">💬 واتساب:</span>
-                        <a href="https://wa.me/201021855525" target="_blank" dir="ltr" class="text-emerald-700 font-semibold hover:underline">01021855525</a>
-                    </div>
-                    <div class="pt-1 border-t flex justify-around gap-2">
-                        <a href="https://www.facebook.com/algharabawycoffee" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1.5 rounded text-[11px] font-bold transition flex-1 text-center">فيسبوك</a>
-                        <a href="https://www.instagram.com/algharabawycoffee?stkn=bXVuc3piNHIyM3V1" target="_blank" class="bg-pink-600 hover:bg-pink-700 text-white px-2 py-1.5 rounded text-[11px] font-bold transition flex-1 text-center">انستجرام</a>
-                        <a href="https://www.tiktok.com/@algharabawycoffee?is_from_webapp=1&sender_device=pc" target="_blank" class="bg-gray-900 hover:bg-black text-white px-2 py-1.5 rounded text-[11px] font-bold transition flex-1 text-center">تيك توك</a>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- القسم الأوسط: شريط البحث والأقسام والأكثر مبيعاً -->
@@ -100,7 +74,7 @@
                 <input type="text" id="productSearchInput" oninput="searchProducts(this.value)" placeholder="🔍 ابحث عن أي صنف بن أو نكهة..." class="w-full px-4 py-2 text-sm border rounded-xl focus:outline-none focus:border-amber-700 bg-gray-50">
             </div>
 
-            <!-- قسم الأصناف الأعلى تقييماً (ديناميكي بالكامل يتغير حسب الأصناف الحاوية على أعلى التقييمات) -->
+            <!-- قسم الأصناف الأعلى تقييماً -->
             <div id="bestSellersSection" class="bg-gradient-to-r from-amber-900 to-amber-800 text-white p-4 rounded-xl shadow-md border border-amber-900 space-y-3">
                 <div class="flex justify-between items-center border-b border-amber-700/60 pb-2">
                     <h3 class="font-bold text-sm flex items-center gap-1.5">
@@ -123,7 +97,7 @@
                     <span>ملاحظة هامة: جميع أصناف الأربيكات متوفرة بدرجة تحميص (وسط) فقط لضمان أفضل طعم ومذاق للقهوة.</span>
                 </div>
 
-                <!-- قسم مبتكر التوليفات الخاصة بالأوزان والتحميص والسادة/المحوج -->
+                <!-- قسم مبتكر التوليفات الخاصة -->
                 <div id="customBlendSection" class="hidden space-y-3">
                     <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-xs space-y-3">
                         <div class="flex justify-between items-center border-b pb-2">
@@ -131,7 +105,6 @@
                             <button type="button" onclick="addBlendRow()" class="bg-amber-800 hover:bg-amber-900 text-white px-3 py-1.5 rounded-lg font-bold transition text-xs">+ إضافة صنف آخر</button>
                         </div>
 
-                        <!-- إعدادات التحميص والنوع للتوليفة بالكامل -->
                         <div class="grid grid-cols-2 gap-2 bg-white p-3 rounded-lg border border-amber-200">
                             <div>
                                 <label class="block font-semibold mb-1">نوع التوليفة:</label>
@@ -150,7 +123,6 @@
                             </div>
                         </div>
 
-                        <!-- حاوية صفوف الأصناف -->
                         <div id="blendRowsContainer" class="space-y-2"></div>
 
                         <div class="bg-white p-3 rounded-lg border border-amber-300 flex justify-between items-center font-bold text-amber-900">
@@ -171,7 +143,6 @@
             <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base">🛒 سلة مشترياتك</h3>
             
             <form id="orderForm" class="space-y-3">
-                <!-- بانر إعادة الطلب السريع -->
                 <div id="quickReorderBanner" class="hidden bg-amber-50 border border-amber-300 p-3 rounded-xl text-xs space-y-2 shadow-sm">
                     <p class="font-bold text-amber-900">✨ أهلاً بك مجدداً! وجدنا آخر أوردر لك:</p>
                     <p id="quickReorderText" class="text-gray-700 font-semibold"></p>
@@ -501,19 +472,15 @@
         </div>
     </div>
 
-    <!-- تذييل الموقع (Footer) الداكن المنسق تماماً حسب تصميم الصورة المرفقة -->
+    <!-- تذييل الموقع (Footer) الداكن المتكامل مع أزرار التواصل الاجتماعي والواتساب والسياسات -->
     <footer class="bg-[#12100e] text-[#d6cdbe] pt-12 pb-6 border-t border-amber-950/60 mt-16 dir-rtl">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-start">
             
-            <!-- العمود 1: اتصل بنا (يمين الصورة المرفقة) -->
+            <!-- العمود 1: اتصل بنا -->
             <div class="space-y-3 text-right w-full">
                 <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2">اتصل بنا</h3>
                 <div class="space-y-2 text-xs">
                     <p class="text-2xl font-black text-[#f1ab28] tracking-widest font-mono" dir="ltr">01021855525</p>
-                    <p class="text-[#3ed481] font-semibold flex items-center justify-start gap-1">
-                        <span>💬 واتساب:</span>
-                        <a href="https://wa.me/201021855525" target="_blank" dir="ltr" class="hover:underline">01021855525</a>
-                    </p>
                     <p class="text-[#a89d8c] flex items-center gap-1">
                         <span>📍</span>
                         <span>التوصيل متاح لجميع فروع القاهرة والجيزة</span>
@@ -544,7 +511,7 @@
                 </ul>
             </div>
 
-            <!-- العمود 4: بن الغرباوي (يسار الصورة المرفقة) -->
+            <!-- العمود 4: بن الغرباوي -->
             <div class="space-y-3 text-right w-full">
                 <div class="flex items-center gap-3">
                     <h2 class="text-xl font-black text-[#e5a639]">بن الغرباوي</h2>
@@ -559,7 +526,31 @@
 
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 mt-10 pt-4 border-t border-stone-800/80 text-center text-[11px] text-[#857b6f] flex flex-col sm:flex-row justify-between items-center gap-2">
+        <!-- أزرار وسائل التواصل الاجتماعي والواتساب الدائرية الأنيقة -->
+        <div class="max-w-7xl mx-auto px-6 mt-8 pt-6 border-t border-stone-800/60 flex justify-center items-center gap-4">
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/algharabawycoffee" target="_blank" aria-label="Facebook" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/algharabawycoffee?stkn=bXVuc3piNHIyM3V1" target="_blank" aria-label="Instagram" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <!-- TikTok -->
+            <a href="https://www.tiktok.com/@algharabawycoffee?is_from_webapp=1&sender_device=pc" target="_blank" aria-label="TikTok" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.98-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.56-1.31 1.56-1.28 2.55.02 1.01.54 1.98 1.37 2.52.84.56 1.94.67 2.87.31 1-.38 1.71-1.32 1.83-2.38.04-1.21.02-2.42.02-3.63V.02z"/></svg>
+            </a>
+            <!-- WhatsApp -->
+            <a href="https://wa.me/201021855525" target="_blank" aria-label="WhatsApp" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.124-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            </a>
+            <!-- YouTube -->
+            <a href="#" target="_blank" aria-label="YouTube" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 mt-6 pt-4 border-t border-stone-800/80 text-center text-[11px] text-[#857b6f] flex flex-col sm:flex-row justify-between items-center gap-2">
             <p>© 2026 بن الغرباوي. جميع الحقوق محفوظة.</p>
             <p class="flex items-center gap-1"><span>☕</span> <span>تصميم وتطوير نظام طلبات بن الغرباوي</span></p>
         </div>
@@ -1265,7 +1256,7 @@
             }
         }
 
-        // دالة الدخول الحسابات والـ OTP
+        // الحسابات والـ OTP
         async function openAuthModal() { 
             document.getElementById('authModal').classList.remove('hidden'); 
             checkUserSession(); 
