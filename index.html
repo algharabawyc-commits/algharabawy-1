@@ -28,8 +28,7 @@
                 <button onclick="openAuthModal()" id="authNavBtn" class="bg-amber-700 hover:bg-amber-800 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
                     <span>👤 حسابي</span>
                 </button>
-                <!-- زر التحميل المحدث ديناميكياً ليقرأ من version.json تلقائياً -->
-                <a id="downloadAppBtn" href="#" download target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow hidden md:flex items-center gap-1">
+                <a href="https://github.com/algharabawyc-commits/algharabawy-1/raw/d619c10c5c5b7e2ae9f717cadffd430b5aa16c19/AlgharabawyOrders%201.apk" download class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow hidden md:flex items-center gap-1">
                     <span>📥 تحميل الأبلكيشن APK</span>
                 </a>
                 <div class="text-xs sm:text-sm bg-amber-950 px-3 py-1.5 rounded-lg border border-amber-800 hidden lg:block">
@@ -154,13 +153,18 @@
                     لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.
                 </div>
 
-                <div id="cartTotalSummary" class="hidden bg-amber-900 text-white p-3 rounded-lg text-xs font-bold space-y-1 shadow-inner">
-                    <div class="flex justify-between items-center">
-                        <span>إجمالي الفاتورة:</span>
-                        <span id="totalAmountText" class="text-amber-200 text-sm font-extrabold">0.00 ج.م</span>
+                <div id="cartTotalSummary" class="hidden bg-amber-900 text-white p-3 rounded-lg text-xs font-bold space-y-1.5 shadow-inner">
+                    <div class="flex justify-between items-center text-xs">
+                        <span>قيمة المنتجات:</span>
+                        <span id="subtotalAmountText">0.00 ج.م</span>
                     </div>
-                    <div class="text-[11px] text-amber-200/90 text-center border-t border-amber-800 pt-1 font-normal">
-                        + مصاريف الشحن
+                    <div class="flex justify-between items-center text-xs border-t border-amber-800 pt-1">
+                        <span id="shippingLabelText">مصاريف الشحن (بالكيلو):</span>
+                        <span id="shippingAmountText">15.00 ج.م</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-amber-700 pt-1 text-amber-200">
+                        <span class="font-extrabold text-sm">إجمالي الفاتورة النهائية:</span>
+                        <span id="totalAmountText" class="text-base font-black">0.00 ج.م</span>
                     </div>
                 </div>
 
@@ -188,7 +192,7 @@
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <label class="block text-xs font-semibold text-gray-700">اختر الفرع الأقرب</label>
-                        <button type="button" onclick="findNearestBranch()" class="text-[11px] text-amber-700 font-bold hover:underline flex items-center gap-1">📍 تحديد أقرب فرع بالـ GPS</button>
+                        <button type="button" onclick="findNearestBranch()" class="text-[11px] text-amber-700 font-bold hover:underline flex items-center gap-1">📍 تحديد موقعي وحساب الشحن بالـ GPS</button>
                     </div>
                     <select id="region" onchange="updateBranchAddress()" class="w-full px-3 py-2 text-sm border rounded-lg bg-white focus:outline-none">
                         <option value="أم المصريين">أم المصريين</option>
@@ -444,7 +448,7 @@
                 <button onclick="closeModal('shippingPolicyModal')" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
             <p class="text-xs text-gray-700 leading-relaxed">
-                خدمة الشحن والتوصيل لمنازلكم متاحة <strong>على مدار الأسبوع طوال أيام الأسبوع</strong>، وذلك ابتداءً من الساعة <strong>12 ظهراً وحتى الساعة 12 مساءً</strong> لضمان وصول أجود أنواع البن الطازج إليكم في أسرع وقت وتغطية كافة فروعنا بالقاهرة والجيزة.
+                خدمة الشحن والتوصيل لمنازلكم متاحة <strong>على مدار الأسبوع طوال أيام الأسبوع</strong>، وذلك ابتداءً من الساعة <strong>12 ظهراً وحتى الساعة 12 مساءً</strong> لضمان وصول أجود أنواع البن الطازج إليكم في أسرع وقت وتغطية كافة فروعنا بالقاهرة والجيزة. يتم احتساب مصاريف الشحن تلقائياً بـ 10 جنيهات لكل كيلومتر بناءً على مسافة الفرع.
             </p>
             <button onclick="closeModal('shippingPolicyModal')" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg text-xs font-bold transition">حسناً، فهمت</button>
         </div>
@@ -558,17 +562,6 @@
     </footer>
 
     <script>
-        // جلب رابط التحديث تلقائياً من ملف version.json لزر التحميل في الموقع
-        fetch('version.json')
-            .then(response => response.json())
-            .then(data => {
-                const downloadBtn = document.getElementById('downloadAppBtn');
-                if (data.downloadUrl && downloadBtn) {
-                    downloadBtn.href = data.downloadUrl;
-                }
-            })
-            .catch(error => console.error('خطأ في جلب رابط الأبليكيشن:', error));
-
         // إعدادات اتصال Supabase
         const SUPABASE_URL = 'https://csroadhvynbSksqncrur.supabase.co';
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGcXPVopb4DItZ2LY6V1vQ_bQ3vf30C';
@@ -592,6 +585,9 @@
             "زهراء المعادي": { lat: 29.9523, lng: 31.3102, address: "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة" }
         };
 
+        // متغير لتخزين مصاريف الشحن الحالية (افتراضياً 15 جنيه أو حسب المسافة)
+        let shippingCost = 15.0;
+
         function updateBranchAddress() {
             const selectedBranch = document.getElementById('region').value;
             const addressBox = document.getElementById('branchAddressBox');
@@ -600,6 +596,20 @@
             } else {
                 addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
             }
+            renderCart();
+        }
+
+        // دالة حساب المسافة بين نقطتين (Haversine formula) بالكيلومتر
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // نصف قطر الأرض بالكيلومتر
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; // المسافة بالكيلومتر
         }
 
         function findNearestBranch() {
@@ -617,7 +627,7 @@
 
                 Object.keys(branchLocations).forEach(branchName => {
                     const b = branchLocations[branchName];
-                    const dist = Math.sqrt(Math.pow(userLat - b.lat, 2) + Math.pow(userLng - b.lng, 2));
+                    const dist = calculateDistance(userLat, userLng, b.lat, b.lng);
                     if (dist < minDistance) {
                         minDistance = dist;
                         nearestBranch = branchName;
@@ -627,7 +637,15 @@
                 if (nearestBranch) {
                     document.getElementById('region').value = nearestBranch;
                     updateBranchAddress();
-                    alert(`تم تحديد أقرب فرع إليك بنجاح: "${nearestBranch}" 📍`);
+                    
+                    // حساب مصاريف الشحن: 10 جنيه لكل كيلومتر (مع حد أدنى 10 جنيه مثلاً)
+                    let calculatedShipping = Math.round(minDistance * 10);
+                    if (calculatedShipping < 10) calculatedShipping = 10;
+                    
+                    shippingCost = calculatedShipping;
+                    renderCart();
+
+                    alert(`تم تحديد أقرب فرع إليك: "${nearestBranch}" 📍\nالمسافة تقريباً: ${minDistance.toFixed(1)} كم\nتم حساب مصاريف الشحن تلقائياً: ${shippingCost} ج.م (10 ج/كم)`);
                 }
             }, error => {
                 alert('تعذر الوصول لموقعك الجغرافي. تأكد من السماح للمتصفح بالوصول لموقعك.');
@@ -1224,6 +1242,8 @@
         function renderCart() {
             const container = document.getElementById('cartItemsContainer');
             const totalSummary = document.getElementById('cartTotalSummary');
+            const subtotalText = document.getElementById('subtotalAmountText');
+            const shippingText = document.getElementById('shippingAmountText');
             const totalAmountText = document.getElementById('totalAmountText');
             
             const floatingBtn = document.getElementById('floatingCartBtn');
@@ -1242,10 +1262,10 @@
             container.className = "bg-amber-100/70 p-3 rounded-lg border border-amber-300 text-right text-xs text-amber-900 space-y-2 transition-all duration-300";
             container.innerHTML = '';
 
-            let grandTotal = 0;
+            let subtotal = 0;
 
             cart.forEach((cartItem, index) => {
-                grandTotal += cartItem.price;
+                subtotal += cartItem.price;
                 const div = document.createElement('div');
                 div.className = "flex justify-between items-center bg-white p-2 rounded border border-amber-200";
                 div.innerHTML = `
@@ -1258,8 +1278,12 @@
                 container.appendChild(div);
             });
 
-            totalSummary.classList.remove('hidden');
+            let grandTotal = subtotal + shippingCost;
+
+            subtotalText.textContent = subtotal.toFixed(2) + ' ج.م';
+            shippingText.textContent = shippingCost.toFixed(2) + ' ج.م';
             totalAmountText.textContent = grandTotal.toFixed(2) + ' ج.م';
+            totalSummary.classList.remove('hidden');
 
             if (floatingBtn) {
                 floatingBtn.classList.remove('hidden');
@@ -1677,7 +1701,8 @@
             }
             
             const combinedDetails = cart.map(item => item.text).join(' + ');
-            const grandTotal = cart.reduce((sum, item) => sum + item.price, 0);
+            let subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+            let grandTotal = subtotal + shippingCost;
             const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
 
             try {
@@ -1695,7 +1720,7 @@
                     phone1: phone1Val,
                     phone2: phone2Val,
                     details: combinedDetails,
-                    total_price: grandTotal.toFixed(2) + ' ج.م',
+                    total_price: grandTotal.toFixed(2) + ' ج.م (شامل شحن ' + shippingCost + ' ج)',
                     address: addressVal,
                     region: selectedBranch,
                     status: 'جديد (في انتظار الاستلام)'
