@@ -24,7 +24,7 @@
                 <span class="text-xs bg-amber-800 px-2.5 py-1 rounded-full text-amber-200 hidden sm:inline-block">من 12 صباحاً حتى 12 مساءً</span>
             </div>
             <div class="flex items-center gap-2">
-                <!-- زر حسابي (OTP) -->
+                <!-- زر حسابي الجديد (OTP) -->
                 <button onclick="openAuthModal()" id="authNavBtn" class="bg-amber-700 hover:bg-amber-800 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
                     <span>👤 حسابي</span>
                 </button>
@@ -92,11 +92,12 @@
 
         <!-- القسم الأوسط: شريط البحث والأقسام والأكثر مبيعاً -->
         <div class="lg:col-span-2 space-y-4">
+            <!-- شريط البحث السريع -->
             <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200">
                 <input type="text" id="productSearchInput" oninput="searchProducts(this.value)" placeholder="🔍 ابحث عن أي صنف بن أو نكهة..." class="w-full px-4 py-2 text-sm border rounded-xl focus:outline-none focus:border-amber-700 bg-gray-50">
             </div>
 
-            <!-- قسم الأصناف الأعلى تقييماً -->
+            <!-- قسم الأصناف الأعلى تقييماً (ديناميكي بالكامل) -->
             <div id="bestSellersSection" class="bg-gradient-to-r from-amber-900 to-amber-800 text-white p-4 rounded-xl shadow-md border border-amber-900 space-y-3">
                 <div class="flex justify-between items-center border-b border-amber-700/60 pb-2">
                     <h3 class="font-bold text-sm flex items-center gap-1.5">
@@ -113,6 +114,7 @@
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                 <h2 class="text-lg font-bold text-amber-900 mb-3" id="categoryTitle">🔥 التوليفات الأساسية</h2>
                 
+                <!-- ملاحظة قسم الأربيكات -->
                 <div id="arabicaNotice" class="hidden bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs font-bold text-amber-900 mb-3 flex items-center gap-2 shadow-sm">
                     <span>🌟</span>
                     <span>ملاحظة هامة: جميع أصناف الأربيكات متوفرة بدرجة تحميص (وسط) فقط لضمان أفضل طعم ومذاق للقهوة.</span>
@@ -244,7 +246,16 @@
 
     </main>
 
-    <!-- نافذة منبثقة لتخصيص الصنف -->
+    <!-- زر السلة العائم للهواتف المحمولة -->
+    <div id="floatingCartBtn" onclick="scrollToCart()" class="fixed bottom-4 left-4 right-4 bg-amber-900 text-white px-4 py-3 rounded-2xl shadow-2xl border-2 border-amber-400 z-40 flex justify-between items-center cursor-pointer hidden lg:hidden transition-transform duration-300">
+        <div class="flex items-center gap-2">
+            <span class="bg-amber-700 text-amber-200 text-xs px-2.5 py-1 rounded-xl font-bold" id="floatingCartCount">0 أصناف</span>
+            <span class="text-xs font-bold">🛒 عرض سلة المشتريات</span>
+        </div>
+        <span class="text-sm font-extrabold text-amber-200" id="floatingCartTotal">0.00 ج.م</span>
+    </div>
+
+    <!-- نافذة منبثقة (Modal) لتخصيص الصنف -->
     <div id="customizerModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <h3 class="text-lg font-bold text-amber-900" id="modalTitle">تخصيص الطلب</h3>
@@ -267,7 +278,7 @@
             </div>
 
             <div id="espressoGrindWrapper" class="hidden">
-                <label class="block text-xs font-bold text-amber-900 mb-1">☕ دليل طحن الإسبريسو:</label>
+                <label class="block text-xs font-bold text-amber-900 mb-1">☕ دليل طحن الإسبريسو (اختر طريقة التحضير):</label>
                 <select id="modalEspressoGrind" class="w-full p-2.5 border border-amber-300 rounded-lg text-xs bg-amber-50 font-semibold text-amber-900">
                     <option value="طحنة إسبريسو (ماكينة إسبيرسو)" selected>ماكينة إسبريسو (طحنة إسبريسو)</option>
                     <option value="طحنة متوسطة (فلتر / V60)">فلتر / V60 (طحنة متوسطة)</option>
@@ -305,7 +316,7 @@
         </div>
     </div>
 
-    <!-- نافذة تتبع الطلب -->
+    <!-- نافذة منبثقة (Modal) لتتبع الطلب وتقييمه وتعديله وإلغائه -->
     <div id="trackModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
@@ -325,7 +336,7 @@
         </div>
     </div>
 
-    <!-- نافذة تعديل الطلب -->
+    <!-- نافذة منبثقة لتعديل الطلب -->
     <div id="editOrderModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
@@ -336,7 +347,7 @@
                 <input type="hidden" id="editOriginalId">
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">المنتجات والطلبات</label>
-                    <textarea id="editOrderDetails" rows="3" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none"></textarea>
+                    <textarea id="editOrderDetails" rows="3" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-amber-600"></textarea>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -381,7 +392,7 @@
         </div>
     </div>
 
-    <!-- نافذة تسجيل الدخول برمز التحقق الرقمي (OTP) -->
+    <!-- نافذة تسجيل الدخول برمز التحقق (OTP) أو عرض الملف الشخصي (متوافقة مع تصميم بن شاهين) -->
     <div id="authModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-3">
@@ -391,7 +402,7 @@
 
             <!-- الحالة 1: إدخال البريد الإلكتروني -->
             <div id="authEmailStep" class="space-y-4">
-                <p class="text-xs text-gray-600">أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق مكون من أرقام لتسجيل الدخول مباشرة:</p>
+                <p class="text-xs text-gray-600">أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق سريع لتسجيل الدخول مباشرة بدون كلمة مرور:</p>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">البريد الإلكتروني</label>
                     <input type="email" id="userEmailInput" placeholder="name@example.com" class="w-full p-3 border rounded-xl text-sm focus:outline-none focus:border-amber-700">
@@ -399,9 +410,9 @@
                 <button onclick="sendOtpCode()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-3 rounded-xl font-bold text-sm transition shadow">إرسال رمز التحقق</button>
             </div>
 
-            <!-- الحالة 2: إدخال رمز الأرقام المُستلم -->
+            <!-- الحالة 2: إدخال الرمز المُستلم -->
             <div id="authOtpStep" class="space-y-4 hidden">
-                <p class="text-xs text-gray-600">تم إرسال رمز التحقق إلى بريدك الإلكتروني. أدخل الأرقام هنا:</p>
+                <p class="text-xs text-gray-600">تم إرسال رمز التحقق إلى بريدك الإلكتروني. أدخل الرمز المكون من أرقام هنا:</p>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">رمز التحقق (OTP)</label>
                     <input type="text" id="otpCodeInput" placeholder="123456" class="w-full p-3 border rounded-xl text-center tracking-widest text-lg font-mono focus:outline-none focus:border-amber-700">
@@ -410,7 +421,7 @@
                 <button onclick="resetAuthSteps()" class="w-full text-xs text-gray-500 hover:underline text-center">← تغيير البريد الإلكتروني</button>
             </div>
 
-            <!-- الحالة 3: عرض الملف الشخصي -->
+            <!-- الحالة 3: مسجل الدخول (عرض الملف الشخصي) -->
             <div id="userProfileStep" class="space-y-4 hidden">
                 <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 flex items-center justify-between">
                     <div>
@@ -954,6 +965,8 @@
             renderCart();
         }
 
+        function scrollToCart() { document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' }); }
+
         function renderCart() {
             const container = document.getElementById('cartItemsContainer');
             const totalSummary = document.getElementById('cartTotalSummary');
@@ -977,7 +990,7 @@
             document.getElementById('totalAmountText').textContent = grandTotal.toFixed(2) + ' ج.م';
         }
 
-        // --- نظام تسجيل الدخول برمز التحقق الرقمي (OTP) المعدل ---
+        // --- نظام تسجيل الدخول عبر البريد الإلكتروني ورمز التحقق (OTP) ---
         async function openAuthModal() {
             document.getElementById('authModal').classList.remove('hidden');
             checkUserSession();
@@ -999,22 +1012,9 @@
                 alert('الرجاء إدخال بريد إلكتروني صحيح!');
                 return;
             }
-
-            // إرسال رمز التحقق الرقمي (OTP) بدون روابط توجيه
-            const { error } = await supabaseClient.auth.signInWithOtp({ 
-                email: email,
-                options: {
-                    shouldCreateUser: true,
-                    emailRedirectTo: null
-                }
-            });
-
-            if (error) {
-                alert('حدث خطأ أثناء إرسال الرمز: ' + error.message);
-                return;
-            }
-
-            alert('تم إرسال رمز التحقق (الأرقام) إلى بريدك الإلكتروني بنجاح! يرجى فحصه وإدخاله.');
+            const { error } = await supabaseClient.auth.signInWithOtp({ email });
+            if (error) { alert('خطأ: ' + error.message); return; }
+            alert('تم إرسال رمز التحقق إلى بريدك الإلكتروني بنجاح!');
             document.getElementById('authEmailStep').classList.add('hidden');
             document.getElementById('authOtpStep').classList.remove('hidden');
         }
@@ -1022,23 +1022,8 @@
         async function verifyOtpCode() {
             const email = document.getElementById('userEmailInput').value.trim();
             const token = document.getElementById('otpCodeInput').value.trim();
-
-            if (!token) {
-                alert('الرجاء إدخال الرمز!');
-                return;
-            }
-
-            const { data, error } = await supabaseClient.auth.verifyOtp({
-                email: email,
-                token: token,
-                type: 'email'
-            });
-
-            if (error) {
-                alert('الرمز غير صحيح أو انتهت صلاحيته: ' + error.message);
-                return;
-            }
-
+            const { data, error } = await supabaseClient.auth.verifyOtp({ email, token, type: 'email' });
+            if (error) { alert('الرمز غير صحيح: ' + error.message); return; }
             alert('تم تسجيل الدخول بنجاح!');
             showProfileView(data.user);
         }
@@ -1082,12 +1067,20 @@
             document.getElementById('authEmailStep').classList.remove('hidden');
             document.getElementById('authOtpStep').classList.add('hidden');
             document.getElementById('userProfileStep').classList.add('hidden');
-            document.getElementById('userEmailInput').value = '';
-            document.getElementById('otpCodeInput').value = '';
         }
 
         function openTrackModal() { document.getElementById('trackModal').classList.remove('hidden'); }
         function closeTrackModal() { document.getElementById('trackModal').classList.add('hidden'); }
+        function openEditModal(id, n, p1, p2, addr, reg, det) {
+            document.getElementById('editOriginalId').value = id;
+            document.getElementById('editOrderIdDisplay').textContent = id;
+            document.getElementById('editCustomerName').value = n;
+            document.getElementById('editPhone1').value = p1;
+            document.getElementById('editPhone2').value = p2 !== 'undefined' ? p2 : '';
+            document.getElementById('editCustomerAddress').value = addr;
+            document.getElementById('editOrderDetails').value = det;
+            document.getElementById('editOrderModal').classList.remove('hidden');
+        }
         function closeEditModal() { document.getElementById('editOrderModal').classList.add('hidden'); }
 
         async function searchOrdersForTracking() {
