@@ -8,12 +8,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- مكتبة Supabase JS للربط بقاعدة البيانات -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>body { font-family: 'Cairo', sans-serif; }</style>
 </head>
 <body class="bg-gray-100 min-h-screen pb-20 lg:pb-0">
 
-    <!-- شريط العرض العلوي مع اللوجو وأزرار التحكم -->
+    <!-- شريط العرض العلوي مع اللوجو وزر التتبع والحساب -->
     <header class="bg-amber-900 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -24,7 +24,7 @@
                 <span class="text-xs bg-amber-800 px-2.5 py-1 rounded-full text-amber-200 hidden sm:inline-block">من 12 صباحاً حتى 12 مساءً</span>
             </div>
             <div class="flex items-center gap-2">
-                <!-- زر حسابي الجديد (OTP) -->
+                <!-- زر حسابي مع الـ OTP -->
                 <button onclick="openAuthModal()" id="authNavBtn" class="bg-amber-700 hover:bg-amber-800 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
                     <span>👤 حسابي</span>
                 </button>
@@ -37,6 +37,9 @@
                 <button onclick="openTrackModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
                     <span>🔍 تتبع طلبك وتعديله</span>
                 </button>
+                <div class="text-xs sm:text-sm bg-amber-950 px-3 py-1.5 rounded-lg border border-amber-800 hidden lg:block">
+                    <span>التوصيل متاح لجميع فروع القاهرة والجيزة</span>
+                </div>
             </div>
         </div>
     </header>
@@ -97,7 +100,7 @@
                 <input type="text" id="productSearchInput" oninput="searchProducts(this.value)" placeholder="🔍 ابحث عن أي صنف بن أو نكهة..." class="w-full px-4 py-2 text-sm border rounded-xl focus:outline-none focus:border-amber-700 bg-gray-50">
             </div>
 
-            <!-- قسم الأصناف الأعلى تقييماً (ديناميكي بالكامل) -->
+            <!-- قسم الأصناف الأعلى تقييماً (ديناميكي بالكامل يتغير حسب الأصناف الحاوية على أعلى التقييمات) -->
             <div id="bestSellersSection" class="bg-gradient-to-r from-amber-900 to-amber-800 text-white p-4 rounded-xl shadow-md border border-amber-900 space-y-3">
                 <div class="flex justify-between items-center border-b border-amber-700/60 pb-2">
                     <h3 class="font-bold text-sm flex items-center gap-1.5">
@@ -120,7 +123,7 @@
                     <span>ملاحظة هامة: جميع أصناف الأربيكات متوفرة بدرجة تحميص (وسط) فقط لضمان أفضل طعم ومذاق للقهوة.</span>
                 </div>
 
-                <!-- قسم مبتكر التوليفات الخاصة -->
+                <!-- قسم مبتكر التوليفات الخاصة بالأوزان والتحميص والسادة/المحوج -->
                 <div id="customBlendSection" class="hidden space-y-3">
                     <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-xs space-y-3">
                         <div class="flex justify-between items-center border-b pb-2">
@@ -128,6 +131,7 @@
                             <button type="button" onclick="addBlendRow()" class="bg-amber-800 hover:bg-amber-900 text-white px-3 py-1.5 rounded-lg font-bold transition text-xs">+ إضافة صنف آخر</button>
                         </div>
 
+                        <!-- إعدادات التحميص والنوع للتوليفة بالكامل -->
                         <div class="grid grid-cols-2 gap-2 bg-white p-3 rounded-lg border border-amber-200">
                             <div>
                                 <label class="block font-semibold mb-1">نوع التوليفة:</label>
@@ -146,6 +150,7 @@
                             </div>
                         </div>
 
+                        <!-- حاوية صفوف الأصناف -->
                         <div id="blendRowsContainer" class="space-y-2"></div>
 
                         <div class="bg-white p-3 rounded-lg border border-amber-300 flex justify-between items-center font-bold text-amber-900">
@@ -166,6 +171,7 @@
             <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base">🛒 سلة مشترياتك</h3>
             
             <form id="orderForm" class="space-y-3">
+                <!-- بانر إعادة الطلب السريع -->
                 <div id="quickReorderBanner" class="hidden bg-amber-50 border border-amber-300 p-3 rounded-xl text-xs space-y-2 shadow-sm">
                     <p class="font-bold text-amber-900">✨ أهلاً بك مجدداً! وجدنا آخر أوردر لك:</p>
                     <p id="quickReorderText" class="text-gray-700 font-semibold"></p>
@@ -277,6 +283,7 @@
                 </select>
             </div>
 
+            <!-- دليل وطحنة الإسبريسو -->
             <div id="espressoGrindWrapper" class="hidden">
                 <label class="block text-xs font-bold text-amber-900 mb-1">☕ دليل طحن الإسبريسو (اختر طريقة التحضير):</label>
                 <select id="modalEspressoGrind" class="w-full p-2.5 border border-amber-300 rounded-lg text-xs bg-amber-50 font-semibold text-amber-900">
@@ -323,6 +330,7 @@
                 <h3 class="text-lg font-bold text-amber-900">🔍 تتبع طلبك وتعديله وتقييمه</h3>
                 <button onclick="closeTrackModal()" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
+
             <div class="space-y-3">
                 <label class="block text-xs font-bold text-gray-700">ادخل رقم الهاتف المستخدم في الطلب:</label>
                 <div class="flex gap-2">
@@ -330,43 +338,50 @@
                     <button onclick="searchOrdersForTracking()" class="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded-lg text-xs font-bold transition">بحث</button>
                 </div>
             </div>
+
             <div id="trackResultsContainer" class="space-y-3 pt-2">
-                <p class="text-center text-xs text-gray-400">أدخل رقم الهاتف واضغط بحث لعرض تفاصيل طلباتك وحالتها.</p>
+                <p class="text-center text-xs text-gray-400">أدخل رقم الهاتف واضغط بحث لعرض تفاصيل طلباتك وحالتها من قاعدة البيانات.</p>
             </div>
         </div>
     </div>
 
-    <!-- نافذة منبثقة لتعديل الطلب -->
+    <!-- نافذة منبثقة (Modal) لتعديل تفاصيل الطلب وبيانات العميل -->
     <div id="editOrderModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="text-lg font-bold text-amber-900">✏️ تعديل الطلب رقم: <span id="editOrderIdDisplay"></span></h3>
                 <button onclick="closeEditModal()" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
+
             <form id="editOrderForm" class="space-y-3" onsubmit="saveOrderChanges(event)">
                 <input type="hidden" id="editOriginalId">
+
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">المنتجات والطلبات</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">المنتجات والطلبات (يمكنك تعديلها كتابةً)</label>
                     <textarea id="editOrderDetails" rows="3" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-amber-600"></textarea>
                 </div>
+
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل أساسي</label>
-                        <input type="tel" id="editPhone1" required maxlength="11" class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none">
+                        <input type="tel" id="editPhone1" required maxlength="11" class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-amber-600">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل إضافي</label>
                         <input type="tel" id="editPhone2" maxlength="11" class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none">
                     </div>
                 </div>
+
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">اسم العميل</label>
                     <input type="text" id="editCustomerName" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none">
                 </div>
+
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">العنوان بالتفصيل</label>
                     <textarea id="editCustomerAddress" rows="2" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none"></textarea>
                 </div>
+
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">اختر الفرع</label>
                     <select id="editRegion" class="w-full px-3 py-2 text-xs border rounded-lg bg-white focus:outline-none">
@@ -384,6 +399,7 @@
                         <option value="زهراء المعادي">زهراء المعادي</option>
                     </select>
                 </div>
+
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeEditModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-bold text-xs">إلغاء</button>
                     <button type="submit" class="w-1/2 bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg font-bold text-xs shadow">حفظ التعديلات</button>
@@ -392,7 +408,7 @@
         </div>
     </div>
 
-    <!-- نافذة تسجيل الدخول برمز التحقق (OTP) أو عرض الملف الشخصي (متوافقة مع تصميم بن شاهين) -->
+    <!-- نافذة تسجيل الدخول برمز التحقق (OTP) أو الملف الشخصي -->
     <div id="authModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-3">
@@ -402,7 +418,7 @@
 
             <!-- الحالة 1: إدخال البريد الإلكتروني -->
             <div id="authEmailStep" class="space-y-4">
-                <p class="text-xs text-gray-600">أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق سريع لتسجيل الدخول مباشرة بدون كلمة مرور:</p>
+                <p class="text-xs text-gray-600 leading-relaxed">أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق سريع لتسجيل الدخول مباشرة بدون كلمة مرور:</p>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">البريد الإلكتروني</label>
                     <input type="email" id="userEmailInput" placeholder="name@example.com" class="w-full p-3 border rounded-xl text-sm focus:outline-none focus:border-amber-700">
@@ -412,7 +428,7 @@
 
             <!-- الحالة 2: إدخال الرمز المُستلم -->
             <div id="authOtpStep" class="space-y-4 hidden">
-                <p class="text-xs text-gray-600">تم إرسال رمز التحقق إلى بريدك الإلكتروني. أدخل الرمز المكون من أرقام هنا:</p>
+                <p class="text-xs text-gray-600 leading-relaxed">تم إرسال رمز التحقق إلى بريدك الإلكتروني. أدخل الرمز المكون من أرقام هنا:</p>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">رمز التحقق (OTP)</label>
                     <input type="text" id="otpCodeInput" placeholder="123456" class="w-full p-3 border rounded-xl text-center tracking-widest text-lg font-mono focus:outline-none focus:border-amber-700">
@@ -445,58 +461,118 @@
         </div>
     </div>
 
-    <!-- تذييل الموقع الاحترافي (Footer) -->
-    <footer class="bg-stone-900 text-stone-300 pt-12 pb-8 border-t border-amber-900/40 mt-16">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="space-y-4">
-                <div class="flex items-center gap-3">
-                    <div class="bg-white p-1.5 rounded-xl inline-block shadow-md">
-                        <img src="https://i.postimg.cc/VvnhkQhY/logo-01.png" alt="بن الغرباوي" class="h-10 w-auto object-contain">
-                    </div>
-                    <h2 class="text-xl font-bold text-amber-500">بن الغرباوي</h2>
+    <!-- نافذة منبثقة: سياسة الشحن والتوصيل -->
+    <div id="shippingPolicyModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-base font-bold text-amber-900 flex items-center gap-2">
+                    <span>🚛</span>
+                    <span>سياسة الشحن والتوصيل</span>
+                </h3>
+                <button onclick="closeModal('shippingPolicyModal')" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
+            </div>
+            <p class="text-xs text-gray-700 leading-relaxed">
+                خدمة الشحن والتوصيل لمنازلكم متاحة <strong>على مدار الأسبوع طوال أيام الأسبوع</strong>، وذلك ابتداءً من الساعة <strong>12 ظهراً وحتى الساعة 12 مساءً</strong> لضمان وصول أجود أنواع البن الطازج إليكم في أسرع وقت وتغطية كافة فروعنا بالقاهرة والجيزة.
+            </p>
+            <button onclick="closeModal('shippingPolicyModal')" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg text-xs font-bold transition">حسناً، فهمت</button>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة: سياسة الخصوصية -->
+    <div id="privacyPolicyModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-base font-bold text-amber-900 flex items-center gap-2">
+                    <span>🔒</span>
+                    <span>سياسة الخصوصية وحماية البيانات</span>
+                </h3>
+                <button onclick="closeModal('privacyPolicyModal')" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
+            </div>
+            <div class="space-y-3 text-xs text-gray-700 leading-relaxed">
+                <p>نحن في <strong>بن الغرباوي</strong> نولي اهتماماً بالغاً بحماية خصوصيتك ومعلوماتك الشخصية. توضح هذه السياسة كيف نجمع ونستخدم ونحمي بياناتك:</p>
+                <ul class="list-disc pr-4 space-y-1.5">
+                    <li><strong>البيانات التي نجمعها:</strong> نقوم بجمع الاسم، أرقام الهواتف، والعنوان عند إتمام طلب الشراء أو تتبع الطلبات لتسهيل عملية التوصيل.</li>
+                    <li><strong>استخدام البيانات:</strong> تُستخدم بياناتك حصرياً لمعالجة أوردراتك، تحسين تجربة التسوق، والتواصل معك في حال وجود استفسار حول الطلب.</li>
+                    <li><strong>أمن المعلومات:</strong> نلتزم بتأمين قواعد بياناتنا ومنع أي وصول غير مصرح به لضمان سرية معلوماتك تماماً.</li>
+                    <li><strong>حقوق المستخدم:</strong> لك الحق الكامل في طلب مراجعة بياناتك المسجلة أو تحديثها في أي وقت عبر التواصل مع خدمة العملاء.</li>
+                </ul>
+            </div>
+            <button onclick="closeModal('privacyPolicyModal')" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg text-xs font-bold transition">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- تذييل الموقع (Footer) الداكن المنسق تماماً حسب تصميم الصورة المرفقة -->
+    <footer class="bg-[#12100e] text-[#d6cdbe] pt-12 pb-6 border-t border-amber-950/60 mt-16 dir-rtl">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-start">
+            
+            <!-- العمود 1: اتصل بنا (يمين الصورة المرفقة) -->
+            <div class="space-y-3 text-right w-full">
+                <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2">اتصل بنا</h3>
+                <div class="space-y-2 text-xs">
+                    <p class="text-2xl font-black text-[#f1ab28] tracking-widest font-mono" dir="ltr">01021855525</p>
+                    <p class="text-[#3ed481] font-semibold flex items-center justify-start gap-1">
+                        <span>💬 واتساب:</span>
+                        <a href="https://wa.me/201021855525" target="_blank" dir="ltr" class="hover:underline">01021855525</a>
+                    </p>
+                    <p class="text-[#a89d8c] flex items-center gap-1">
+                        <span>📍</span>
+                        <span>التوصيل متاح لجميع فروع القاهرة والجيزة</span>
+                    </p>
                 </div>
-                <p class="text-xs text-stone-400 leading-relaxed">
+            </div>
+
+            <!-- العمود 2: السياسات والخدمات -->
+            <div class="space-y-3 text-right w-full">
+                <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2">السياسات والخدمات</h3>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="https://jobapplication-psi.vercel.app/" target="_blank" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>💼</span> <span>التقديم لوظيفة (الأبلكيشن)</span></a></li>
+                    <li><a href="#" onclick="openTrackModal(); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🔍</span> <span>تتبع طلبك وتعديله</span></a></li>
+                    <li><a href="#" onclick="openModal('shippingPolicyModal'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🚚</span> <span>سياسة الشحن والتوصيل</span></a></li>
+                    <li><a href="#" onclick="openModal('privacyPolicyModal'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🔒</span> <span>سياسة الخصوصية</span></a></li>
+                </ul>
+            </div>
+
+            <!-- العمود 3: المتجر -->
+            <div class="space-y-3 text-right w-full">
+                <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2">المتجر</h3>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" onclick="switchCategory('basic'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🔥</span> <span>التوليفات الأساسية</span></a></li>
+                    <li><a href="#" onclick="switchCategory('arabica'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🌟</span> <span>الأربيكات الفاخرة</span></a></li>
+                    <li><a href="#" onclick="switchCategory('french'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>☕</span> <span>الأنواع الفرنسية والإسبريسو</span></a></li>
+                    <li><a href="#" onclick="switchCategory('flavors'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🍫</span> <span>النكهات والإضافات</span></a></li>
+                    <li><a href="#" onclick="switchCategory('customBlend'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🧪</span> <span>مبتكر التوليفات الخاصة</span></a></li>
+                </ul>
+            </div>
+
+            <!-- العمود 4: بن الغرباوي (يسار الصورة المرفقة) -->
+            <div class="space-y-3 text-right w-full">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl font-black text-[#e5a639]">بن الغرباوي</h2>
+                    <div class="bg-white px-2 py-1 rounded-xl shadow inline-block">
+                        <img src="https://i.postimg.cc/VvnhkQhY/logo-01.png" alt="بن الغرباوي" class="h-9 w-auto object-contain">
+                    </div>
+                </div>
+                <p class="text-xs text-[#a89d8c] leading-relaxed text-justify">
                     من محمستنا إلى فنجانك، نلتزم بتقديم أجود أنواع البن وتوليفات القهوة الخاصة بأسعار تنافسية وخبرة متميزة لأكثر من 50 عاماً.
                 </p>
             </div>
-            <div>
-                <h3 class="text-sm font-bold text-amber-500 mb-4 border-b border-stone-800 pb-2">المتجر</h3>
-                <ul class="space-y-2 text-xs text-stone-300">
-                    <li><a href="#" onclick="switchCategory('basic'); return false;" class="hover:text-amber-400 transition">🔥 التوليفات الأساسية</a></li>
-                    <li><a href="#" onclick="switchCategory('arabica'); return false;" class="hover:text-amber-400 transition">🌟 الأربيكات الفاخرة</a></li>
-                    <li><a href="#" onclick="switchCategory('french'); return false;" class="hover:text-amber-400 transition">☕ الأنواع الفرنسية والإسبريسو</a></li>
-                    <li><a href="#" onclick="switchCategory('flavors'); return false;" class="hover:text-amber-400 transition">🍫 النكهات والإضافات</a></li>
-                    <li><a href="#" onclick="switchCategory('customBlend'); return false;" class="hover:text-amber-400 transition">🧪 مبتكر التوليفات الخاصة</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-sm font-bold text-amber-500 mb-4 border-b border-stone-800 pb-2">السياسات والخدمات</h3>
-                <ul class="space-y-2 text-xs text-stone-300">
-                    <li><a href="https://jobapplication-psi.vercel.app/" target="_blank" class="hover:text-amber-400 transition">💼 التقديم لوظيفة (الأبلكيشن)</a></li>
-                    <li><a href="#" onclick="openTrackModal(); return false;" class="hover:text-amber-400 transition">🔍 تتبع طلبك وتعديله</a></li>
-                    <li><a href="#" class="hover:text-amber-400 transition">🚛 سياسة الشحن والتوصيل</a></li>
-                    <li><a href="#" class="hover:text-amber-400 transition">🔒 سياسة الخصوصية</a></li>
-                </ul>
-            </div>
-            <div class="space-y-4">
-                <h3 class="text-sm font-bold text-amber-500 mb-4 border-b border-stone-800 pb-2">اتصل بنا</h3>
-                <div class="space-y-2 text-xs text-stone-300">
-                    <p class="text-2xl font-black text-amber-400 tracking-wider font-mono" dir="ltr">01021855525</p>
-                    <p class="text-stone-400">💬 واتساب: <a href="https://wa.me/201021855525" target="_blank" dir="ltr" class="text-emerald-400 font-semibold hover:underline">01021855525</a></p>
-                    <p class="text-stone-400">📍 التوصيل متاح لجميع فروع القاهرة والجيزة</p>
-                </div>
-            </div>
+
         </div>
-        <div class="max-w-7xl mx-auto px-6 mt-10 pt-4 border-t border-stone-800/80 text-center text-[11px] text-stone-500 flex flex-col sm:flex-row justify-between items-center gap-2">
+
+        <div class="max-w-7xl mx-auto px-6 mt-10 pt-4 border-t border-stone-800/80 text-center text-[11px] text-[#857b6f] flex flex-col sm:flex-row justify-between items-center gap-2">
             <p>© 2026 بن الغرباوي. جميع الحقوق محفوظة.</p>
-            <p>تصميم وتطوير نظام طلبات بن الغرباوي ☕</p>
+            <p class="flex items-center gap-1"><span>☕</span> <span>تصميم وتطوير نظام طلبات بن الغرباوي</span></p>
         </div>
     </footer>
 
     <script>
+        // إعدادات اتصال Supabase
         const SUPABASE_URL = 'https://csroadhvynbSksqncrur.supabase.co';
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGcXPVopb4DItZ2LY6V1vQ_bQ3vf30C';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         const branchLocations = {
             "أم المصريين": { lat: 30.0131, lng: 31.2089, address: "برج السلام 10 شارع صلاح سالم ميدان ام المصريين، الجيزة" },
@@ -528,9 +604,11 @@
                 alert('متصفحك لا يدعم خاصية تحديد الموقع الجغرافي.');
                 return;
             }
+
             navigator.geolocation.getCurrentPosition(position => {
                 const userLat = position.coords.latitude;
                 const userLng = position.coords.longitude;
+
                 let nearestBranch = '';
                 let minDistance = Infinity;
 
@@ -549,7 +627,7 @@
                     alert(`تم تحديد أقرب فرع إليك بنجاح: "${nearestBranch}" 📍`);
                 }
             }, error => {
-                alert('تعذر الوصول لموقعك الجغرافي.');
+                alert('تعذر الوصول لموقعك الجغرافي. تأكد من السماح للمتصفح بالوصول لموقعك.');
             });
         }
 
@@ -628,14 +706,15 @@
         function getAllCatalogProducts() {
             let all = [];
             Object.keys(categoriesData).forEach(catKey => {
-                categoriesData[catKey].items.forEach(p => all.push(p));
+                categoriesData[catKey].items.forEach(p => { all.push(p); });
             });
             return all;
         }
 
         function getBlendAllowedCoffees() {
-            let list = [{ name: 'شرقي', price: getCoffeePriceByName('شرقي') }];
-            arabicaItems.forEach(name => list.push({ name: name, price: getCoffeePriceByName(name) }));
+            let list = [];
+            list.push({ name: 'شرقي', price: getCoffeePriceByName('شرقي') });
+            arabicaItems.forEach(name => { list.push({ name: name, price: getCoffeePriceByName(name) }); });
             return list;
         }
 
@@ -658,17 +737,20 @@
                 let selectVal = isStandard ? row.weight : "أخرى (حدد بالجرام)";
                 let customVal = isStandard ? "" : row.weight;
 
+                let weightsHtml = '';
+                standardWeights.forEach(w => {
+                    let selected = (w === selectVal) ? 'selected' : '';
+                    weightsHtml += `<option value="${w}" ${selected}>${w}</option>`;
+                });
+                weightsHtml += `<option value="أخرى (حدد بالجرام)" ${!isStandard ? 'selected' : ''}>أخرى (حدد بالجرام يدوياً)</option>`;
+
                 div.innerHTML = `
                     <select onchange="updateBlendRowData(${index}, 'coffee', this.value)" class="flex-1 p-2 text-xs border rounded bg-white font-semibold">
                         ${optionsHtml}
                     </select>
                     <div class="flex flex-col gap-1 w-44">
                         <select onchange="handleBlendWeightSelect(${index}, this.value)" class="p-1.5 text-xs border rounded bg-white">
-                            <option value="تمن كيلو (125 جرام)" ${selectVal === 'تمن كيلو (125 جرام)' ? 'selected' : ''}>تمن كيلو (125 جرام)</option>
-                            <option value="ربع كيلو (250 جرام)" ${selectVal === 'ربع كيلو (250 جرام)' ? 'selected' : ''}>ربع كيلو (250 جرام)</option>
-                            <option value="ربعين (نصف كيلو / 500 جرام)" ${selectVal === 'ربعين (نصف كيلو / 500 جرام)' ? 'selected' : ''}>نصف كيلو (500 جرام)</option>
-                            <option value="كيلو (1000 جرام)" ${selectVal === 'كيلو (1000 جرام)' ? 'selected' : ''}>كيلو (1000 جرام)</option>
-                            <option value="أخرى (حدد بالجرام)" ${!isStandard ? 'selected' : ''}>أخرى (بالجرام)</option>
+                            ${weightsHtml}
                         </select>
                         <input type="text" id="custom_weight_${index}" value="${customVal}" oninput="updateBlendCustomWeight(${index}, this.value)" placeholder="مثال: 150 جرام" class="p-1.5 text-xs border rounded bg-white ${isStandard ? 'hidden' : ''}">
                     </div>
@@ -676,6 +758,7 @@
                 `;
                 container.appendChild(div);
             });
+
             calculateCustomBlendTotal();
         }
 
@@ -730,20 +813,26 @@
         }
 
         function addCustomBlendToCart() {
-            if (blendRows.length === 0) return;
+            if (blendRows.length === 0) {
+                alert('الرجاء إضافة صنف واحد على الأقل للتوليفة!');
+                return;
+            }
+
             let blendSubtype = document.getElementById('blendSubtype').value;
             let blendRoast = document.getElementById('blendRoast').value;
             let partsDesc = blendRows.map(r => `${r.weight} ${r.coffee}`).join(' + ');
             let totalP = parseFloat(document.getElementById('blendTotalPrice').textContent);
 
+            let blendDescription = `توليفة خاصة (${partsDesc}) - ${blendSubtype} (تحميص ${blendRoast})`;
+
             cart.push({
-                text: `توليفة خاصة (${partsDesc}) - ${blendSubtype} (${blendRoast})`,
+                text: blendDescription,
                 price: totalP
             });
 
             saveCartToLocalStorage();
             renderCart();
-            alert('تمت إضافة التوليفة الخاصة للسلة بنجاح! 🧪');
+            alert('تمت إضافة توليفَتَك الخاصة إلى السلة بنجاح! 🧪☕');
         }
 
         function loadCartFromLocalStorage() {
@@ -776,10 +865,22 @@
             if (itemName === 'جواتيمالي') return subtype === 'سادة' ? 1320 : 1375;
             if (itemName === 'هندي نيبال') return subtype === 'سادة' ? 1375 : 1430;
             if (itemName === 'كوستاريكي') return subtype === 'سادة' ? 1320 : 1375;
-            if (itemName === 'شرقي') return roast === 'فاتح' ? (subtype === 'سادة' ? 720 : 810) : (subtype === 'سادة' ? 735 : 820);
-            if (itemName === 'مخصوص') return subtype === 'سادة' ? 960 : 1015;
-            if (itemName === 'اسبشيل') return subtype === 'سادة' ? 1015 : 1090;
-            if (itemName === 'الغرباوي') return subtype === 'سادة' ? 1145 : 1235;
+            if (itemName === 'شرقي') {
+                if (roast === 'فاتح') return subtype === 'سادة' ? 720 : 810;
+                if (roast === 'وسط') return subtype === 'سادة' ? 735 : 820;
+                if (roast === 'غامق') return subtype === 'سادة' ? 745 : 830;
+            }
+            if (itemName === 'مخصوص') {
+                if (roast === 'فاتح' || roast === 'وسط') return subtype === 'سادة' ? 960 : 1015;
+                if (roast === 'غامق') return subtype === 'سادة' ? 970 : 1025;
+            }
+            if (itemName === 'اسبشيل') {
+                if (roast === 'فاتح' || roast === 'وسط') return subtype === 'سادة' ? 1015 : 1090;
+                if (roast === 'غامق') return subtype === 'سادة' ? 1025 : 1100;
+            }
+            if (itemName === 'الغرباوي') {
+                return subtype === 'سادة' ? 1145 : 1235;
+            }
             return getCoffeePriceByName(itemName);
         }
 
@@ -787,21 +888,46 @@
             if (!weightStr) return 0.25;
             weightStr = String(weightStr);
             if (weightStr.includes('تمن')) return 0.125;
-            if (weightStr.includes('ربع')) return weightStr.includes('نصف') ? 0.5 : 0.25;
-            if (weightStr.includes('كيلو') && !weightStr.includes('ربع')) return 1.0;
+            if (weightStr.includes('ربع')) {
+                if (weightStr.includes('ربعين') || weightStr.includes('نصف')) return 0.5;
+                return 0.25;
+            }
+            if (weightStr.includes('ثلاث أرباع')) return 0.75;
+            if (weightStr.includes('كيلو') && !weightStr.includes('تمن') && !weightStr.includes('ربع') && !weightStr.includes('أرباع')) {
+                let match = weightStr.match(/([\d.]+)\s*كيلو/);
+                if (match) return parseFloat(match[1]);
+                return 1.0;
+            }
             let gramMatch = weightStr.match(/([\d.]+)\s*جرام/);
             if (gramMatch) return parseFloat(gramMatch[1]) / 1000;
+            
+            let kgMatch = weightStr.match(/([\d.]+)\s*(كجم|كيلو|kg)/i);
+            if (kgMatch) return parseFloat(kgMatch[1]);
+            
+            let numMatch = weightStr.match(/([\d.]+)/);
+            if (numMatch) {
+                let val = parseFloat(numMatch[1]);
+                if (val > 10) return val / 1000;
+                return val;
+            }
             return 0.5;
         }
 
+        // جلب وحساب التقييمات التلقائية لكل أصناف المنيو وعرض الأعلى 3 تقييماً
         async function fetchBestSellersRatings() {
             const container = document.getElementById('topRatedContainer');
             try {
-                let { data: orders } = await supabaseClient.from('orders').select('details, rating').not('rating', 'is', null);
+                let { data: orders, error } = await supabaseClient
+                    .from('orders')
+                    .select('details, rating')
+                    .not('rating', 'is', null);
+
                 let catalog = getAllCatalogProducts();
                 let productStats = {};
 
-                catalog.forEach(p => { productStats[p.name] = { name: p.name, kiloPrice: p.kiloPrice, sumRating: 0, count: 0, avg: 0 }; });
+                catalog.forEach(p => {
+                    productStats[p.name] = { name: p.name, kiloPrice: p.kiloPrice, sumRating: 0, count: 0, avg: 0 };
+                });
 
                 if (orders && orders.length > 0) {
                     orders.forEach(o => {
@@ -814,26 +940,43 @@
                             });
                         }
                     });
+
                     Object.keys(productStats).forEach(k => {
-                        if (productStats[k].count > 0) productStats[k].avg = productStats[k].sumRating / productStats[k].count;
+                        if (productStats[k].count > 0) {
+                            productStats[k].avg = productStats[k].sumRating / productStats[k].count;
+                        }
                     });
                 }
 
-                let sorted = Object.values(productStats).sort((a, b) => b.avg - a.avg).slice(0, 3);
+                let sortedProducts = Object.values(productStats).sort((a, b) => {
+                    if (b.avg !== a.avg) return b.avg - a.avg;
+                    return b.count - a.count;
+                });
+
+                let top3 = sortedProducts.slice(0, 3);
+
                 container.innerHTML = '';
-                sorted.forEach(prod => {
+                top3.forEach(prod => {
                     let avgDisplay = prod.count > 0 ? prod.avg.toFixed(1) : "5.0";
+                    let roundedStars = prod.count > 0 ? Math.round(prod.avg) : 5;
+                    let starsStr = '⭐'.repeat(roundedStars);
+                    let countText = prod.count > 0 ? `(${prod.count} تقييم)` : `(مقترح)`;
+
                     const div = document.createElement('div');
                     div.className = "bg-amber-950/60 hover:bg-amber-950 p-2.5 rounded-lg border border-amber-700/50 cursor-pointer transition flex flex-col justify-between";
                     div.onclick = function() { openCustomizer(prod.name); };
                     div.innerHTML = `
                         <span class="block font-bold text-amber-200">🏆 ${prod.name}</span>
-                        <span class="block text-[10px] text-amber-300 mt-0.5">⭐ (${avgDisplay})</span>
+                        <span class="block text-[10px] text-amber-300 mt-0.5">${starsStr} (${avgDisplay})</span>
+                        <span class="block text-[10px] text-amber-300/80">${countText}</span>
                         <span class="block text-[11px] font-semibold mt-1 text-amber-100 border-t border-amber-800/80 pt-1">${prod.kiloPrice} ج.م/ك</span>
                     `;
                     container.appendChild(div);
                 });
-            } catch (err) { console.error(err); }
+
+            } catch (err) {
+                console.error('خطأ في جلب تقييمات المنتجات:', err);
+            }
         }
 
         function searchProducts(query) {
@@ -844,26 +987,47 @@
             customBlendSec.classList.add('hidden');
 
             if (!query) {
-                switchCategory(currentCategoryKey, document.querySelector('#categoryList li'));
+                const activeLi = document.querySelector('#categoryList li.bg-amber-50');
+                if (activeLi) {
+                    switchCategory(currentCategoryKey, activeLi);
+                } else {
+                    switchCategory('basic', document.querySelector('#categoryList li'));
+                }
                 return;
             }
 
-            let found = getAllCatalogProducts().filter(p => p.name.toLowerCase().includes(query));
-            if (found.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 text-xs">عذراً، لم يتم العثور على منتجات.</div>`;
+            document.getElementById('categoryTitle').textContent = 'نتائج البحث عن: "' + query + '"';
+            document.getElementById('arabicaNotice').classList.add('hidden');
+
+            let foundItems = [];
+            Object.keys(categoriesData).forEach(catKey => {
+                categoriesData[catKey].items.forEach(prod => {
+                    if (prod.name.toLowerCase().includes(query) || prod.desc.toLowerCase().includes(query)) {
+                        foundItems.push(prod);
+                    }
+                });
+            });
+
+            if (foundItems.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 text-xs">عذراً، لم يتم العثور على منتجات تطابق بحثك.</div>`;
                 return;
             }
 
-            found.forEach(prod => {
+            foundItems.forEach(prod => {
                 const card = document.createElement('div');
-                card.className = "bg-white border border-gray-200 rounded-2xl p-3 flex flex-col justify-between hover:shadow-lg transition relative";
+                card.className = "bg-white border border-gray-200 rounded-2xl p-3 flex flex-col justify-between hover:shadow-lg transition relative overflow-hidden";
                 card.innerHTML = `
                     <div class="relative bg-gray-50 rounded-xl p-2 h-40 flex items-center justify-center mb-3">
                         <img src="${prod.img}" alt="${prod.name}" class="h-full w-full object-contain rounded-lg">
-                        <button onclick="openCustomizer('${prod.name}')" class="absolute bottom-2 left-2 bg-white text-amber-800 hover:bg-amber-800 hover:text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-md">+</button>
+                        <button onclick="openCustomizer('${prod.name}')" class="absolute bottom-2 left-2 bg-white text-amber-800 hover:bg-amber-800 hover:text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-md transition border border-gray-200">+</button>
                     </div>
-                    <h4 class="font-bold text-gray-900 text-sm">${prod.name}</h4>
-                    <span class="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md w-fit">سعر الكيلو: ${prod.kiloPrice} ج.م</span>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-gray-900 text-sm">${prod.name}</h4>
+                            <span class="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md">سعر الكيلو: ${prod.kiloPrice} ج.م</span>
+                        </div>
+                        <p class="text-xs text-gray-500 line-clamp-2">${prod.desc}</p>
+                    </div>
                 `;
                 grid.appendChild(card);
             });
@@ -871,15 +1035,21 @@
 
         function switchCategory(categoryKey, element) {
             currentCategoryKey = categoryKey;
-            document.querySelectorAll('#categoryList li').forEach(li => li.className = "hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition");
-            if (element) element.className = "bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition";
+            document.getElementById('productSearchInput').value = '';
+
+            document.querySelectorAll('#categoryList li').forEach(li => {
+                li.className = "hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition";
+            });
+            if (element) {
+                element.className = "bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition";
+            }
 
             const grid = document.getElementById('productsGrid');
             const customBlendSec = document.getElementById('customBlendSection');
             const arabicaNotice = document.getElementById('arabicaNotice');
 
             if (categoryKey === 'customBlend') {
-                document.getElementById('categoryTitle').textContent = '🧪 مبتكر التوليفات الخاصة';
+                document.getElementById('categoryTitle').textContent = '🧪 مبتكر التوليفات الخاصة (بالأوزان والتحميص)';
                 arabicaNotice.classList.add('hidden');
                 grid.innerHTML = '';
                 customBlendSec.classList.remove('hidden');
@@ -890,17 +1060,22 @@
             customBlendSec.classList.add('hidden');
             const cat = categoriesData[categoryKey];
             document.getElementById('categoryTitle').textContent = cat.title;
-            if (categoryKey === 'arabica') arabicaNotice.classList.remove('hidden');
-            else arabicaNotice.classList.add('hidden');
+
+            if (categoryKey === 'arabica') {
+                arabicaNotice.classList.remove('hidden');
+            } else {
+                arabicaNotice.classList.add('hidden');
+            }
 
             grid.innerHTML = '';
+
             cat.items.forEach(prod => {
                 const card = document.createElement('div');
-                card.className = "bg-white border border-gray-200 rounded-2xl p-3 flex flex-col justify-between hover:shadow-lg transition relative";
+                card.className = "bg-white border border-gray-200 rounded-2xl p-3 flex flex-col justify-between hover:shadow-lg transition relative overflow-hidden";
                 card.innerHTML = `
                     <div class="relative bg-gray-50 rounded-xl p-2 h-40 flex items-center justify-center mb-3">
                         <img src="${prod.img}" alt="${prod.name}" class="h-full w-full object-contain rounded-lg">
-                        <button onclick="openCustomizer('${prod.name}')" class="absolute bottom-2 left-2 bg-white text-amber-800 hover:bg-amber-800 hover:text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-md">+</button>
+                        <button onclick="openCustomizer('${prod.name}')" class="absolute bottom-2 left-2 bg-white text-amber-800 hover:bg-amber-800 hover:text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-md transition border border-gray-200">+</button>
                     </div>
                     <div class="space-y-1.5">
                         <div class="flex justify-between items-center">
@@ -917,9 +1092,32 @@
         function openCustomizer(itemName) {
             activeItemName = itemName;
             document.getElementById('modalTitle').textContent = 'تخصيص: ' + itemName;
-            document.getElementById('espressoGrindWrapper').classList.toggle('hidden', itemName !== 'اسبرسو');
-            document.getElementById('subtypeWrapper').classList.toggle('hidden', !basicItems.includes(itemName) && !arabicaItems.includes(itemName));
-            document.getElementById('roastWrapper').classList.toggle('hidden', !basicItems.includes(itemName));
+            
+            const subtypeWrapper = document.getElementById('subtypeWrapper');
+            const roastWrapper = document.getElementById('roastWrapper');
+            const espressoWrapper = document.getElementById('espressoGrindWrapper');
+            
+            if (itemName === 'اسبرسو') {
+                espressoWrapper.classList.remove('hidden');
+            } else {
+                espressoWrapper.classList.add('hidden');
+            }
+
+            if (basicItems.includes(itemName)) {
+                subtypeWrapper.classList.remove('hidden');
+                roastWrapper.classList.remove('hidden');
+            } else if (arabicaItems.includes(itemName)) {
+                subtypeWrapper.classList.remove('hidden');
+                roastWrapper.classList.add('hidden');
+            } else {
+                subtypeWrapper.classList.add('hidden');
+                roastWrapper.classList.add('hidden');
+            }
+
+            document.getElementById('modalWeight').value = 'ربعين (نصف كيلو / 500 جرام)';
+            document.getElementById('customWeightWrapper').classList.add('hidden');
+            document.getElementById('modalCustomWeight').value = '';
+
             updateModalPricePreview();
             document.getElementById('customizerModal').classList.remove('hidden');
         }
@@ -928,35 +1126,86 @@
             let subtype = document.getElementById('modalSubtype').value;
             let roast = document.getElementById('modalRoast').value;
             let weightSelection = document.getElementById('modalWeight').value;
-            if (weightSelection === 'أخرى') weightSelection = document.getElementById('modalCustomWeight').value || '100 جرام';
+            
+            if (weightSelection === 'أخرى') {
+                const customW = document.getElementById('modalCustomWeight').value.trim();
+                if (customW) {
+                    weightSelection = customW;
+                }
+            }
 
-            let kiloPrice = getPricePerKilo(activeItemName, subtype, roast);
-            let itemTotal = kiloPrice * parseWeightInKg(weightSelection);
+            const kiloPrice = getPricePerKilo(activeItemName, subtype, roast);
+            const weightKg = parseWeightInKg(weightSelection);
+            const itemTotal = kiloPrice * weightKg;
+
             document.getElementById('modalKiloPrice').textContent = kiloPrice.toLocaleString();
             document.getElementById('modalItemTotalPrice').textContent = itemTotal.toFixed(2);
         }
 
         function checkCustomWeight(select) {
-            document.getElementById('customWeightWrapper').classList.toggle('hidden', select.value !== 'أخرى');
+            const customWrapper = document.getElementById('customWeightWrapper');
+            if (select.value === 'أخرى') {
+                customWrapper.classList.remove('hidden');
+            } else {
+                customWrapper.classList.add('hidden');
+            }
         }
 
-        function closeCustomizer() { document.getElementById('customizerModal').classList.add('hidden'); }
+        function closeCustomizer() {
+            document.getElementById('customizerModal').classList.add('hidden');
+        }
 
         function addItemToCart() {
             let weight = document.getElementById('modalWeight').value;
-            if (weight === 'أخرى') weight = document.getElementById('modalCustomWeight').value || '100 جرام';
+            if (weight === 'أخرى') {
+                const customW = document.getElementById('modalCustomWeight').value.trim();
+                if (!customW) {
+                    alert('الرجاء كتابة الوزن المطلوب في خانة "أخرى"!');
+                    return;
+                }
+                weight = customW;
+            }
 
             let subtype = document.getElementById('modalSubtype').value;
             let roast = document.getElementById('modalRoast').value;
+            let itemString = '';
             let kiloP = getPricePerKilo(activeItemName, subtype, roast);
-            let itemTotal = kiloP * parseWeightInKg(weight);
+            let wKg = parseWeightInKg(weight);
+            let itemTotal = kiloP * wKg;
 
-            let itemString = activeItemName === 'اسبرسو' ? `${weight} اسبرسو (${document.getElementById('modalEspressoGrind').value})` : `${weight} ${activeItemName}`;
-            cart.push({ text: itemString, price: itemTotal });
+            if (activeItemName === 'اسبرسو') {
+                let grindOption = document.getElementById('modalEspressoGrind').value;
+                itemString = `${weight} اسبرسو (${grindOption})`;
+            } else if (basicItems.includes(activeItemName)) {
+                itemString = `${weight} ${activeItemName} ${subtype} (${roast})`;
+            } else if (arabicaItems.includes(activeItemName)) {
+                itemString = `${weight} ${activeItemName} ${subtype} (وسط)`;
+            } else {
+                itemString = `${weight} ${activeItemName}`;
+            }
+
+            cart.push({
+                text: itemString,
+                price: itemTotal
+            });
 
             saveCartToLocalStorage();
             renderCart();
             closeCustomizer();
+
+            const cartContainer = document.getElementById('cartItemsContainer');
+            cartContainer.classList.add('bg-amber-200', 'scale-[1.02]');
+            setTimeout(() => {
+                cartContainer.classList.remove('bg-amber-200', 'scale-[1.02]');
+            }, 400);
+
+            const floatingBtn = document.getElementById('floatingCartBtn');
+            if (floatingBtn) {
+                floatingBtn.classList.add('scale-110');
+                setTimeout(() => {
+                    floatingBtn.classList.remove('scale-110');
+                }, 300);
+            }
         }
 
         function removeFromCart(index) {
@@ -965,54 +1214,74 @@
             renderCart();
         }
 
-        function scrollToCart() { document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' }); }
+        function scrollToCart() {
+            document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' });
+        }
 
         function renderCart() {
             const container = document.getElementById('cartItemsContainer');
             const totalSummary = document.getElementById('cartTotalSummary');
+            const totalAmountText = document.getElementById('totalAmountText');
+            
+            const floatingBtn = document.getElementById('floatingCartBtn');
+            const floatCount = document.getElementById('floatingCartCount');
+            const floatTotal = document.getElementById('floatingCartTotal');
+
             if (cart.length === 0) {
-                container.className = "bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500";
+                container.className = "bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500 transition-all duration-300";
                 container.textContent = "لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.";
                 totalSummary.classList.add('hidden');
+                
+                if (floatingBtn) floatingBtn.classList.add('hidden');
                 return;
             }
-            container.className = "bg-amber-100/70 p-3 rounded-lg border border-amber-300 text-right text-xs text-amber-900 space-y-2";
+
+            container.className = "bg-amber-100/70 p-3 rounded-lg border border-amber-300 text-right text-xs text-amber-900 space-y-2 transition-all duration-300";
             container.innerHTML = '';
+
             let grandTotal = 0;
-            cart.forEach((item, index) => {
-                grandTotal += item.price;
+
+            cart.forEach((cartItem, index) => {
+                grandTotal += cartItem.price;
                 const div = document.createElement('div');
                 div.className = "flex justify-between items-center bg-white p-2 rounded border border-amber-200";
-                div.innerHTML = `<span>☕ ${item.text} (${item.price.toFixed(2)} ج.م)</span><button type="button" onclick="removeFromCart(${index})" class="text-red-600 font-bold px-2">✕</button>`;
+                div.innerHTML = `
+                    <div class="space-y-0.5">
+                        <span class="font-bold block">☕ ${cartItem.text}</span>
+                        <span class="text-[11px] text-amber-800 font-semibold">${cartItem.price.toFixed(2)} ج.م</span>
+                    </div>
+                    <button type="button" onclick="removeFromCart(${index})" class="text-red-600 font-bold px-2 py-0.5 rounded hover:bg-red-50">✕</button>
+                `;
                 container.appendChild(div);
             });
+
             totalSummary.classList.remove('hidden');
-            document.getElementById('totalAmountText').textContent = grandTotal.toFixed(2) + ' ج.م';
+            totalAmountText.textContent = grandTotal.toFixed(2) + ' ج.م';
+
+            if (floatingBtn) {
+                floatingBtn.classList.remove('hidden');
+                floatCount.textContent = cart.length + ' أصناف';
+                floatTotal.textContent = grandTotal.toFixed(2) + ' ج.م';
+            }
         }
 
-        // --- نظام تسجيل الدخول عبر البريد الإلكتروني ورمز التحقق (OTP) ---
-        async function openAuthModal() {
-            document.getElementById('authModal').classList.remove('hidden');
-            checkUserSession();
+        // دالة الدخول الحسابات والـ OTP
+        async function openAuthModal() { 
+            document.getElementById('authModal').classList.remove('hidden'); 
+            checkUserSession(); 
         }
         function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
 
         async function checkUserSession() {
             const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session && session.user) {
-                showProfileView(session.user);
-            } else {
-                resetAuthSteps();
-            }
+            if (session && session.user) showProfileView(session.user); 
+            else resetAuthSteps();
         }
 
         async function sendOtpCode() {
             const email = document.getElementById('userEmailInput').value.trim();
-            if (!email || !email.includes('@')) {
-                alert('الرجاء إدخال بريد إلكتروني صحيح!');
-                return;
-            }
-            const { error } = await supabaseClient.auth.signInWithOtp({ email });
+            if (!email || !email.includes('@')) { alert('الرجاء إدخال بريد إلكتروني صحيح!'); return; }
+            const { error } = await supabaseClient.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
             if (error) { alert('خطأ: ' + error.message); return; }
             alert('تم إرسال رمز التحقق إلى بريدك الإلكتروني بنجاح!');
             document.getElementById('authEmailStep').classList.add('hidden');
@@ -1042,10 +1311,7 @@
             container.innerHTML = `<p class="text-gray-400 text-center py-2">جاري البحث عن طلباتك...</p>`;
             try {
                 let { data: orders } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false }).limit(5);
-                if (!orders || orders.length === 0) {
-                    container.innerHTML = `<p class="text-gray-400 text-center py-2">لا توجد طلبات سابقة مسجلة.</p>`;
-                    return;
-                }
+                if (!orders || orders.length === 0) { container.innerHTML = `<p class="text-gray-400 text-center py-2">لا توجد طلبات سابقة مسجلة.</p>`; return; }
                 container.innerHTML = '';
                 orders.forEach(ord => {
                     const div = document.createElement('div');
@@ -1069,38 +1335,306 @@
             document.getElementById('userProfileStep').classList.add('hidden');
         }
 
-        function openTrackModal() { document.getElementById('trackModal').classList.remove('hidden'); }
-        function closeTrackModal() { document.getElementById('trackModal').classList.add('hidden'); }
-        function openEditModal(id, n, p1, p2, addr, reg, det) {
-            document.getElementById('editOriginalId').value = id;
-            document.getElementById('editOrderIdDisplay').textContent = id;
-            document.getElementById('editCustomerName').value = n;
-            document.getElementById('editPhone1').value = p1;
-            document.getElementById('editPhone2').value = p2 !== 'undefined' ? p2 : '';
-            document.getElementById('editCustomerAddress').value = addr;
-            document.getElementById('editOrderDetails').value = det;
+        document.getElementById('phone1').addEventListener('input', async function() {
+            let phone = this.value.trim();
+            if (phone.length >= 8) {
+                try {
+                    let { data, error } = await supabaseClient
+                        .from('customers')
+                        .select('*')
+                        .eq('phone1', phone)
+                        .maybeSingle();
+
+                    if (data) {
+                        document.getElementById('customerName').value = data.name || '';
+                        if (data.phone2) {
+                            document.getElementById('phone2').value = data.phone2;
+                        }
+                        document.getElementById('customerAddress').value = data.address || '';
+                        
+                        let branchSelect = document.getElementById('region');
+                        for (let i = 0; i < branchSelect.options.length; i++) {
+                            if (branchSelect.options[i].value === data.region) {
+                                branchSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    let { data: lastOrders } = await supabaseClient
+                        .from('orders')
+                        .select('*')
+                        .eq('phone1', phone)
+                        .order('created_at', { ascending: false })
+                        .limit(1);
+
+                    if (lastOrders && lastOrders.length > 0) {
+                        cachedLastOrder = lastOrders[0];
+                        document.getElementById('quickReorderText').textContent = `${cachedLastOrder.details} (الإجمالي: ${cachedLastOrder.total_price || '0 ج.م'})`;
+                        document.getElementById('quickReorderBanner').classList.remove('hidden');
+                    } else {
+                        hideQuickReorderBanner();
+                    }
+                } catch (err) {
+                    console.error('خطأ في جلب بيانات العميل أو الطلبات:', err);
+                }
+            } else {
+                hideQuickReorderBanner();
+            }
+        });
+
+        function hideQuickReorderBanner() {
+            cachedLastOrder = null;
+            document.getElementById('quickReorderBanner').classList.add('hidden');
+        }
+
+        function applyQuickReorder() {
+            if (!cachedLastOrder) return;
+            let priceNum = parseFloat(cachedLastOrder.total_price) || 0;
+            cart.push({
+                text: cachedLastOrder.details,
+                price: priceNum
+            });
+            saveCartToLocalStorage();
+            renderCart();
+            hideQuickReorderBanner();
+            alert('تمت إضافة تفاصيل آخر أوردر إلى سلة المشتريات بنجاح! ☕');
+        }
+
+        function openTrackModal() {
+            document.getElementById('trackModal').classList.remove('hidden');
+        }
+        function closeTrackModal() {
+            document.getElementById('trackModal').classList.add('hidden');
+        }
+
+        function openEditModal(orderId, name, phone1, phone2, address, region, details) {
+            document.getElementById('editOriginalId').value = orderId;
+            document.getElementById('editOrderIdDisplay').textContent = orderId;
+            document.getElementById('editCustomerName').value = name;
+            document.getElementById('editPhone1').value = phone1;
+            document.getElementById('editPhone2').value = phone2 !== 'undefined' ? phone2 : '';
+            document.getElementById('editCustomerAddress').value = address;
+            document.getElementById('editOrderDetails').value = details;
+
+            let regionSelect = document.getElementById('editRegion');
+            for (let i = 0; i < regionSelect.options.length; i++) {
+                if (regionSelect.options[i].value === region) {
+                    regionSelect.selectedIndex = i;
+                    break;
+                }
+            }
+
             document.getElementById('editOrderModal').classList.remove('hidden');
         }
-        function closeEditModal() { document.getElementById('editOrderModal').classList.add('hidden'); }
+
+        function closeEditModal() {
+            document.getElementById('editOrderModal').classList.add('hidden');
+        }
+
+        async function saveOrderChanges(e) {
+            e.preventDefault();
+            const orderId = document.getElementById('editOriginalId').value;
+            const details = document.getElementById('editOrderDetails').value.trim();
+            const phone1 = document.getElementById('editPhone1').value.trim();
+            const phone2 = document.getElementById('editPhone2').value.trim();
+            const name = document.getElementById('editCustomerName').value.trim();
+            const address = document.getElementById('editCustomerAddress').value.trim();
+            const region = document.getElementById('editRegion').value;
+
+            const phoneRegex = /^01[0125][0-9]{8}$/;
+            if (!phoneRegex.test(phone1)) {
+                alert('رقم الهاتف الأساسي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
+                return;
+            }
+
+            try {
+                let { error } = await supabaseClient
+                    .from('orders')
+                    .update({
+                        details: details,
+                        phone1: phone1,
+                        phone2: phone2,
+                        name: name,
+                        address: address,
+                        region: region
+                    })
+                    .eq('id', orderId);
+
+                if (error) {
+                    alert('حدث خطأ أثناء حفظ التعديلات: ' + error.message);
+                    return;
+                }
+
+                alert('تم تعديل الطلب وبياناتك بنجاح! ☕');
+                closeEditModal();
+                searchOrdersForTracking();
+            } catch (err) {
+                console.error('خطأ:', err);
+                alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
+            }
+        }
+
+        async function cancelOrder(orderId) {
+            if (!confirm('هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟')) {
+                return;
+            }
+
+            try {
+                let { error } = await supabaseClient
+                    .from('orders')
+                    .update({ status: 'ملغي بواسطة العميل' })
+                    .eq('id', orderId);
+
+                if (error) {
+                    alert('حدث خطأ أثناء إلغاء الطلب: ' + error.message);
+                    return;
+                }
+
+                alert('تم إلغاء الطلب بنجاح.');
+                searchOrdersForTracking();
+            } catch (err) {
+                console.error('خطأ:', err);
+                alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
+            }
+        }
 
         async function searchOrdersForTracking() {
             let phone = document.getElementById('trackPhoneInput').value.trim();
             const container = document.getElementById('trackResultsContainer');
-            if (!phone) return alert('أدخل رقم الهاتف');
+
+            if (!phone) {
+                alert('الرجاء إدخال رقم الهاتف للبحث');
+                return;
+            }
+
+            container.innerHTML = `<p class="text-center text-xs text-gray-500">جاري البحث في قاعدة البيانات...</p>`;
+
             try {
-                let { data: orders } = await supabaseClient.from('orders').select('*').or(`phone1.eq.${phone},phone2.eq.${phone}`).order('created_at', { ascending: false });
-                if (!orders || orders.length === 0) {
-                    container.innerHTML = `<p class="text-center text-xs text-gray-500">لا توجد أوردرات بهذا الرقم.</p>`;
+                let { data: orders, error } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .or(`phone1.eq.${phone},phone2.eq.${phone}`)
+                    .order('created_at', { ascending: false });
+
+                if (error || !orders || orders.length === 0) {
+                    container.innerHTML = `
+                        <div class="bg-gray-50 border p-4 rounded-xl text-center text-xs text-gray-500">
+                            لم يتم العثور على أوردرات مسجلة بهذا الرقم في قاعدة البيانات.
+                        </div>
+                    `;
                     return;
                 }
+
                 container.innerHTML = '';
                 orders.forEach(order => {
+                    let statusText = order.status || '';
+                    let isDelivered = statusText.includes('تم التسليم');
+                    let isCancelled = statusText.includes('ملغي');
+                    let isOutForDelivery = statusText.includes('الطريق') || statusText.includes('توصيل') || statusText.includes('الدليفري') || statusText.includes('الدلفري') || statusText.includes('دلفري');
+                    
+                    let canEditOrCancel = !isOutForDelivery && !isDelivered && !isCancelled;
+
+                    let ratingHtml = '';
+                    if (isDelivered) {
+                        if (order.rating) {
+                            ratingHtml = `
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg space-y-1">
+                                    <p class="text-xs font-bold text-emerald-800">⭐ تقييمك المسجل:</p>
+                                    <div class="text-amber-600 text-xs font-bold">${'⭐'.repeat(order.rating)} (${order.rating}/5)</div>
+                                    ${order.feedback ? `<p class="text-xs text-gray-600">ملاحظتك: "${order.feedback}"</p>` : ''}
+                                </div>
+                            `;
+                        } else {
+                            ratingHtml = `
+                                <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg space-y-2">
+                                    <p class="text-xs font-bold text-amber-900">🎉 تم تسليم طلبك بنجاح! شاركنا رأيك:</p>
+                                    <select id="rate_${order.id}" class="w-full bg-white border text-xs p-1.5 rounded">
+                                        <option value="5">⭐⭐⭐⭐⭐ (ممتاز جداً)</option>
+                                        <option value="4">⭐⭐⭐⭐ (جيد جداً)</option>
+                                        <option value="3">⭐⭐⭐ (مقبول)</option>
+                                        <option value="2">⭐⭐ (ضعيف)</option>
+                                        <option value="1">⭐ (سيء)</option>
+                                    </select>
+                                    <input type="text" id="feedback_${order.id}" placeholder="اكتب ملاحظتك (اختياري)..." class="w-full bg-white border text-xs p-1.5 rounded">
+                                    <button onclick="submitClientRating('${order.id}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 rounded text-xs font-bold">إرسال التقييم للمحل</button>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        ratingHtml = `
+                            <p class="text-xs text-gray-400 text-center bg-gray-50 p-2 rounded">⏳ ستتمكن من تقييم الطلب فور اكتمال التسليم.</p>
+                        `;
+                    }
+
+                    let actionButtonHtml = '';
+                    if (canEditOrCancel) {
+                        actionButtonHtml = `
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="openEditModal('${order.id}', '${order.name || ''}', '${order.phone1 || ''}', '${order.phone2 || ''}', \`${order.address || ''}\`, '${order.region || ''}', \`${order.details || ''}\`)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 border border-amber-300">
+                                    <span>✏️ تعديل الطلب</span>
+                                </button>
+                                <button onclick="cancelOrder('${order.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 border border-red-300">
+                                    <span>❌ إلغاء الطلب</span>
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        actionButtonHtml = `
+                            <p class="text-center text-[11px] text-gray-400 bg-gray-100 p-1.5 rounded">🔒 الطلب منتهي (تم تسليمه أو إلغاؤه مسبقاً).</p>
+                        `;
+                    }
+
                     const card = document.createElement('div');
-                    card.className = "bg-gray-50 border p-3 rounded-xl space-y-2 text-xs";
-                    card.innerHTML = `<div class="flex justify-between font-bold text-amber-900"><span>طلب: ${order.id}</span><span>${order.status}</span></div><p>☕ ${order.details}</p>`;
+                    card.className = "bg-gray-50 border border-gray-200 rounded-xl p-3 space-y-2 text-xs";
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <span class="font-bold text-amber-900">طلب رقم: ${order.id}</span>
+                            <span class="px-2 py-0.5 rounded font-bold ${
+                                statusText.includes('جديد') ? 'bg-blue-100 text-blue-800' :
+                                statusText.includes('تجهيز') ? 'bg-amber-100 text-amber-800' :
+                                statusText.includes('توصيل') || statusText.includes('الدلفري') || statusText.includes('دلفري') ? 'bg-purple-100 text-purple-800' :
+                                statusText.includes('ملغي') ? 'bg-red-100 text-red-800' :
+                                'bg-green-100 text-green-800'
+                            }">${order.status}</span>
+                        </div>
+                        <p>👤 العميل: <b>${order.name}</b> | 📞 ${order.phone1}</p>
+                        <p>📍 الفرع: <b>${order.region}</b> - العنوان: ${order.address}</p>
+                        <p>☕ الطلبات: <b>${order.details}</b></p>
+                        ${order.total_price ? `<p class="font-bold text-amber-900">💰 إجمالي الفاتورة: ${order.total_price} ج.م</p>` : ''}
+                        ${actionButtonHtml}
+                        ${ratingHtml}
+                    `;
                     container.appendChild(card);
                 });
-            } catch (e) { console.error(e); }
+
+            } catch (err) {
+                console.error('خطأ في جلب الطلبات:', err);
+                container.innerHTML = `<p class="text-center text-xs text-red-600">حدث خطأ أثناء الاتصال بقاعدة البيانات.</p>`;
+            }
+        }
+
+        async function submitClientRating(orderId) {
+            let ratingVal = parseInt(document.getElementById('rate_' + orderId).value);
+            let feedbackText = document.getElementById('feedback_' + orderId).value;
+
+            try {
+                let { error } = await supabaseClient
+                    .from('orders')
+                    .update({ rating: ratingVal, feedback: feedbackText })
+                    .eq('id', orderId);
+
+                if (error) {
+                    alert('حدث خطأ أثناء إرسال التقييم.');
+                    return;
+                }
+
+                alert('شكراً لك! تم إرسال تقييمك إلى لوحة فرع بن الغرباوي بنجاح 🌟');
+                searchOrdersForTracking();
+                fetchBestSellersRatings();
+            } catch (err) {
+                console.error('خطأ:', err);
+            }
         }
 
         window.onload = function() {
@@ -1114,26 +1648,72 @@
 
         document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (cart.length === 0) { alert('السلة فارغة!'); return; }
-            const p1 = document.getElementById('phone1').value.trim();
-            const name = document.getElementById('customerName').value.trim();
-            const addr = document.getElementById('customerAddress').value.trim();
-            const branch = document.getElementById('region').value;
-            const combined = cart.map(i => i.text).join(' + ');
-            const total = cart.reduce((s, i) => s + i.price, 0);
+
+            if (cart.length === 0) {
+                alert('الرجاء إضافة منتج واحد على الأقل إلى السلة بالضغط على علامة (+) !');
+                return;
+            }
+
+            const phone1Val = document.getElementById('phone1').value.trim();
+            const phone2Val = document.getElementById('phone2').value.trim();
+            const nameVal = document.getElementById('customerName').value.trim();
+            const addressVal = document.getElementById('customerAddress').value.trim();
+            const selectedBranch = document.getElementById('region').value;
+
+            const phoneRegex = /^01[0125][0-9]{8}$/;
+            if (!phoneRegex.test(phone1Val)) {
+                alert('رقم الهاتف الأساسي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
+                document.getElementById('phone1').focus();
+                return;
+            }
+
+            if (phone2Val && !phoneRegex.test(phone2Val)) {
+                alert('رقم الهاتف الإضافي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
+                document.getElementById('phone2').focus();
+                return;
+            }
+            
+            const combinedDetails = cart.map(item => item.text).join(' + ');
+            const grandTotal = cart.reduce((sum, item) => sum + item.price, 0);
             const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
 
             try {
-                await supabaseClient.from('customers').upsert({ phone1: p1, name: name, address: addr, region: branch }, { onConflict: 'phone1' });
-                await supabaseClient.from('orders').insert({
-                    id: orderId, name: name, phone1: p1, details: combined, total_price: total.toFixed(2) + ' ج.م', address: addr, region: branch, status: 'جديد (في انتظار الاستلام)'
+                await supabaseClient.from('customers').upsert({
+                    phone1: phone1Val,
+                    name: nameVal,
+                    phone2: phone2Val,
+                    address: addressVal,
+                    region: selectedBranch
+                }, { onConflict: 'phone1' });
+
+                const { error: orderError } = await supabaseClient.from('orders').insert({
+                    id: orderId,
+                    name: nameVal,
+                    phone1: phone1Val,
+                    phone2: phone2Val,
+                    details: combinedDetails,
+                    total_price: grandTotal.toFixed(2) + ' ج.م',
+                    address: addressVal,
+                    region: selectedBranch,
+                    status: 'جديد (في انتظار الاستلام)'
                 });
+
+                if (orderError) {
+                    alert('حدث خطأ أثناء إرسال الطلب: ' + orderError.message);
+                    return;
+                }
+
                 cart = [];
                 localStorage.removeItem('gharbawee_cart');
                 renderCart();
+
                 document.getElementById('orderForm').style.display = 'none';
                 document.getElementById('successMsg').classList.remove('hidden');
-            } catch (err) { alert('حدث خطأ أثناء الإرسال.'); }
+
+            } catch (err) {
+                console.error('خطأ في إرسال الأوردر:', err);
+                alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
+            }
         });
     </script>
 </body>
