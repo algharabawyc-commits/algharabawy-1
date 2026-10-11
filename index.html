@@ -28,7 +28,8 @@
                 <button onclick="openAuthModal()" id="authNavBtn" class="bg-amber-700 hover:bg-amber-800 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
                     <span>👤 حسابي</span>
                 </button>
-                <a href="https://github.com/algharabawyc-commits/algharabawy-1/releases/download/v1.0/Gharbawi.Shopp.apk" download class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow hidden md:flex items-center gap-1">
+                <!-- زر التحميل المحدث ديناميكياً ليقرأ من version.json تلقائياً -->
+                <a id="downloadAppBtn" href="#" download target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow hidden md:flex items-center gap-1">
                     <span>📥 تحميل الأبلكيشن APK</span>
                 </a>
                 <div class="text-xs sm:text-sm bg-amber-950 px-3 py-1.5 rounded-lg border border-amber-800 hidden lg:block">
@@ -557,6 +558,17 @@
     </footer>
 
     <script>
+        // جلب رابط التحديث تلقائياً من ملف version.json لزر التحميل في الموقع
+        fetch('version.json')
+            .then(response => response.json())
+            .then(data => {
+                const downloadBtn = document.getElementById('downloadAppBtn');
+                if (data.downloadUrl && downloadBtn) {
+                    downloadBtn.href = data.downloadUrl;
+                }
+            })
+            .catch(error => console.error('خطأ في جلب رابط الأبليكيشن:', error));
+
         // إعدادات اتصال Supabase
         const SUPABASE_URL = 'https://csroadhvynbSksqncrur.supabase.co';
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGcXPVopb4DItZ2LY6V1vQ_bQ3vf30C';
