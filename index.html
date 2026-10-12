@@ -28,7 +28,8 @@
                 <button onclick="openAuthModal()" id="authNavBtn" class="bg-amber-700 hover:bg-amber-800 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
                     <span>👤 حسابي</span>
                 </button>
-                <a href="https://github.com/algharabawyc-commits/algharabawy-1/raw/d619c10c5c5b7e2ae9f717cadffd430b5aa16c19/AlgharabawyOrders%201.apk" download class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow hidden md:flex items-center gap-1">
+                <!-- زر التحميل المحدث ديناميكياً ليقرأ من version.json تلقائياً -->
+                <a id="downloadAppBtn" href="#" download target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow hidden md:flex items-center gap-1">
                     <span>📥 تحميل الأبلكيشن APK</span>
                 </a>
                 <div class="text-xs sm:text-sm bg-amber-950 px-3 py-1.5 rounded-lg border border-amber-800 hidden lg:block">
@@ -153,18 +154,13 @@
                     لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.
                 </div>
 
-                <div id="cartTotalSummary" class="hidden bg-amber-900 text-white p-3 rounded-lg text-xs font-bold space-y-1.5 shadow-inner">
-                    <div class="flex justify-between items-center text-xs">
-                        <span>قيمة المنتجات:</span>
-                        <span id="subtotalAmountText">0.00 ج.م</span>
+                <div id="cartTotalSummary" class="hidden bg-amber-900 text-white p-3 rounded-lg text-xs font-bold space-y-1 shadow-inner">
+                    <div class="flex justify-between items-center">
+                        <span>إجمالي الفاتورة:</span>
+                        <span id="totalAmountText" class="text-amber-200 text-sm font-extrabold">0.00 ج.م</span>
                     </div>
-                    <div class="flex justify-between items-center text-xs border-t border-amber-800 pt-1">
-                        <span id="shippingLabelText">مصاريف الشحن (بالكيلو):</span>
-                        <span id="shippingAmountText">15.00 ج.م</span>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-amber-700 pt-1 text-amber-200">
-                        <span class="font-extrabold text-sm">إجمالي الفاتورة النهائية:</span>
-                        <span id="totalAmountText" class="text-base font-black">0.00 ج.م</span>
+                    <div class="text-[11px] text-amber-200/90 text-center border-t border-amber-800 pt-1 font-normal">
+                        + مصاريف الشحن
                     </div>
                 </div>
 
@@ -192,7 +188,7 @@
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <label class="block text-xs font-semibold text-gray-700">اختر الفرع الأقرب</label>
-                        <button type="button" onclick="findNearestBranch()" class="text-[11px] text-amber-700 font-bold hover:underline flex items-center gap-1">📍 تحديد موقعي وحساب الشحن بالـ GPS</button>
+                        <button type="button" onclick="findNearestBranch()" class="text-[11px] text-amber-700 font-bold hover:underline flex items-center gap-1">📍 تحديد أقرب فرع بالـ GPS</button>
                     </div>
                     <select id="region" onchange="updateBranchAddress()" class="w-full px-3 py-2 text-sm border rounded-lg bg-white focus:outline-none">
                         <option value="أم المصريين">أم المصريين</option>
@@ -384,7 +380,7 @@
         </div>
     </div>
 
-    <!-- نافذة تسجيل الدخول برمز التحقق (OTP) أو الملف الشخصي -->
+    <!-- نافذة تسجيل الدخول (OAuth بـ Google و Facebook و OTP) أو الملف الشخصي -->
     <div id="authModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-3">
@@ -392,9 +388,22 @@
                 <button onclick="closeAuthModal()" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
 
-            <!-- الحالة 1: إدخال البريد الإلكتروني -->
+            <!-- أزرار تسجيل الدخول الاجتماعي (Google & Facebook) -->
+            <div id="socialAuthSection" class="space-y-2.5 pb-3 border-b">
+                <p class="text-xs font-bold text-gray-700">تسجيل الدخول السريع:</p>
+                <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 py-2.5 rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.14C3.15 21.36 7.22 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.62H1.18C.43 8.14 0 9.85 0 12s.43 3.86 1.18 5.38l4.09-3.14z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.64 1.18 6.62l4.09 3.14c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                    <span>الدخول باستخدام Google</span>
+                </button>
+                <button onclick="loginWithFacebook()" class="w-full bg-[#1877F2] hover:bg-[#166fe5] text-white py-2.5 rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    <span>الدخول باستخدام Facebook</span>
+                </button>
+            </div>
+
+            <!-- الحالة 1: إدخال البريد الإلكتروني (OTP) -->
             <div id="authEmailStep" class="space-y-4">
-                <p class="text-xs text-gray-600 leading-relaxed">أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق سريع لتسجيل الدخول مباشرة بدون كلمة مرور:</p>
+                <p class="text-xs text-gray-600 leading-relaxed">أو أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق سريع:</p>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">البريد الإلكتروني</label>
                     <input type="email" id="userEmailInput" placeholder="name@example.com" class="w-full p-3 border rounded-xl text-sm focus:outline-none focus:border-amber-700">
@@ -417,7 +426,7 @@
             <div id="userProfileStep" class="space-y-4 hidden">
                 <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 flex items-center justify-between">
                     <div>
-                        <p class="text-[10px] text-gray-500 font-bold">البريد الإلكتروني المسجل:</p>
+                        <p class="text-[10px] text-gray-500 font-bold">الحساب المسجل:</p>
                         <p id="profileEmailDisplay" class="text-xs font-bold text-amber-900"></p>
                     </div>
                     <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-1 rounded font-bold">🟢 متصل</span>
@@ -448,7 +457,7 @@
                 <button onclick="closeModal('shippingPolicyModal')" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
             <p class="text-xs text-gray-700 leading-relaxed">
-                خدمة الشحن والتوصيل لمنازلكم متاحة <strong>على مدار الأسبوع طوال أيام الأسبوع</strong>، وذلك ابتداءً من الساعة <strong>12 ظهراً وحتى الساعة 12 مساءً</strong> لضمان وصول أجود أنواع البن الطازج إليكم في أسرع وقت وتغطية كافة فروعنا بالقاهرة والجيزة. يتم احتساب مصاريف الشحن تلقائياً بـ 10 جنيهات لكل كيلومتر بناءً على مسافة الفرع.
+                خدمة الشحن والتوصيل لمنازلكم متاحة <strong>على مدار الأسبوع طوال أيام الأسبوع</strong>، وذلك ابتداءً من الساعة <strong>12 ظهراً وحتى الساعة 12 مساءً</strong> لضمان وصول أجود أنواع البن الطازج إليكم في أسرع وقت وتغطية كافة فروعنا بالقاهرة والجيزة.
             </p>
             <button onclick="closeModal('shippingPolicyModal')" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg text-xs font-bold transition">حسناً، فهمت</button>
         </div>
@@ -562,6 +571,17 @@
     </footer>
 
     <script>
+        // جلب رابط التحديث تلقائياً من ملف version.json لزر التحميل في الموقع
+        fetch('version.json')
+            .then(response => response.json())
+            .then(data => {
+                const downloadBtn = document.getElementById('downloadAppBtn');
+                if (data.downloadUrl && downloadBtn) {
+                    downloadBtn.href = data.downloadUrl;
+                }
+            })
+            .catch(error => console.error('خطأ في جلب رابط الأبليكيشن:', error));
+
         // إعدادات اتصال Supabase
         const SUPABASE_URL = 'https://csroadhvynbSksqncrur.supabase.co';
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGcXPVopb4DItZ2LY6V1vQ_bQ3vf30C';
@@ -585,9 +605,6 @@
             "زهراء المعادي": { lat: 29.9523, lng: 31.3102, address: "شارع الخمسين الشطر الثالث عشر بجوار سبينز عمارة 26، القاهرة" }
         };
 
-        // متغير لتخزين مصاريف الشحن الحالية (افتراضياً 15 جنيه أو حسب المسافة)
-        let shippingCost = 15.0;
-
         function updateBranchAddress() {
             const selectedBranch = document.getElementById('region').value;
             const addressBox = document.getElementById('branchAddressBox');
@@ -596,20 +613,6 @@
             } else {
                 addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
             }
-            renderCart();
-        }
-
-        // دالة حساب المسافة بين نقطتين (Haversine formula) بالكيلومتر
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // نصف قطر الأرض بالكيلومتر
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = 
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c; // المسافة بالكيلومتر
         }
 
         function findNearestBranch() {
@@ -627,7 +630,7 @@
 
                 Object.keys(branchLocations).forEach(branchName => {
                     const b = branchLocations[branchName];
-                    const dist = calculateDistance(userLat, userLng, b.lat, b.lng);
+                    const dist = Math.sqrt(Math.pow(userLat - b.lat, 2) + Math.pow(userLng - b.lng, 2));
                     if (dist < minDistance) {
                         minDistance = dist;
                         nearestBranch = branchName;
@@ -637,15 +640,7 @@
                 if (nearestBranch) {
                     document.getElementById('region').value = nearestBranch;
                     updateBranchAddress();
-                    
-                    // حساب مصاريف الشحن: 10 جنيه لكل كيلومتر (مع حد أدنى 10 جنيه مثلاً)
-                    let calculatedShipping = Math.round(minDistance * 10);
-                    if (calculatedShipping < 10) calculatedShipping = 10;
-                    
-                    shippingCost = calculatedShipping;
-                    renderCart();
-
-                    alert(`تم تحديد أقرب فرع إليك: "${nearestBranch}" 📍\nالمسافة تقريباً: ${minDistance.toFixed(1)} كم\nتم حساب مصاريف الشحن تلقائياً: ${shippingCost} ج.م (10 ج/كم)`);
+                    alert(`تم تحديد أقرب فرع إليك بنجاح: "${nearestBranch}" 📍`);
                 }
             }, error => {
                 alert('تعذر الوصول لموقعك الجغرافي. تأكد من السماح للمتصفح بالوصول لموقعك.');
@@ -1242,8 +1237,6 @@
         function renderCart() {
             const container = document.getElementById('cartItemsContainer');
             const totalSummary = document.getElementById('cartTotalSummary');
-            const subtotalText = document.getElementById('subtotalAmountText');
-            const shippingText = document.getElementById('shippingAmountText');
             const totalAmountText = document.getElementById('totalAmountText');
             
             const floatingBtn = document.getElementById('floatingCartBtn');
@@ -1262,10 +1255,10 @@
             container.className = "bg-amber-100/70 p-3 rounded-lg border border-amber-300 text-right text-xs text-amber-900 space-y-2 transition-all duration-300";
             container.innerHTML = '';
 
-            let subtotal = 0;
+            let grandTotal = 0;
 
             cart.forEach((cartItem, index) => {
-                subtotal += cartItem.price;
+                grandTotal += cartItem.price;
                 const div = document.createElement('div');
                 div.className = "flex justify-between items-center bg-white p-2 rounded border border-amber-200";
                 div.innerHTML = `
@@ -1278,12 +1271,8 @@
                 container.appendChild(div);
             });
 
-            let grandTotal = subtotal + shippingCost;
-
-            subtotalText.textContent = subtotal.toFixed(2) + ' ج.م';
-            shippingText.textContent = shippingCost.toFixed(2) + ' ج.م';
-            totalAmountText.textContent = grandTotal.toFixed(2) + ' ج.م';
             totalSummary.classList.remove('hidden');
+            totalAmountText.textContent = grandTotal.toFixed(2) + ' ج.م';
 
             if (floatingBtn) {
                 floatingBtn.classList.remove('hidden');
@@ -1292,7 +1281,7 @@
             }
         }
 
-        // الحسابات والـ OTP
+        // المصادقة (Google, Facebook, OTP)
         async function openAuthModal() { 
             document.getElementById('authModal').classList.remove('hidden'); 
             checkUserSession(); 
@@ -1303,6 +1292,22 @@
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session && session.user) showProfileView(session.user); 
             else resetAuthSteps();
+        }
+
+        async function loginWithGoogle() {
+            const { error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: window.location.origin }
+            });
+            if (error) alert('خطأ في تسجيل الدخول بـ Google: ' + error.message);
+        }
+
+        async function loginWithFacebook() {
+            const { error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'facebook',
+                options: { redirectTo: window.location.origin }
+            });
+            if (error) alert('خطأ في تسجيل الدخول بـ Facebook: ' + error.message);
         }
 
         async function sendOtpCode() {
@@ -1325,17 +1330,20 @@
         }
 
         async function showProfileView(user) {
+            document.getElementById('socialAuthSection').classList.add('hidden');
             document.getElementById('authEmailStep').classList.add('hidden');
             document.getElementById('authOtpStep').classList.add('hidden');
             document.getElementById('userProfileStep').classList.remove('hidden');
-            document.getElementById('profileEmailDisplay').textContent = user.email;
-            document.getElementById('authNavBtn').innerHTML = `<span>👤 (${user.email.split('@')[0]})</span>`;
+            
+            let displayName = user.email ? user.email.split('@')[0] : (user.user_metadata?.full_name || 'حسابي');
+            document.getElementById('profileEmailDisplay').textContent = user.email || user.user_metadata?.email || 'مستخدم فيسبوك/جوجل';
+            document.getElementById('authNavBtn').innerHTML = `<span>👤 (${displayName})</span>`;
             loadUserProfileOrders();
         }
 
         async function loadUserProfileOrders() {
             const container = document.getElementById('profileOrdersContainer');
-            container.innerHTML = `<p class="text-gray-400 text-center py-2">جاري البحث عن طلباتك...</p>`;
+            container.innerHTML = `<p class="text-gray-400 text-center py-2">جاري جلب الطلبات...</p>`;
             try {
                 let { data: orders } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false }).limit(5);
                 if (!orders || orders.length === 0) { container.innerHTML = `<p class="text-gray-400 text-center py-2">لا توجد طلبات سابقة مسجلة.</p>`; return; }
@@ -1357,6 +1365,7 @@
         }
 
         function resetAuthSteps() {
+            document.getElementById('socialAuthSection').classList.remove('hidden');
             document.getElementById('authEmailStep').classList.remove('hidden');
             document.getElementById('authOtpStep').classList.add('hidden');
             document.getElementById('userProfileStep').classList.add('hidden');
@@ -1701,8 +1710,7 @@
             }
             
             const combinedDetails = cart.map(item => item.text).join(' + ');
-            let subtotal = cart.reduce((sum, item) => sum + item.price, 0);
-            let grandTotal = subtotal + shippingCost;
+            const grandTotal = cart.reduce((sum, item) => sum + item.price, 0);
             const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
 
             try {
@@ -1720,7 +1728,7 @@
                     phone1: phone1Val,
                     phone2: phone2Val,
                     details: combinedDetails,
-                    total_price: grandTotal.toFixed(2) + ' ج.م (شامل شحن ' + shippingCost + ' ج)',
+                    total_price: grandTotal.toFixed(2) + ' ج.م',
                     address: addressVal,
                     region: selectedBranch,
                     status: 'جديد (في انتظار الاستلام)'
