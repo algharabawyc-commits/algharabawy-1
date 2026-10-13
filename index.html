@@ -3,37 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بن الغرباوي - اطلب أوردرك أونلاين</title>
+    <title id="pageTitle">بن الغرباوي - اطلب أوردرك أونلاين</title>
     <!-- مكتبة تيلويند سي إس إس -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- مكتبة Supabase JS للربط بقاعدة البيانات -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Cairo', sans-serif; }</style>
+    <style>
+        body { font-family: 'Cairo', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        
+        /* إعدادات الوضع الليلي Dark Mode Custom Classes */
+        body.dark-theme {
+            background-color: #0f0d0b;
+            color: #e2d8ce;
+        }
+        body.dark-theme .bg-white {
+            background-color: #1a1613 !important;
+            color: #f3ece7 !important;
+            border-color: #332a24 !important;
+        }
+        body.dark-theme .bg-gray-50 {
+            background-color: #241e1a !important;
+            color: #e2d8ce !important;
+            border-color: #3d312a !important;
+        }
+        body.dark-theme .bg-amber-50 {
+            background-color: #2a2018 !important;
+            color: #f7e3d0 !important;
+            border-color: #4a3828 !important;
+        }
+        body.dark-theme .text-gray-800, 
+        body.dark-theme .text-gray-900, 
+        body.dark-theme .text-gray-700 {
+            color: #e8ded5 !important;
+        }
+        body.dark-theme .text-gray-500, 
+        body.dark-theme .text-gray-600 {
+            color: #b0a397 !important;
+        }
+        body.dark-theme .border-gray-200 {
+            border-color: #332a24 !important;
+        }
+        body.dark-theme input, 
+        body.dark-theme select, 
+        body.dark-theme textarea {
+            background-color: #241e1a !important;
+            color: #ffffff !important;
+            border-color: #4a3a30 !important;
+        }
+        body.dark-theme .modal-card {
+            background-color: #1a1613 !important;
+            color: #f3ece7 !important;
+        }
+        .dev-glow {
+            text-shadow: 0 0 8px rgba(229, 166, 57, 0.4);
+        }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen pb-20 lg:pb-0">
 
-    <!-- شريط العرض العلوي مع اللوجو وزر الحساب فقط -->
+    <!-- شريط العرض العلوي مع اللوجو وأزرار اللغة والوضع الليلي وزر الحساب -->
     <header class="bg-amber-900 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="bg-white px-2 py-1 rounded-lg shadow-sm flex items-center justify-center">
                     <img src="https://i.postimg.cc/VvnhkQhY/logo-01.png" alt="بن الغرباوي" class="h-9 w-auto object-contain">
                 </div>
-                <h1 class="text-lg font-bold">بن الغرباوي</h1>
-                <span class="text-xs bg-amber-800 px-2.5 py-1 rounded-full text-amber-200 hidden sm:inline-block">من 12 صباحاً حتى 12 مساءً</span>
+                <h1 class="text-lg font-bold" data-i18n="brand_name">بن الغرباوي</h1>
+                <span class="text-xs bg-amber-800 px-2.5 py-1 rounded-full text-amber-200 hidden sm:inline-block" data-i18n="work_hours">من 12 صباحاً حتى 12 مساءً</span>
             </div>
+            
             <div class="flex items-center gap-2">
-                <!-- زر حسابي مع الـ OTP -->
-                <button onclick="openAuthModal()" id="authNavBtn" class="bg-amber-700 hover:bg-amber-800 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
-                    <span>👤 حسابي</span>
+                <!-- زر تبديل الوضع الليلي -->
+                <button onclick="toggleDarkMode()" id="themeToggleBtn" title="الوضع الليلي / النهاري" class="bg-amber-800 hover:bg-amber-700 text-amber-100 p-2 rounded-lg text-xs font-bold transition shadow flex items-center justify-center">
+                    <span id="themeIcon">🌙</span>
                 </button>
-                <!-- زر التحميل المحدث ديناميكياً ليقرأ من version.json تلقائياً -->
+
+                <!-- زر تبديل اللغة -->
+                <button onclick="toggleLanguage()" id="langToggleBtn" class="bg-amber-800 hover:bg-amber-700 text-amber-100 px-2.5 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1 border border-amber-700">
+                    <span>🌐</span>
+                    <span id="langText">EN</span>
+                </button>
+
+                <!-- زر حسابي -->
+                <button onclick="openAuthModal()" id="authNavBtn" class="bg-amber-700 hover:bg-amber-800 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow flex items-center gap-1">
+                    <span data-i18n="my_account">👤 حسابي</span>
+                </button>
+
+                <!-- زر التحميل -->
                 <a id="downloadAppBtn" href="#" download target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow hidden md:flex items-center gap-1">
-                    <span>📥 تحميل الأبلكيشن APK</span>
+                    <span data-i18n="download_app">📥 تحميل الأبلكيشن APK</span>
                 </a>
+
                 <div class="text-xs sm:text-sm bg-amber-950 px-3 py-1.5 rounded-lg border border-amber-800 hidden lg:block">
-                    <span>التوصيل متاح لجميع فروع القاهرة والجيزة</span>
+                    <span data-i18n="delivery_coverage">التوصيل متاح لجميع فروع القاهرة والجيزة</span>
                 </div>
             </div>
         </div>
@@ -42,28 +105,28 @@
     <!-- المحتوى الرئيسي -->
     <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 mt-4">
 
-        <!-- القسم الأيمن: فئات قائمة الطعام ونبذة عن الشركة فقط -->
+        <!-- القسم الأيمن: فئات قائمة الطعام ونبذة عن الشركة -->
         <div class="space-y-4 lg:col-span-1">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 h-fit">
-                <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base">فئات المنتجات</h3>
+                <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base" data-i18n="categories_title">فئات المنتجات</h3>
                 <ul class="space-y-2 text-sm text-gray-700" id="categoryList">
-                    <li onclick="switchCategory('basic', this)" class="bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition">🔥 التوليفات الأساسية</li>
-                    <li onclick="switchCategory('arabica', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">🌟 الأربيكات</li>
-                    <li onclick="switchCategory('french', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">☕ الأنواع الفرنسية والإسبريسو</li>
-                    <li onclick="switchCategory('flavors', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">🍫 النكهات والإضافات (بندق، شوكولاتة)</li>
-                    <li onclick="switchCategory('herbs', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition">🌿 أعشاب ونسكافيه</li>
-                    <li onclick="switchCategory('customBlend', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition text-amber-800 font-bold">🧪 مبتكر التوليفات الخاصة</li>
+                    <li onclick="switchCategory('basic', this)" class="bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition" data-i18n="cat_basic">🔥 التوليفات الأساسية</li>
+                    <li onclick="switchCategory('arabica', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition" data-i18n="cat_arabica">🌟 الأربيكات</li>
+                    <li onclick="switchCategory('french', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition" data-i18n="cat_french">☕ الأنواع الفرنسية والإسبريسو</li>
+                    <li onclick="switchCategory('flavors', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition" data-i18n="cat_flavors">🍫 النكهات والإضافات (بندق، شوكولاتة)</li>
+                    <li onclick="switchCategory('herbs', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition" data-i18n="cat_herbs">🌿 أعشاب ونسكافيه</li>
+                    <li onclick="switchCategory('customBlend', this)" class="hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition text-amber-800 font-bold" data-i18n="cat_custom">🧪 مبتكر التوليفات الخاصة</li>
                 </ul>
             </div>
 
             <!-- بطاقة نبذة عن الشركة -->
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 space-y-2">
-                <h3 class="font-bold text-amber-900 border-b pb-2 text-sm">☕ عن بن الغرباوي</h3>
-                <p class="text-xs text-gray-700 leading-relaxed text-justify">
-                    شركة الغرباوي هي شركة مصرية متخصصة في مجال البن خبرة أكثر من 50 عاماً. تأسست عام 1968 وتوارثها الأجيال حتى وصلت إلى الآن لتكون الشركة متخصصة في طحن وتجهيز جميع أنواع البن. ومن هذا المنطق فإننا نهتم بأدق التفاصيل ونعمل بشكل مختلف على توليفات ممتازة لنرتقي بجودة البن.
+                <h3 class="font-bold text-amber-900 border-b pb-2 text-sm" data-i18n="about_title">☕ عن بن الغرباوي</h3>
+                <p class="text-xs text-gray-700 leading-relaxed text-justify" data-i18n="about_p1">
+                    شركة الغرباوي هي شركة مصرية متخصصة في مجال البن خبرة أكثر من 50 عاماً. تأسست عام 1968 وتوارثها الأجيال حتى وصلت إلى الآن لتكون الشركة متخصصة في طحن وتجهيز جميع أنواع البن.
                 </p>
-                <p class="text-xs text-gray-700 leading-relaxed text-justify">
-                    استراتيجية الشركة مبنية على تقديم أفضل أنواع البن بأسعار معقولة وتنافسية من خلال الطحن والتغليف بأحدث التقنيات والحلول الجديدة والمبتكرة، وتعمل الشركة على اتساع نقاط الانتشار بوجود فروعنا.
+                <p class="text-xs text-gray-700 leading-relaxed text-justify" data-i18n="about_p2">
+                    استراتيجية الشركة مبنية على تقديم أفضل أنواع البن بأسعار معقولة وتنافسية من خلال الطحن والتغليف بأحدث التقنيات والحلول الجديدة والمبتكرة.
                 </p>
             </div>
         </div>
@@ -72,7 +135,7 @@
         <div class="lg:col-span-2 space-y-4">
             <!-- شريط البحث السريع -->
             <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200">
-                <input type="text" id="productSearchInput" oninput="searchProducts(this.value)" placeholder="🔍 ابحث عن أي صنف بن أو نكهة..." class="w-full px-4 py-2 text-sm border rounded-xl focus:outline-none focus:border-amber-700 bg-gray-50">
+                <input type="text" id="productSearchInput" oninput="searchProducts(this.value)" placeholder="🔍 ابحث عن أي صنف بن أو نكهة..." class="w-full px-4 py-2 text-sm border rounded-xl focus:outline-none focus:border-amber-700 bg-gray-50" data-i18n-ph="search_ph">
             </div>
 
             <!-- قسم الأصناف الأعلى تقييماً -->
@@ -80,46 +143,46 @@
                 <div class="flex justify-between items-center border-b border-amber-700/60 pb-2">
                     <h3 class="font-bold text-sm flex items-center gap-1.5">
                         <span>📊</span>
-                        <span>الأعلى تقييماً بآراء العملاء</span>
+                        <span data-i18n="top_rated_title">الأعلى تقييماً بآراء العملاء</span>
                     </h3>
-                    <span class="text-[11px] bg-amber-700 px-2 py-0.5 rounded-full text-amber-200">تحديث تلقائي</span>
+                    <span class="text-[11px] bg-amber-700 px-2 py-0.5 rounded-full text-amber-200" data-i18n="auto_update">تحديث تلقائي</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-xs" id="topRatedContainer">
-                    <div class="col-span-3 text-center text-amber-200 text-xs py-2">جاري تحميل الأصناف الأعلى تقييماً...</div>
+                    <div class="col-span-3 text-center text-amber-200 text-xs py-2" data-i18n="loading_ratings">جاري تحميل الأصناف الأعلى تقييماً...</div>
                 </div>
             </div>
 
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                <h2 class="text-lg font-bold text-amber-900 mb-3" id="categoryTitle">🔥 التوليفات الأساسية</h2>
+                <h2 class="text-lg font-bold text-amber-900 mb-3" id="categoryTitle" data-i18n="cat_basic_title">🔥 التوليفات الأساسية</h2>
                 
                 <!-- ملاحظة قسم الأربيكات -->
                 <div id="arabicaNotice" class="hidden bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs font-bold text-amber-900 mb-3 flex items-center gap-2 shadow-sm">
                     <span>🌟</span>
-                    <span>ملاحظة هامة: جميع أصناف الأربيكات متوفرة بدرجة تحميص (وسط) فقط لضمان أفضل طعم ومذاق للقهوة.</span>
+                    <span data-i18n="arabica_note">ملاحظة هامة: جميع أصناف الأربيكات متوفرة بدرجة تحميص (وسط) فقط لضمان أفضل طعم ومذاق للقهوة.</span>
                 </div>
 
                 <!-- قسم مبتكر التوليفات الخاصة -->
                 <div id="customBlendSection" class="hidden space-y-3">
                     <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-xs space-y-3">
                         <div class="flex justify-between items-center border-b pb-2">
-                            <p class="font-bold text-amber-900 text-sm">🧪 صمم توليفَتك الخاصة (الشرقي + الأربيكات):</p>
-                            <button type="button" onclick="addBlendRow()" class="bg-amber-800 hover:bg-amber-900 text-white px-3 py-1.5 rounded-lg font-bold transition text-xs">+ إضافة صنف آخر</button>
+                            <p class="font-bold text-amber-900 text-sm" data-i18n="custom_blend_heading">🧪 صمم توليفَتك الخاصة (الشرقي + الأربيكات):</p>
+                            <button type="button" onclick="addBlendRow()" class="bg-amber-800 hover:bg-amber-900 text-white px-3 py-1.5 rounded-lg font-bold transition text-xs" data-i18n="add_another_item">+ إضافة صنف آخر</button>
                         </div>
 
                         <div class="grid grid-cols-2 gap-2 bg-white p-3 rounded-lg border border-amber-200">
                             <div>
-                                <label class="block font-semibold mb-1">نوع التوليفة:</label>
+                                <label class="block font-semibold mb-1" data-i18n="lbl_blend_type">نوع التوليفة:</label>
                                 <select id="blendSubtype" onchange="calculateCustomBlendTotal()" class="w-full p-2 text-xs border rounded bg-white">
-                                    <option value="محوج" selected>محوج</option>
-                                    <option value="سادة">سادة</option>
+                                    <option value="محوج" selected data-i18n="opt_spiced">محوج</option>
+                                    <option value="سادة" data-i18n="opt_plain">سادة</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block font-semibold mb-1">درجة التحميص:</label>
+                                <label class="block font-semibold mb-1" data-i18n="lbl_roast_level">درجة التحميص:</label>
                                 <select id="blendRoast" onchange="calculateCustomBlendTotal()" class="w-full p-2 text-xs border rounded bg-white">
-                                    <option value="وسط" selected>وسط</option>
-                                    <option value="فاتح">فاتح</option>
-                                    <option value="غامق">غامق</option>
+                                    <option value="وسط" selected data-i18n="opt_medium">وسط</option>
+                                    <option value="فاتح" data-i18n="opt_light">فاتح</option>
+                                    <option value="غامق" data-i18n="opt_dark">غامق</option>
                                 </select>
                             </div>
                         </div>
@@ -127,11 +190,11 @@
                         <div id="blendRowsContainer" class="space-y-2"></div>
 
                         <div class="bg-white p-3 rounded-lg border border-amber-300 flex justify-between items-center font-bold text-amber-900">
-                            <span>إجمالي وزن التوليفة: <span id="blendTotalWeightText">0 جرام</span></span>
-                            <span>إجمالي السعر: <span id="blendTotalPrice" class="text-sm font-extrabold text-amber-700">0.00</span> ج.م</span>
+                            <span><span data-i18n="total_blend_weight">إجمالي وزن التوليفة:</span> <span id="blendTotalWeightText">0 جرام</span></span>
+                            <span><span data-i18n="total_price_lbl">إجمالي السعر:</span> <span id="blendTotalPrice" class="text-sm font-extrabold text-amber-700">0.00</span> <span data-i18n="currency">ج.م</span></span>
                         </div>
 
-                        <button type="button" onclick="addCustomBlendToCart()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2.5 rounded-lg font-bold shadow transition text-sm">إضافة التوليفة الخاصة للسلة 🛒</button>
+                        <button type="button" onclick="addCustomBlendToCart()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2.5 rounded-lg font-bold shadow transition text-sm" data-i18n="add_custom_blend_btn">إضافة التوليفة الخاصة للسلة 🛒</button>
                     </div>
                 </div>
 
@@ -141,54 +204,54 @@
 
         <!-- القسم الأيسر: سلة المشتريات واستمارة إتمام الأوردر -->
         <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 h-fit lg:col-span-1">
-            <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base">🛒 سلة مشترياتك</h3>
+            <h3 class="font-bold text-gray-800 border-b pb-2 mb-3 text-base" data-i18n="cart_title">🛒 سلة مشترياتك</h3>
             
             <form id="orderForm" class="space-y-3">
                 <div id="quickReorderBanner" class="hidden bg-amber-50 border border-amber-300 p-3 rounded-xl text-xs space-y-2 shadow-sm">
-                    <p class="font-bold text-amber-900">✨ أهلاً بك مجدداً! وجدنا آخر أوردر لك:</p>
+                    <p class="font-bold text-amber-900" data-i18n="welcome_back">✨ أهلاً بك مجدداً! وجدنا آخر أوردر لك:</p>
                     <p id="quickReorderText" class="text-gray-700 font-semibold"></p>
-                    <button type="button" onclick="applyQuickReorder()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-1.5 rounded-lg text-xs font-bold transition shadow">إعادة طلب هذا الأوردر بضغطة واحدة ⚡</button>
+                    <button type="button" onclick="applyQuickReorder()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-1.5 rounded-lg text-xs font-bold transition shadow" data-i18n="reorder_btn">إعادة طلب هذا الأوردر بضغطة واحدة ⚡</button>
                 </div>
 
-                <div id="cartItemsContainer" class="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500 transition-all duration-300">
+                <div id="cartItemsContainer" class="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500 transition-all duration-300" data-i18n="empty_cart_msg">
                     لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.
                 </div>
 
                 <div id="cartTotalSummary" class="hidden bg-amber-900 text-white p-3 rounded-lg text-xs font-bold space-y-1 shadow-inner">
                     <div class="flex justify-between items-center">
-                        <span>إجمالي الفاتورة:</span>
+                        <span data-i18n="total_bill">إجمالي الفاتورة:</span>
                         <span id="totalAmountText" class="text-amber-200 text-sm font-extrabold">0.00 ج.م</span>
                     </div>
-                    <div class="text-[11px] text-amber-200/90 text-center border-t border-amber-800 pt-1 font-normal">
+                    <div class="text-[11px] text-amber-200/90 text-center border-t border-amber-800 pt-1 font-normal" data-i18n="plus_shipping">
                         + مصاريف الشحن
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل أساسي (للبحث)</label>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_phone1">موبايل أساسي (للبحث)</label>
                         <input type="tel" id="phone1" required maxlength="11" placeholder="010xxxxxxxx" class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-amber-600">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل إضافي</label>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_phone2">موبايل إضافي</label>
                         <input type="tel" id="phone2" maxlength="11" placeholder="011xxxxxxx" class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">اسم العميل</label>
-                    <input type="text" id="customerName" required placeholder="مثال: أ. طه حسين" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_customer_name">اسم العميل</label>
+                    <input type="text" id="customerName" required placeholder="مثال: أ. طه حسين" data-i18n-ph="ph_customer_name" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">العنوان بالتفصيل</label>
-                    <textarea id="customerAddress" rows="2" required placeholder="الشارع، العمارة، الدور..." class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none"></textarea>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_address">العنوان بالتفصيل</label>
+                    <textarea id="customerAddress" rows="2" required placeholder="الشارع، العمارة، الدور..." data-i18n-ph="ph_address" class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none"></textarea>
                 </div>
 
                 <div>
                     <div class="flex justify-between items-center mb-1">
-                        <label class="block text-xs font-semibold text-gray-700">اختر الفرع الأقرب</label>
-                        <button type="button" onclick="findNearestBranch()" class="text-[11px] text-amber-700 font-bold hover:underline flex items-center gap-1">📍 تحديد أقرب فرع بالـ GPS</button>
+                        <label class="block text-xs font-semibold text-gray-700" data-i18n="lbl_branch">اختر الفرع الأقرب</label>
+                        <button type="button" onclick="findNearestBranch()" class="text-[11px] text-amber-700 font-bold hover:underline flex items-center gap-1" data-i18n="gps_branch">📍 تحديد أقرب فرع بالـ GPS</button>
                     </div>
                     <select id="region" onchange="updateBranchAddress()" class="w-full px-3 py-2 text-sm border rounded-lg bg-white focus:outline-none">
                         <option value="أم المصريين">أم المصريين</option>
@@ -207,18 +270,18 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">📍 عنوان الفرع التفصيلي</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_branch_details">📍 عنوان الفرع التفصيلي</label>
                     <div id="branchAddressBox" class="w-full px-3 py-2 text-xs bg-amber-50 border border-amber-200 rounded-lg text-amber-900 font-semibold min-h-[38px] flex items-center"></div>
                 </div>
 
-                <button type="submit" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2.5 rounded-lg font-bold text-sm transition shadow-md">
+                <button type="submit" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2.5 rounded-lg font-bold text-sm transition shadow-md" data-i18n="submit_order_btn">
                     تأكيد وإرسال الأوردر
                 </button>
             </form>
 
             <div id="successMsg" class="hidden p-4 mt-3 bg-green-50 border border-green-200 text-green-800 text-center rounded-lg text-xs font-semibold space-y-2">
-                <p>تم استلام طلبك بنجاح وتم حفظه في قاعدة البيانات! ☕</p>
-                <button onclick="openTrackModal()" class="w-full bg-amber-700 hover:bg-amber-800 text-white px-3 py-2 rounded-lg text-xs font-bold transition">🔍 تتبع طلبك أو تعديله الآن</button>
+                <p data-i18n="order_success_msg">تم استلام طلبك بنجاح وتم حفظه في قاعدة البيانات! ☕</p>
+                <button onclick="openTrackModal()" class="w-full bg-amber-700 hover:bg-amber-800 text-white px-3 py-2 rounded-lg text-xs font-bold transition" data-i18n="track_order_now">🔍 تتبع طلبك أو تعديله الآن</button>
             </div>
         </div>
 
@@ -228,100 +291,100 @@
     <div id="floatingCartBtn" onclick="scrollToCart()" class="fixed bottom-4 left-4 right-4 bg-amber-900 text-white px-4 py-3 rounded-2xl shadow-2xl border-2 border-amber-400 z-40 flex justify-between items-center cursor-pointer hidden lg:hidden transition-transform duration-300">
         <div class="flex items-center gap-2">
             <span class="bg-amber-700 text-amber-200 text-xs px-2.5 py-1 rounded-xl font-bold" id="floatingCartCount">0 أصناف</span>
-            <span class="text-xs font-bold">🛒 عرض سلة المشتريات</span>
+            <span class="text-xs font-bold" data-i18n="view_cart">🛒 عرض سلة المشتريات</span>
         </div>
         <span class="text-sm font-extrabold text-amber-200" id="floatingCartTotal">0.00 ج.م</span>
     </div>
 
-    <!-- نافذة منبثقة (Modal) لتخصيص الصنف -->
+    <!-- نافذة منبثقة لتخصيص الصنف -->
     <div id="customizerModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <h3 class="text-lg font-bold text-amber-900" id="modalTitle">تخصيص الطلب</h3>
+        <div class="bg-white modal-card rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <h3 class="text-lg font-bold text-amber-900" id="modalTitle" data-i18n="customize_order">تخصيص الطلب</h3>
             
             <div id="subtypeWrapper">
-                <label class="block text-xs font-semibold text-gray-700 mb-1">النوع (سادة / محوج)</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_type">النوع (سادة / محوج)</label>
                 <select id="modalSubtype" onchange="updateModalPricePreview()" class="w-full p-2.5 border rounded-lg text-sm bg-white">
-                    <option value="سادة">سادة</option>
-                    <option value="محوج" selected>محوج</option>
+                    <option value="سادة" data-i18n="opt_plain">سادة</option>
+                    <option value="محوج" selected data-i18n="opt_spiced">محوج</option>
                 </select>
             </div>
 
             <div id="roastWrapper">
-                <label class="block text-xs font-semibold text-gray-700 mb-1">درجة التحميص</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_roast_level">درجة التحميص</label>
                 <select id="modalRoast" onchange="updateModalPricePreview()" class="w-full p-2.5 border rounded-lg text-sm bg-white">
-                    <option value="فاتح">فاتح</option>
-                    <option value="وسط" selected>وسط</option>
-                    <option value="غامق">غامق</option>
+                    <option value="فاتح" data-i18n="opt_light">فاتح</option>
+                    <option value="وسط" selected data-i18n="opt_medium">وسط</option>
+                    <option value="غامق" data-i18n="opt_dark">غامق</option>
                 </select>
             </div>
 
             <!-- دليل وطحنة الإسبريسو -->
             <div id="espressoGrindWrapper" class="hidden">
-                <label class="block text-xs font-bold text-amber-900 mb-1">☕ دليل طحن الإسبريسو (اختر طريقة التحضير):</label>
+                <label class="block text-xs font-bold text-amber-900 mb-1" data-i18n="espresso_guide">☕ دليل طحن الإسبريسو (اختر طريقة التحضير):</label>
                 <select id="modalEspressoGrind" class="w-full p-2.5 border border-amber-300 rounded-lg text-xs bg-amber-50 font-semibold text-amber-900">
-                    <option value="طحنة إسبريسو (ماكينة إسبيرسو)" selected>ماكينة إسبريسو (طحنة إسبريسو)</option>
-                    <option value="طحنة متوسطة (فلتر / V60)">فلتر / V60 (طحنة متوسطة)</option>
-                    <option value="طحنة خشنة (فرنش بريس)">فرنش بريس (طحنة خشنة)</option>
-                    <option value="حبوب كاملة (بدون طحن)">حبوب كاملة (بدون طحن)</option>
+                    <option value="طحنة إسبريسو (ماكينة إسبيرسو)" selected data-i18n="espresso_grind_1">ماكينة إسبريسو (طحنة إسبريسو)</option>
+                    <option value="طحنة متوسطة (فلتر / V60)" data-i18n="espresso_grind_2">فلتر / V60 (طحنة متوسطة)</option>
+                    <option value="طحنة خشنة (فرنش بريس)" data-i18n="espresso_grind_3">فرنش بريس (طحنة خشنة)</option>
+                    <option value="حبوب كاملة (بدون طحن)" data-i18n="espresso_grind_4">حبوب كاملة (بدون طحن)</option>
                 </select>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1">الوزن / الكمية</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_weight">الوزن / الكمية</label>
                 <select id="modalWeight" onchange="checkCustomWeight(this); updateModalPricePreview();" class="w-full p-2.5 border rounded-lg text-sm bg-white">
-                    <option value="تمن كيلو (125 جرام)">تمن كيلو (125 جرام)</option>
-                    <option value="ربع كيلو (250 جرام)">ربع كيلو (250 جرام)</option>
-                    <option value="ربعين (نصف كيلو / 500 جرام)" selected>ربعين (نصف كيلو / 500 جرام)</option>
-                    <option value="ثلاث أرباع كيلو (750 جرام)">ثلاث أرباع كيلو (750 جرام)</option>
-                    <option value="كيلو (1000 جرام)">كيلو (1000 جرام)</option>
-                    <option value="أخرى">أخرى (حدد الوزن يدوياً)</option>
+                    <option value="تمن كيلو (125 جرام)" data-i18n="w_125">تمن كيلو (125 جرام)</option>
+                    <option value="ربع كيلو (250 جرام)" data-i18n="w_250">ربع كيلو (250 جرام)</option>
+                    <option value="ربعين (نصف كيلو / 500 جرام)" selected data-i18n="w_500">ربعين (نصف كيلو / 500 جرام)</option>
+                    <option value="ثلاث أرباع كيلو (750 جرام)" data-i18n="w_750">ثلاث أرباع كيلو (750 جرام)</option>
+                    <option value="كيلو (1000 جرام)" data-i18n="w_1000">كيلو (1000 جرام)</option>
+                    <option value="أخرى" data-i18n="w_custom">أخرى (حدد الوزن يدوياً)</option>
                 </select>
             </div>
 
             <div id="customWeightWrapper" class="hidden">
-                <label class="block text-xs font-semibold text-gray-700 mb-1">اكتب الوزن المطلوب (مثال: 100 جرام)</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_custom_weight">اكتب الوزن المطلوب (مثال: 100 جرام)</label>
                 <input type="text" id="modalCustomWeight" oninput="updateModalPricePreview()" placeholder="اكتب الوزن هنا..." class="w-full p-2.5 border rounded-lg text-sm bg-white">
             </div>
 
             <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 flex justify-between items-center text-xs font-bold text-amber-900">
-                <span>سعر الكيلو: <span id="modalKiloPrice">0</span> ج.م</span>
-                <span>إجمالي الصنف: <span id="modalItemTotalPrice" class="text-sm font-extrabold text-amber-700">0.00</span> ج.م</span>
+                <span><span data-i18n="kilo_price_lbl">سعر الكيلو:</span> <span id="modalKiloPrice">0</span> <span data-i18n="currency">ج.م</span></span>
+                <span><span data-i18n="item_total_lbl">إجمالي الصنف:</span> <span id="modalItemTotalPrice" class="text-sm font-extrabold text-amber-700">0.00</span> <span data-i18n="currency">ج.م</span></span>
             </div>
 
             <div class="flex gap-2 pt-2">
-                <button onclick="closeCustomizer()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-bold text-sm">إلغاء</button>
-                <button onclick="addItemToCart()" class="w-1/2 bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg font-bold text-sm shadow">إضافة للسلة</button>
+                <button onclick="closeCustomizer()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-bold text-sm" data-i18n="btn_cancel">إلغاء</button>
+                <button onclick="addItemToCart()" class="w-1/2 bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg font-bold text-sm shadow" data-i18n="btn_add_to_cart">إضافة للسلة</button>
             </div>
         </div>
     </div>
 
-    <!-- نافذة منبثقة (Modal) لتتبع الطلب وتقييمه وتعديله وإلغائه -->
+    <!-- نافذة تتبع الطلب -->
     <div id="trackModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="bg-white modal-card rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-lg font-bold text-amber-900">🔍 تتبع طلبك وتعديله وتقييمه</h3>
+                <h3 class="text-lg font-bold text-amber-900" data-i18n="track_modal_title">🔍 تتبع طلبك وتعديله وتقييمه</h3>
                 <button onclick="closeTrackModal()" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
 
             <div class="space-y-3">
-                <label class="block text-xs font-bold text-gray-700">ادخل رقم الهاتف المستخدم في الطلب:</label>
+                <label class="block text-xs font-bold text-gray-700" data-i18n="enter_phone_track">ادخل رقم الهاتف المستخدم في الطلب:</label>
                 <div class="flex gap-2">
                     <input type="text" id="trackPhoneInput" placeholder="مثال: 01012345678" class="flex-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-amber-600">
-                    <button onclick="searchOrdersForTracking()" class="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded-lg text-xs font-bold transition">بحث</button>
+                    <button onclick="searchOrdersForTracking()" class="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded-lg text-xs font-bold transition" data-i18n="btn_search">بحث</button>
                 </div>
             </div>
 
             <div id="trackResultsContainer" class="space-y-3 pt-2">
-                <p class="text-center text-xs text-gray-400">أدخل رقم الهاتف واضغط بحث لعرض تفاصيل طلباتك وحالتها من قاعدة البيانات.</p>
+                <p class="text-center text-xs text-gray-400" data-i18n="track_intro_text">أدخل رقم الهاتف واضغط بحث لعرض تفاصيل طلباتك وحالتها من قاعدة البيانات.</p>
             </div>
         </div>
     </div>
 
-    <!-- نافذة منبثقة (Modal) لتعديل تفاصيل الطلب وبيانات العميل -->
+    <!-- نافذة تعديل التفاصيل -->
     <div id="editOrderModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="bg-white modal-card rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-lg font-bold text-amber-900">✏️ تعديل الطلب رقم: <span id="editOrderIdDisplay"></span></h3>
+                <h3 class="text-lg font-bold text-amber-900"><span data-i18n="edit_order_heading">✏️ تعديل الطلب رقم:</span> <span id="editOrderIdDisplay"></span></h3>
                 <button onclick="closeEditModal()" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
 
@@ -329,33 +392,33 @@
                 <input type="hidden" id="editOriginalId">
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">المنتجات والطلبات (يمكنك تعديلها كتابةً)</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_edit_details">المنتجات والطلبات (يمكنك تعديلها كتابةً)</label>
                     <textarea id="editOrderDetails" rows="3" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-amber-600"></textarea>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل أساسي</label>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_phone1">موبايل أساسي</label>
                         <input type="tel" id="editPhone1" required maxlength="11" class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-amber-600">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">موبايل إضافي</label>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_phone2">موبايل إضافي</label>
                         <input type="tel" id="editPhone2" maxlength="11" class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">اسم العميل</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_customer_name">اسم العميل</label>
                     <input type="text" id="editCustomerName" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">العنوان بالتفصيل</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_address">العنوان بالتفصيل</label>
                     <textarea id="editCustomerAddress" rows="2" required class="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none"></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">اختر الفرع</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_branch">اختر الفرع</label>
                     <select id="editRegion" class="w-full px-3 py-2 text-xs border rounded-lg bg-white focus:outline-none">
                         <option value="أم المصريين">أم المصريين</option>
                         <option value="فيصل">فيصل</option>
@@ -373,107 +436,107 @@
                 </div>
 
                 <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeEditModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-bold text-xs">إلغاء</button>
-                    <button type="submit" class="w-1/2 bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg font-bold text-xs shadow">حفظ التعديلات</button>
+                    <button type="button" onclick="closeEditModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-bold text-xs" data-i18n="btn_cancel">إلغاء</button>
+                    <button type="submit" class="w-1/2 bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg font-bold text-xs shadow" data-i18n="btn_save_changes">حفظ التعديلات</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- نافذة تسجيل الدخول (OAuth بـ Google و Facebook و OTP) أو الملف الشخصي -->
+    <!-- نافذة تسجيل الدخول -->
     <div id="authModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+        <div class="bg-white modal-card rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-lg font-bold text-amber-900" id="authModalTitle">تسجيل الدخول / الملف الشخصي</h3>
+                <h3 class="text-lg font-bold text-amber-900" id="authModalTitle" data-i18n="auth_modal_title">تسجيل الدخول / الملف الشخصي</h3>
                 <button onclick="closeAuthModal()" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
 
-            <!-- أزرار تسجيل الدخول الاجتماعي (Google & Facebook) -->
+            <!-- أزرار تسجيل الدخول الاجتماعي -->
             <div id="socialAuthSection" class="space-y-2.5 pb-3 border-b">
-                <p class="text-xs font-bold text-gray-700">تسجيل الدخول السريع:</p>
+                <p class="text-xs font-bold text-gray-700" data-i18n="quick_login">تسجيل الدخول السريع:</p>
                 <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 py-2.5 rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.14C3.15 21.36 7.22 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.62H1.18C.43 8.14 0 9.85 0 12s.43 3.86 1.18 5.38l4.09-3.14z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.64 1.18 6.62l4.09 3.14c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-                    <span>الدخول باستخدام Google</span>
+                    <span data-i18n="login_google">الدخول باستخدام Google</span>
                 </button>
                 <button onclick="loginWithFacebook()" class="w-full bg-[#1877F2] hover:bg-[#166fe5] text-white py-2.5 rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-2">
                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                    <span>الدخول باستخدام Facebook</span>
+                    <span data-i18n="login_facebook">الدخول باستخدام Facebook</span>
                 </button>
             </div>
 
-            <!-- الحالة 1: إدخال البريد الإلكتروني (OTP) -->
+            <!-- الحالة 1: إدخال البريد الإلكتروني -->
             <div id="authEmailStep" class="space-y-4">
-                <p class="text-xs text-gray-600 leading-relaxed">أو أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق سريع:</p>
+                <p class="text-xs text-gray-600 leading-relaxed" data-i18n="email_otp_intro">أو أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق سريع:</p>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">البريد الإلكتروني</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_email">البريد الإلكتروني</label>
                     <input type="email" id="userEmailInput" placeholder="name@example.com" class="w-full p-3 border rounded-xl text-sm focus:outline-none focus:border-amber-700">
                 </div>
-                <button onclick="sendOtpCode()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-3 rounded-xl font-bold text-sm transition shadow">إرسال رمز التحقق</button>
+                <button onclick="sendOtpCode()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-3 rounded-xl font-bold text-sm transition shadow" data-i18n="send_otp_btn">إرسال رمز التحقق</button>
             </div>
 
-            <!-- الحالة 2: إدخال الرمز المُستلم -->
+            <!-- الحالة 2: إدخال الرمز -->
             <div id="authOtpStep" class="space-y-4 hidden">
-                <p class="text-xs text-gray-600 leading-relaxed">تم إرسال رمز التحقق إلى بريدك الإلكتروني. أدخل الرمز المكون من أرقام هنا:</p>
+                <p class="text-xs text-gray-600 leading-relaxed" data-i18n="otp_sent_msg">تم إرسال رمز التحقق إلى بريدك الإلكتروني. أدخل الرمز المكون من أرقام هنا:</p>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">رمز التحقق (OTP)</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="lbl_otp_code">رمز التحقق (OTP)</label>
                     <input type="text" id="otpCodeInput" placeholder="123456" class="w-full p-3 border rounded-xl text-center tracking-widest text-lg font-mono focus:outline-none focus:border-amber-700">
                 </div>
-                <button onclick="verifyOtpCode()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-3 rounded-xl font-bold text-sm transition shadow">تأكيد الرمز ودخول</button>
-                <button onclick="resetAuthSteps()" class="w-full text-xs text-gray-500 hover:underline text-center">← تغيير البريد الإلكتروني</button>
+                <button onclick="verifyOtpCode()" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-3 rounded-xl font-bold text-sm transition shadow" data-i18n="verify_otp_btn">تأكيد الرمز ودخول</button>
+                <button onclick="resetAuthSteps()" class="w-full text-xs text-gray-500 hover:underline text-center" data-i18n="change_email_btn">← تغيير البريد الإلكتروني</button>
             </div>
 
-            <!-- الحالة 3: مسجل الدخول (عرض الملف الشخصي) -->
+            <!-- الحالة 3: عرض الملف الشخصي -->
             <div id="userProfileStep" class="space-y-4 hidden">
                 <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 flex items-center justify-between">
                     <div>
-                        <p class="text-[10px] text-gray-500 font-bold">الحساب المسجل:</p>
+                        <p class="text-[10px] text-gray-500 font-bold" data-i18n="registered_account">الحساب المسجل:</p>
                         <p id="profileEmailDisplay" class="text-xs font-bold text-amber-900"></p>
                     </div>
-                    <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-1 rounded font-bold">🟢 متصل</span>
+                    <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-1 rounded font-bold" data-i18n="status_online">🟢 متصل</span>
                 </div>
 
                 <div class="space-y-2 pt-2">
-                    <h4 class="text-xs font-bold text-gray-800">📋 طلباتك السابقة:</h4>
+                    <h4 class="text-xs font-bold text-gray-800" data-i18n="previous_orders">📋 طلباتك السابقة:</h4>
                     <div id="profileOrdersContainer" class="max-h-48 overflow-y-auto space-y-2 text-xs">
-                        <p class="text-gray-400 text-center py-2">جاري جلب الطلبات...</p>
+                        <p class="text-gray-400 text-center py-2" data-i18n="fetching_orders">جاري جلب الطلبات...</p>
                     </div>
                 </div>
 
                 <div class="pt-2 border-t flex flex-col gap-2">
-                    <button onclick="logoutUser()" class="w-full bg-red-700 hover:bg-red-800 text-white py-2.5 rounded-xl font-bold text-xs transition shadow">تسجيل الخروج</button>
+                    <button onclick="logoutUser()" class="w-full bg-red-700 hover:bg-red-800 text-white py-2.5 rounded-xl font-bold text-xs transition shadow" data-i18n="logout_btn">تسجيل الخروج</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة منبثقة: سياسة الشحن والتوصيل -->
+    <!-- نافذة سياسة الشحن -->
     <div id="shippingPolicyModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+        <div class="bg-white modal-card rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="text-base font-bold text-amber-900 flex items-center gap-2">
                     <span>🚛</span>
-                    <span>سياسة الشحن والتوصيل</span>
+                    <span data-i18n="shipping_policy_title">سياسة الشحن والتوصيل</span>
                 </h3>
                 <button onclick="closeModal('shippingPolicyModal')" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
-            <p class="text-xs text-gray-700 leading-relaxed">
-                خدمة الشحن والتوصيل لمنازلكم متاحة <strong>على مدار الأسبوع طوال أيام الأسبوع</strong>، وذلك ابتداءً من الساعة <strong>12 ظهراً وحتى الساعة 12 مساءً</strong> لضمان وصول أجود أنواع البن الطازج إليكم في أسرع وقت وتغطية كافة فروعنا بالقاهرة والجيزة.
+            <p class="text-xs text-gray-700 leading-relaxed" data-i18n="shipping_policy_text">
+                خدمة الشحن والتوصيل لمنازلكم متاحة على مدار الأسبوع طوال أيام الأسبوع، وذلك ابتداءً من الساعة 12 ظهراً وحتى الساعة 12 مساءً لضمان وصول أجود أنواع البن الطازج إليكم في أسرع وقت وتغطية كافة فروعنا بالقاهرة والجيزة.
             </p>
-            <button onclick="closeModal('shippingPolicyModal')" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg text-xs font-bold transition">حسناً، فهمت</button>
+            <button onclick="closeModal('shippingPolicyModal')" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg text-xs font-bold transition" data-i18n="got_it">حسناً، فهمت</button>
         </div>
     </div>
 
-    <!-- نافذة منبثقة: سياسة الخصوصية -->
+    <!-- نافذة سياسة الخصوصية -->
     <div id="privacyPolicyModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto">
+        <div class="bg-white modal-card rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="text-base font-bold text-amber-900 flex items-center gap-2">
                     <span>🔒</span>
-                    <span>سياسة الخصوصية وحماية البيانات</span>
+                    <span data-i18n="privacy_policy_title">سياسة الخصوصية وحماية البيانات</span>
                 </h3>
                 <button onclick="closeModal('privacyPolicyModal')" class="text-gray-500 hover:text-red-600 font-bold text-lg">✕</button>
             </div>
-            <div class="space-y-3 text-xs text-gray-700 leading-relaxed">
+            <div class="space-y-3 text-xs text-gray-700 leading-relaxed" data-i18n="privacy_policy_html">
                 <p>نحن في <strong>بن الغرباوي</strong> نولي اهتماماً بالغاً بحماية خصوصيتك ومعلوماتك الشخصية. توضح هذه السياسة كيف نجمع ونستخدم ونحمي بياناتك:</p>
                 <ul class="list-disc pr-4 space-y-1.5">
                     <li><strong>البيانات التي نجمعها:</strong> نقوم بجمع الاسم، أرقام الهواتف، والعنوان عند إتمام طلب الشراء أو تتبع الطلبات لتسهيل عملية التوصيل.</li>
@@ -482,96 +545,367 @@
                     <li><strong>حقوق المستخدم:</strong> لك الحق الكامل في طلب مراجعة بياناتك المسجلة أو تحديثها في أي وقت عبر التواصل مع خدمة العملاء.</li>
                 </ul>
             </div>
-            <button onclick="closeModal('privacyPolicyModal')" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg text-xs font-bold transition">إغلاق</button>
+            <button onclick="closeModal('privacyPolicyModal')" class="w-full bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg text-xs font-bold transition" data-i18n="btn_close">إغلاق</button>
         </div>
     </div>
 
-    <!-- تذييل الموقع (Footer) الداكن المتكامل مع أزرار التواصل الاجتماعي والواتساب والسياسات -->
-    <footer class="bg-[#12100e] text-[#d6cdbe] pt-12 pb-6 border-t border-amber-950/60 mt-16 dir-rtl">
+    <!-- تذييل الموقع (Footer) مع اسم المطور في الجنب -->
+    <footer class="bg-[#12100e] text-[#d6cdbe] pt-12 pb-6 border-t border-amber-950/60 mt-16">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-start">
             
             <!-- العمود 1: اتصل بنا -->
-            <div class="space-y-3 text-right w-full">
-                <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2">اتصل بنا</h3>
+            <div class="space-y-3 w-full">
+                <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2" data-i18n="contact_us">اتصل بنا</h3>
                 <div class="space-y-2 text-xs">
                     <p class="text-2xl font-black text-[#f1ab28] tracking-widest font-mono" dir="ltr">01021855525</p>
                     <p class="text-[#a89d8c] flex items-center gap-1">
                         <span>📍</span>
-                        <span>التوصيل متاح لجميع فروع القاهرة والجيزة</span>
+                        <span data-i18n="delivery_coverage">التوصيل متاح لجميع فروع القاهرة والجيزة</span>
                     </p>
                 </div>
             </div>
 
             <!-- العمود 2: السياسات والخدمات -->
-            <div class="space-y-3 text-right w-full">
-                <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2">السياسات والخدمات</h3>
+            <div class="space-y-3 w-full">
+                <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2" data-i18n="policies_and_services">السياسات والخدمات</h3>
                 <ul class="space-y-2 text-xs">
-                    <li><a href="https://jobapplication-psi.vercel.app/" target="_blank" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>💼</span> <span>التقديم لوظيفة (الأبلكيشن)</span></a></li>
-                    <li><a href="#" onclick="openTrackModal(); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🔍</span> <span>تتبع طلبك وتعديله</span></a></li>
-                    <li><a href="#" onclick="openModal('shippingPolicyModal'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🚚</span> <span>سياسة الشحن والتوصيل</span></a></li>
-                    <li><a href="#" onclick="openModal('privacyPolicyModal'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🔒</span> <span>سياسة الخصوصية</span></a></li>
+                    <li><a href="https://jobapplication-psi.vercel.app/" target="_blank" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>💼</span> <span data-i18n="job_application">التقديم لوظيفة (الأبلكيشن)</span></a></li>
+                    <li><a href="#" onclick="openTrackModal(); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🔍</span> <span data-i18n="track_order_footer">تتبع طلبك وتعديله</span></a></li>
+                    <li><a href="#" onclick="openModal('shippingPolicyModal'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🚚</span> <span data-i18n="shipping_policy_title">سياسة الشحن والتوصيل</span></a></li>
+                    <li><a href="#" onclick="openModal('privacyPolicyModal'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🔒</span> <span data-i18n="privacy_policy_title">سياسة الخصوصية</span></a></li>
                 </ul>
             </div>
 
             <!-- العمود 3: المتجر -->
-            <div class="space-y-3 text-right w-full">
-                <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2">المتجر</h3>
+            <div class="space-y-3 w-full">
+                <h3 class="text-sm font-bold text-[#e5a639] border-b border-stone-800 pb-2" data-i18n="store_heading">المتجر</h3>
                 <ul class="space-y-2 text-xs">
-                    <li><a href="#" onclick="switchCategory('basic'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🔥</span> <span>التوليفات الأساسية</span></a></li>
-                    <li><a href="#" onclick="switchCategory('arabica'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🌟</span> <span>الأربيكات الفاخرة</span></a></li>
-                    <li><a href="#" onclick="switchCategory('french'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>☕</span> <span>الأنواع الفرنسية والإسبريسو</span></a></li>
-                    <li><a href="#" onclick="switchCategory('flavors'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🍫</span> <span>النكهات والإضافات</span></a></li>
-                    <li><a href="#" onclick="switchCategory('customBlend'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🧪</span> <span>مبتكر التوليفات الخاصة</span></a></li>
+                    <li><a href="#" onclick="switchCategory('basic'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🔥</span> <span data-i18n="cat_basic">التوليفات الأساسية</span></a></li>
+                    <li><a href="#" onclick="switchCategory('arabica'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🌟</span> <span data-i18n="cat_arabica">الأربيكات الفاخرة</span></a></li>
+                    <li><a href="#" onclick="switchCategory('french'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>☕</span> <span data-i18n="cat_french">الأنواع الفرنسية والإسبريسو</span></a></li>
+                    <li><a href="#" onclick="switchCategory('flavors'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🍫</span> <span data-i18n="cat_flavors">النكهات والإضافات</span></a></li>
+                    <li><a href="#" onclick="switchCategory('customBlend'); return false;" class="hover:text-[#e5a639] transition flex items-center gap-1.5"><span>🧪</span> <span data-i18n="cat_custom">مبتكر التوليفات الخاصة</span></a></li>
                 </ul>
             </div>
 
             <!-- العمود 4: بن الغرباوي -->
-            <div class="space-y-3 text-right w-full">
+            <div class="space-y-3 w-full">
                 <div class="flex items-center gap-3">
-                    <h2 class="text-xl font-black text-[#e5a639]">بن الغرباوي</h2>
+                    <h2 class="text-xl font-black text-[#e5a639]" data-i18n="brand_name">بن الغرباوي</h2>
                     <div class="bg-white px-2 py-1 rounded-xl shadow inline-block">
                         <img src="https://i.postimg.cc/VvnhkQhY/logo-01.png" alt="بن الغرباوي" class="h-9 w-auto object-contain">
                     </div>
                 </div>
-                <p class="text-xs text-[#a89d8c] leading-relaxed text-justify">
+                <p class="text-xs text-[#a89d8c] leading-relaxed text-justify" data-i18n="footer_about_text">
                     من محمستنا إلى فنجانك، نلتزم بتقديم أجود أنواع البن وتوليفات القهوة الخاصة بأسعار تنافسية وخبرة متميزة لأكثر من 50 عاماً.
                 </p>
             </div>
 
         </div>
 
-        <!-- أزرار وسائل التواصل الاجتماعي والواتساب الدائرية الأنيقة -->
+        <!-- أزرار وسائل التواصل الاجتماعي -->
         <div class="max-w-7xl mx-auto px-6 mt-8 pt-6 border-t border-stone-800/60 flex justify-center items-center gap-4">
-            <!-- Facebook -->
             <a href="https://www.facebook.com/algharabawycoffee" target="_blank" aria-label="Facebook" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             </a>
-            <!-- Instagram -->
             <a href="https://www.instagram.com/algharabawycoffee?stkn=bXVuc3piNHIyM3V1" target="_blank" aria-label="Instagram" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             </a>
-            <!-- TikTok -->
             <a href="https://www.tiktok.com/@algharabawycoffee?is_from_webapp=1&sender_device=pc" target="_blank" aria-label="TikTok" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.98-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.56-1.31 1.56-1.28 2.55.02 1.01.54 1.98 1.37 2.52.84.56 1.94.67 2.87.31 1-.38 1.71-1.32 1.83-2.38.04-1.21.02-2.42.02-3.63V.02z"/></svg>
             </a>
-            <!-- WhatsApp -->
             <a href="https://wa.me/201021855525" target="_blank" aria-label="WhatsApp" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.124-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
             </a>
-            <!-- YouTube -->
             <a href="#" target="_blank" aria-label="YouTube" class="w-10 h-10 rounded-full border border-stone-700 hover:border-[#e5a639] flex items-center justify-center text-stone-300 hover:text-[#e5a639] transition bg-stone-900/50">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </a>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 mt-6 pt-4 border-t border-stone-800/80 text-center text-[11px] text-[#857b6f] flex flex-col sm:flex-row justify-between items-center gap-2">
-            <p>© 2026 بن الغرباوي. جميع الحقوق محفوظة.</p>
-            <p class="flex items-center gap-1"><span>☕</span> <span>تصميم وتطوير نظام طلبات بن الغرباوي</span></p>
+        <!-- سطر الحقوق و اسم المطور على الجنب -->
+        <div class="max-w-7xl mx-auto px-6 mt-6 pt-4 border-t border-stone-800/80 text-xs text-[#857b6f] flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p data-i18n="copyright_text">© 2026 بن الغرباوي. جميع الحقوق محفوظة.</p>
+            <div class="flex items-center gap-1.5 font-semibold">
+                <span class="text-amber-500">💻</span>
+                <span class="text-amber-400 dev-glow" data-i18n="dev_credit">تصميم وتطوير: صلاح الدين ابو سيف</span>
+            </div>
         </div>
     </footer>
 
     <script>
-        // جلب رابط التحديث تلقائياً من ملف version.json لزر التحميل في الموقع
+        // نظام الترجمات المتكامل (العربية / الإنجليزية)
+        const translations = {
+            ar: {
+                page_title: "بن الغرباوي - اطلب أوردرك أونلاين",
+                brand_name: "بن الغرباوي",
+                work_hours: "من 12 صباحاً حتى 12 مساءً",
+                my_account: "👤 حسابي",
+                download_app: "📥 تحميل الأبلكيشن APK",
+                delivery_coverage: "التوصيل متاح لجميع فروع القاهرة والجيزة",
+                categories_title: "فئات المنتجات",
+                cat_basic: "🔥 التوليفات الأساسية",
+                cat_arabica: "🌟 الأربيكات",
+                cat_french: "☕ الأنواع الفرنسية والإسبريسو",
+                cat_flavors: "🍫 النكهات والإضافات (بندق، شوكولاتة)",
+                cat_herbs: "🌿 أعشاب ونسكافيه",
+                cat_custom: "🧪 مبتكر التوليفات الخاصة",
+                about_title: "☕ عن بن الغرباوي",
+                about_p1: "شركة الغرباوي هي شركة مصرية متخصصة في مجال البن خبرة أكثر من 50 عاماً. تأسست عام 1968 وتوارثها الأجيال حتى وصلت إلى الآن لتكون الشركة متخصصة في طحن وتجهيز جميع أنواع البن.",
+                about_p2: "استراتيجية الشركة مبنية على تقديم أفضل أنواع البن بأسعار معقولة وتنافسية من خلال الطحن والتغليف بأحدث التقنيات والحلول الجديدة والمبتكرة.",
+                search_ph: "🔍 ابحث عن أي صنف بن أو نكهة...",
+                top_rated_title: "الأعلى تقييماً بآراء العملاء",
+                auto_update: "تحديث تلقائي",
+                loading_ratings: "جاري تحميل الأصناف الأعلى تقييماً...",
+                cat_basic_title: "🔥 التوليفات الأساسية",
+                arabica_note: "ملاحظة هامة: جميع أصناف الأربيكات متوفرة بدرجة تحميص (وسط) فقط لضمان أفضل طعم ومذاق للقهوة.",
+                custom_blend_heading: "🧪 صمم توليفَتك الخاصة (الشرقي + الأربيكات):",
+                add_another_item: "+ إضافة صنف آخر",
+                lbl_blend_type: "نوع التوليفة:",
+                opt_spiced: "محوج",
+                opt_plain: "سادة",
+                lbl_roast_level: "درجة التحميص:",
+                opt_medium: "وسط",
+                opt_light: "فاتح",
+                opt_dark: "غامق",
+                total_blend_weight: "إجمالي وزن التوليفة:",
+                total_price_lbl: "إجمالي السعر:",
+                currency: "ج.م",
+                add_custom_blend_btn: "إضافة التوليفة الخاصة للسلة 🛒",
+                cart_title: "🛒 سلة مشترياتك",
+                welcome_back: "✨ أهلاً بك مجدداً! وجدنا آخر أوردر لك:",
+                reorder_btn: "إعادة طلب هذا الأوردر بضغطة واحدة ⚡",
+                empty_cart_msg: "لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.",
+                total_bill: "إجمالي الفاتورة:",
+                plus_shipping: "+ مصاريف الشحن",
+                lbl_phone1: "موبايل أساسي (للبحث)",
+                lbl_phone2: "موبايل إضافي",
+                lbl_customer_name: "اسم العميل",
+                ph_customer_name: "مثال: أ. طه حسين",
+                lbl_address: "العنوان بالتفصيل",
+                ph_address: "الشارع، العمارة، الدور...",
+                lbl_branch: "اختر الفرع الأقرب",
+                gps_branch: "📍 تحديد أقرب فرع بالـ GPS",
+                lbl_branch_details: "📍 عنوان الفرع التفصيلي",
+                submit_order_btn: "تأكيد وإرسال الأوردر",
+                order_success_msg: "تم استلام طلبك بنجاح وتم حفظه في قاعدة البيانات! ☕",
+                track_order_now: "🔍 تتبع طلبك أو تعديله الآن",
+                view_cart: "🛒 عرض سلة المشتريات",
+                customize_order: "تخصيص الطلب",
+                lbl_type: "النوع (سادة / محوج)",
+                espresso_guide: "☕ دليل طحن الإسبريسو (اختر طريقة التحضير):",
+                espresso_grind_1: "ماكينة إسبريسو (طحنة إسبريسو)",
+                espresso_grind_2: "فلتر / V60 (طحنة متوسطة)",
+                espresso_grind_3: "فرنش بريس (طحنة خشنة)",
+                espresso_grind_4: "حبوب كاملة (بدون طحن)",
+                lbl_weight: "الوزن / الكمية",
+                w_125: "تمن كيلو (125 جرام)",
+                w_250: "ربع كيلو (250 جرام)",
+                w_500: "ربعين (نصف كيلو / 500 جرام)",
+                w_750: "ثلاث أرباع كيلو (750 جرام)",
+                w_1000: "كيلو (1000 جرام)",
+                w_custom: "أخرى (حدد الوزن يدوياً)",
+                lbl_custom_weight: "اكتب الوزن المطلوب (مثال: 100 جرام)",
+                kilo_price_lbl: "سعر الكيلو:",
+                item_total_lbl: "إجمالي الصنف:",
+                btn_cancel: "إلغاء",
+                btn_add_to_cart: "إضافة للسلة",
+                track_modal_title: "🔍 تتبع طلبك وتعديله وتقييمه",
+                enter_phone_track: "ادخل رقم الهاتف المستخدم في الطلب:",
+                btn_search: "بحث",
+                track_intro_text: "أدخل رقم الهاتف واضغط بحث لعرض تفاصيل طلباتك وحالتها من قاعدة البيانات.",
+                edit_order_heading: "✏️ تعديل الطلب رقم:",
+                lbl_edit_details: "المنتجات والطلبات (يمكنك تعديلها كتابةً)",
+                btn_save_changes: "حفظ التعديلات",
+                auth_modal_title: "تسجيل الدخول / الملف الشخصي",
+                quick_login: "تسجيل الدخول السريع:",
+                login_google: "الدخول باستخدام Google",
+                login_facebook: "الدخول باستخدام Facebook",
+                email_otp_intro: "أو أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق سريع:",
+                lbl_email: "البريد الإلكتروني",
+                send_otp_btn: "إرسال رمز التحقق",
+                otp_sent_msg: "تم إرسال رمز التحقق إلى بريدك الإلكتروني. أدخل الرمز المكون من أرقام هنا:",
+                lbl_otp_code: "رمز التحقق (OTP)",
+                verify_otp_btn: "تأكيد الرمز ودخول",
+                change_email_btn: "← تغيير البريد الإلكتروني",
+                registered_account: "الحساب المسجل:",
+                status_online: "🟢 متصل",
+                previous_orders: "📋 طلباتك السابقة:",
+                fetching_orders: "جاري جلب الطلبات...",
+                logout_btn: "تسجيل الخروج",
+                shipping_policy_title: "سياسة الشحن والتوصيل",
+                shipping_policy_text: "خدمة الشحن والتوصيل لمنازلكم متاحة على مدار الأسبوع طوال أيام الأسبوع، وذلك ابتداءً من الساعة 12 ظهراً وحتى الساعة 12 مساءً لضمان وصول أجود أنواع البن الطازج إليكم في أسرع وقت وتغطية كافة فروعنا بالقاهرة والجيزة.",
+                got_it: "حسناً، فهمت",
+                privacy_policy_title: "سياسة الخصوصية وحماية البيانات",
+                btn_close: "إغلاق",
+                contact_us: "اتصل بنا",
+                policies_and_services: "السياسات والخدمات",
+                job_application: "التقديم لوظيفة (الأبلكيشن)",
+                track_order_footer: "تتبع طلبك وتعديله",
+                store_heading: "المتجر",
+                footer_about_text: "من محمستنا إلى فنجانك، نلتزم بتقديم أجود أنواع البن وتوليفات القهوة الخاصة بأسعار تنافسية وخبرة متميزة لأكثر من 50 عاماً.",
+                copyright_text: "© 2026 بن الغرباوي. جميع الحقوق محفوظة.",
+                dev_credit: "تصميم وتطوير: صلاح الدين ابو سيف"
+            },
+            en: {
+                page_title: "Al-Gharabawy Coffee - Order Online",
+                brand_name: "Al-Gharabawy Coffee",
+                work_hours: "12 AM to 12 PM",
+                my_account: "👤 My Account",
+                download_app: "📥 Download APK App",
+                delivery_coverage: "Delivery available across Cairo & Giza",
+                categories_title: "Product Categories",
+                cat_basic: "🔥 Classic Blends",
+                cat_arabica: "🌟 Arabica Beans",
+                cat_french: "☕ French & Espresso",
+                cat_flavors: "🍫 Flavors & Additions",
+                cat_herbs: "🌿 Herbs & Nescafé",
+                cat_custom: "🧪 Custom Blend Maker",
+                about_title: "☕ About Al-Gharabawy",
+                about_p1: "Al-Gharabawy Coffee is an Egyptian company specializing in high-quality coffee with over 50 years of heritage since 1968.",
+                about_p2: "Our strategy focuses on offering the finest coffee beans at reasonable prices utilizing modern grinding and packaging solutions.",
+                search_ph: "🔍 Search for coffee beans or flavors...",
+                top_rated_title: "Top Customer Rated Items",
+                auto_update: "Auto Update",
+                loading_ratings: "Loading top rated items...",
+                cat_basic_title: "🔥 Classic Blends",
+                arabica_note: "Important Note: All Arabica selections are available in Medium Roast only to ensure optimal flavor.",
+                custom_blend_heading: "🧪 Custom Blend Creator (Oriental + Arabica):",
+                add_another_item: "+ Add Another Bean",
+                lbl_blend_type: "Blend Type:",
+                opt_spiced: "Spiced",
+                opt_plain: "Plain",
+                lbl_roast_level: "Roast Level:",
+                opt_medium: "Medium",
+                opt_light: "Light",
+                opt_dark: "Dark",
+                total_blend_weight: "Total Blend Weight:",
+                total_price_lbl: "Total Price:",
+                currency: "EGP",
+                add_custom_blend_btn: "Add Custom Blend To Cart 🛒",
+                cart_title: "🛒 Shopping Cart",
+                welcome_back: "✨ Welcome back! We found your last order:",
+                reorder_btn: "Reorder This In One Click ⚡",
+                empty_cart_msg: "Your cart is empty. Click (+) to add products.",
+                total_bill: "Total Bill:",
+                plus_shipping: "+ Shipping Fees",
+                lbl_phone1: "Main Mobile Number",
+                lbl_phone2: "Secondary Mobile",
+                lbl_customer_name: "Customer Name",
+                ph_customer_name: "e.g., Taha Hussein",
+                lbl_address: "Detailed Address",
+                ph_address: "Street, Building, Floor...",
+                lbl_branch: "Select Nearest Branch",
+                gps_branch: "📍 Find Branch via GPS",
+                lbl_branch_details: "📍 Detailed Branch Address",
+                submit_order_btn: "Confirm & Submit Order",
+                order_success_msg: "Your order was successfully submitted! ☕",
+                track_order_now: "🔍 Track or Edit Order Now",
+                view_cart: "🛒 View Shopping Cart",
+                customize_order: "Customize Order",
+                lbl_type: "Type (Plain / Spiced)",
+                espresso_guide: "☕ Espresso Grind Guide:",
+                espresso_grind_1: "Espresso Machine Grind",
+                espresso_grind_2: "Filter / V60 (Medium Grind)",
+                espresso_grind_3: "French Press (Coarse Grind)",
+                espresso_grind_4: "Whole Beans (No Grind)",
+                lbl_weight: "Weight / Quantity",
+                w_125: "1/8 Kg (125g)",
+                w_250: "1/4 Kg (250g)",
+                w_500: "1/2 Kg (500g)",
+                w_750: "3/4 Kg (750g)",
+                w_1000: "1 Kg (1000g)",
+                w_custom: "Other (Specify weight)",
+                lbl_custom_weight: "Enter weight in grams (e.g. 100g)",
+                kilo_price_lbl: "Price per Kg:",
+                item_total_lbl: "Item Total:",
+                btn_cancel: "Cancel",
+                btn_add_to_cart: "Add to Cart",
+                track_modal_title: "🔍 Track, Edit & Rate Order",
+                enter_phone_track: "Enter phone number used in order:",
+                btn_search: "Search",
+                track_intro_text: "Enter phone number and search to view order details.",
+                edit_order_heading: "✏️ Edit Order #",
+                lbl_edit_details: "Order Details (Editable text)",
+                btn_save_changes: "Save Changes",
+                auth_modal_title: "Sign In / Profile",
+                quick_login: "Quick Login:",
+                login_google: "Continue with Google",
+                login_facebook: "Continue with Facebook",
+                email_otp_intro: "Or enter email to receive a quick verification code:",
+                lbl_email: "Email Address",
+                send_otp_btn: "Send OTP Code",
+                otp_sent_msg: "Verification code sent to your email. Enter code below:",
+                lbl_otp_code: "Verification Code (OTP)",
+                verify_otp_btn: "Verify Code & Sign In",
+                change_email_btn: "← Change Email",
+                registered_account: "Logged in as:",
+                status_online: "🟢 Online",
+                previous_orders: "📋 Previous Orders:",
+                fetching_orders: "Fetching orders...",
+                logout_btn: "Sign Out",
+                shipping_policy_title: "Shipping Policy",
+                shipping_policy_text: "Delivery service is available 7 days a week, from 12 PM to 12 AM to guarantee fresh coffee delivered to your doorstep.",
+                got_it: "Got It",
+                privacy_policy_title: "Privacy Policy",
+                btn_close: "Close",
+                contact_us: "Contact Us",
+                policies_and_services: "Policies & Services",
+                job_application: "Job Application",
+                track_order_footer: "Track & Edit Order",
+                store_heading: "Store",
+                footer_about_text: "From our roastery to your cup, offering top-quality coffee blends with over 50 years of experience.",
+                copyright_text: "© 2026 Al-Gharabawy Coffee. All rights reserved.",
+                dev_credit: "Design & Development: Salah El-Din Abu Seif"
+            }
+        };
+
+        let currentLang = localStorage.getItem('gharbawee_lang') || 'ar';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            localStorage.setItem('gharbawee_lang', currentLang);
+            applyLanguage();
+        }
+
+        function applyLanguage() {
+            const htmlTag = document.documentElement;
+            htmlTag.setAttribute('lang', currentLang);
+            htmlTag.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.getElementById('langText').textContent = currentLang === 'ar' ? 'EN' : 'عربي';
+
+            document.querySelectorAll('[data-i18n]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    elem.textContent = translations[currentLang][key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-ph]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n-ph');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    elem.setAttribute('placeholder', translations[currentLang][key]);
+                }
+            });
+
+            document.getElementById('pageTitle').textContent = translations[currentLang].page_title;
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('gharbawee_theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+        }
+
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('gharbawee_theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('themeIcon').textContent = '☀️';
+            }
+        }
+
         fetch('version.json')
             .then(response => response.json())
             .then(data => {
@@ -582,7 +916,6 @@
             })
             .catch(error => console.error('خطأ في جلب رابط الأبليكيشن:', error));
 
-        // إعدادات اتصال Supabase
         const SUPABASE_URL = 'https://csroadhvynbSksqncrur.supabase.co';
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGcXPVopb4DItZ2LY6V1vQ_bQ3vf30C';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
@@ -611,23 +944,20 @@
             if (branchLocations[selectedBranch]) {
                 addressBox.textContent = branchLocations[selectedBranch].address;
             } else {
-                addressBox.textContent = "يرجى اختيار الفرع لعرض العنوان";
+                addressBox.textContent = currentLang === 'ar' ? "يرجى اختيار الفرع لعرض العنوان" : "Select branch to view address";
             }
         }
 
         function findNearestBranch() {
             if (!navigator.geolocation) {
-                alert('متصفحك لا يدعم خاصية تحديد الموقع الجغرافي.');
+                alert(currentLang === 'ar' ? 'متصفحك لا يدعم خاصية تحديد الموقع الجغرافي.' : 'Geolocation is not supported.');
                 return;
             }
-
             navigator.geolocation.getCurrentPosition(position => {
                 const userLat = position.coords.latitude;
                 const userLng = position.coords.longitude;
-
                 let nearestBranch = '';
                 let minDistance = Infinity;
-
                 Object.keys(branchLocations).forEach(branchName => {
                     const b = branchLocations[branchName];
                     const dist = Math.sqrt(Math.pow(userLat - b.lat, 2) + Math.pow(userLng - b.lng, 2));
@@ -636,14 +966,13 @@
                         nearestBranch = branchName;
                     }
                 });
-
                 if (nearestBranch) {
                     document.getElementById('region').value = nearestBranch;
                     updateBranchAddress();
-                    alert(`تم تحديد أقرب فرع إليك بنجاح: "${nearestBranch}" 📍`);
+                    alert(currentLang === 'ar' ? `تم تحديد أقرب فرع إليك بنجاح: "${nearestBranch}" 📍` : `Nearest branch: "${nearestBranch}" 📍`);
                 }
             }, error => {
-                alert('تعذر الوصول لموقعك الجغرافي. تأكد من السماح للمتصفح بالوصول لموقعك.');
+                alert(currentLang === 'ar' ? 'تعذر الوصول لموقعك الجغرافي.' : 'Geolocation access denied.');
             });
         }
 
@@ -746,7 +1075,7 @@
                 let optionsHtml = '';
                 allowedCoffees.forEach(c => {
                     let selected = (c.name === row.coffee) ? 'selected' : '';
-                    optionsHtml += `<option value="${c.name}" ${selected}>${c.name} (${c.price} ج.م/كيلو)</option>`;
+                    optionsHtml += `<option value="${c.name}" ${selected}>${c.name} (${c.price} ${translations[currentLang].currency}/Kg)</option>`;
                 });
 
                 let isStandard = standardWeights.includes(row.weight);
@@ -825,7 +1154,7 @@
             });
 
             document.getElementById('blendTotalPrice').textContent = grandTotal.toFixed(2);
-            document.getElementById('blendTotalWeightText').textContent = totalGrams >= 1000 ? (totalGrams/1000) + ' كيلو' : totalGrams + ' جرام';
+            document.getElementById('blendTotalWeightText').textContent = totalGrams >= 1000 ? (totalGrams/1000) + ' كجم' : totalGrams + ' جرام';
         }
 
         function addCustomBlendToCart() {
@@ -833,19 +1162,13 @@
                 alert('الرجاء إضافة صنف واحد على الأقل للتوليفة!');
                 return;
             }
-
             let blendSubtype = document.getElementById('blendSubtype').value;
             let blendRoast = document.getElementById('blendRoast').value;
             let partsDesc = blendRows.map(r => `${r.weight} ${r.coffee}`).join(' + ');
             let totalP = parseFloat(document.getElementById('blendTotalPrice').textContent);
-
             let blendDescription = `توليفة خاصة (${partsDesc}) - ${blendSubtype} (تحميص ${blendRoast})`;
 
-            cart.push({
-                text: blendDescription,
-                price: totalP
-            });
-
+            cart.push({ text: blendDescription, price: totalP });
             saveCartToLocalStorage();
             renderCart();
             alert('تمت إضافة توليفَتَك الخاصة إلى السلة بنجاح! 🧪☕');
@@ -853,9 +1176,7 @@
 
         function loadCartFromLocalStorage() {
             const saved = localStorage.getItem('gharbawee_cart');
-            if (saved) {
-                try { cart = JSON.parse(saved); } catch(e) { cart = []; }
-            }
+            if (saved) { try { cart = JSON.parse(saved); } catch(e) { cart = []; } }
         }
 
         function saveCartToLocalStorage() {
@@ -909,17 +1230,13 @@
                 return 0.25;
             }
             if (weightStr.includes('ثلاث أرباع')) return 0.75;
-            if (weightStr.includes('كيلو') && !weightStr.includes('تمن') && !weightStr.includes('ربع') && !weightStr.includes('أرباع')) {
+            if (weightStr.includes('كيلو') && !weightStr.includes('تمن') && !weightStr.includes('ربع')) {
                 let match = weightStr.match(/([\d.]+)\s*كيلو/);
                 if (match) return parseFloat(match[1]);
                 return 1.0;
             }
             let gramMatch = weightStr.match(/([\d.]+)\s*جرام/);
             if (gramMatch) return parseFloat(gramMatch[1]) / 1000;
-            
-            let kgMatch = weightStr.match(/([\d.]+)\s*(كجم|كيلو|kg)/i);
-            if (kgMatch) return parseFloat(kgMatch[1]);
-            
             let numMatch = weightStr.match(/([\d.]+)/);
             if (numMatch) {
                 let val = parseFloat(numMatch[1]);
@@ -929,22 +1246,13 @@
             return 0.5;
         }
 
-        // جلب وحساب التقييمات التلقائية لكل أصناف المنيو وعرض الأعلى 3 تقييماً
         async function fetchBestSellersRatings() {
             const container = document.getElementById('topRatedContainer');
             try {
-                let { data: orders, error } = await supabaseClient
-                    .from('orders')
-                    .select('details, rating')
-                    .not('rating', 'is', null);
-
+                let { data: orders } = await supabaseClient.from('orders').select('details, rating').not('rating', 'is', null);
                 let catalog = getAllCatalogProducts();
                 let productStats = {};
-
-                catalog.forEach(p => {
-                    productStats[p.name] = { name: p.name, kiloPrice: p.kiloPrice, sumRating: 0, count: 0, avg: 0 };
-                });
-
+                catalog.forEach(p => { productStats[p.name] = { name: p.name, kiloPrice: p.kiloPrice, sumRating: 0, count: 0, avg: 0 }; });
                 if (orders && orders.length > 0) {
                     orders.forEach(o => {
                         if (o.details && o.rating) {
@@ -956,43 +1264,28 @@
                             });
                         }
                     });
-
                     Object.keys(productStats).forEach(k => {
-                        if (productStats[k].count > 0) {
-                            productStats[k].avg = productStats[k].sumRating / productStats[k].count;
-                        }
+                        if (productStats[k].count > 0) productStats[k].avg = productStats[k].sumRating / productStats[k].count;
                     });
                 }
-
-                let sortedProducts = Object.values(productStats).sort((a, b) => {
-                    if (b.avg !== a.avg) return b.avg - a.avg;
-                    return b.count - a.count;
-                });
-
+                let sortedProducts = Object.values(productStats).sort((a, b) => b.avg - a.avg || b.count - a.count);
                 let top3 = sortedProducts.slice(0, 3);
-
                 container.innerHTML = '';
                 top3.forEach(prod => {
                     let avgDisplay = prod.count > 0 ? prod.avg.toFixed(1) : "5.0";
                     let roundedStars = prod.count > 0 ? Math.round(prod.avg) : 5;
                     let starsStr = '⭐'.repeat(roundedStars);
-                    let countText = prod.count > 0 ? `(${prod.count} تقييم)` : `(مقترح)`;
-
                     const div = document.createElement('div');
                     div.className = "bg-amber-950/60 hover:bg-amber-950 p-2.5 rounded-lg border border-amber-700/50 cursor-pointer transition flex flex-col justify-between";
                     div.onclick = function() { openCustomizer(prod.name); };
                     div.innerHTML = `
                         <span class="block font-bold text-amber-200">🏆 ${prod.name}</span>
                         <span class="block text-[10px] text-amber-300 mt-0.5">${starsStr} (${avgDisplay})</span>
-                        <span class="block text-[10px] text-amber-300/80">${countText}</span>
-                        <span class="block text-[11px] font-semibold mt-1 text-amber-100 border-t border-amber-800/80 pt-1">${prod.kiloPrice} ج.م/ك</span>
+                        <span class="block text-[11px] font-semibold mt-1 text-amber-100 border-t border-amber-800/80 pt-1">${prod.kiloPrice} ${translations[currentLang].currency}/Kg</span>
                     `;
                     container.appendChild(div);
                 });
-
-            } catch (err) {
-                console.error('خطأ في جلب تقييمات المنتجات:', err);
-            }
+            } catch (err) { console.error('Error:', err); }
         }
 
         function searchProducts(query) {
@@ -1001,34 +1294,22 @@
             const customBlendSec = document.getElementById('customBlendSection');
             grid.innerHTML = '';
             customBlendSec.classList.add('hidden');
-
             if (!query) {
-                const activeLi = document.querySelector('#categoryList li.bg-amber-50');
-                if (activeLi) {
-                    switchCategory(currentCategoryKey, activeLi);
-                } else {
-                    switchCategory('basic', document.querySelector('#categoryList li'));
-                }
+                switchCategory(currentCategoryKey, document.querySelector('#categoryList li.bg-amber-50') || document.querySelector('#categoryList li'));
                 return;
             }
-
-            document.getElementById('categoryTitle').textContent = 'نتائج البحث عن: "' + query + '"';
+            document.getElementById('categoryTitle').textContent = (currentLang === 'ar' ? 'نتائج البحث عن: ' : 'Search results for: ') + '"' + query + '"';
             document.getElementById('arabicaNotice').classList.add('hidden');
-
             let foundItems = [];
             Object.keys(categoriesData).forEach(catKey => {
                 categoriesData[catKey].items.forEach(prod => {
-                    if (prod.name.toLowerCase().includes(query) || prod.desc.toLowerCase().includes(query)) {
-                        foundItems.push(prod);
-                    }
+                    if (prod.name.toLowerCase().includes(query) || prod.desc.toLowerCase().includes(query)) foundItems.push(prod);
                 });
             });
-
             if (foundItems.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 text-xs">عذراً، لم يتم العثور على منتجات تطابق بحثك.</div>`;
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 text-xs">No products found.</div>`;
                 return;
             }
-
             foundItems.forEach(prod => {
                 const card = document.createElement('div');
                 card.className = "bg-white border border-gray-200 rounded-2xl p-3 flex flex-col justify-between hover:shadow-lg transition relative overflow-hidden";
@@ -1040,7 +1321,7 @@
                     <div class="space-y-1.5">
                         <div class="flex justify-between items-center">
                             <h4 class="font-bold text-gray-900 text-sm">${prod.name}</h4>
-                            <span class="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md">سعر الكيلو: ${prod.kiloPrice} ج.م</span>
+                            <span class="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md">${prod.kiloPrice} ${translations[currentLang].currency}/Kg</span>
                         </div>
                         <p class="text-xs text-gray-500 line-clamp-2">${prod.desc}</p>
                     </div>
@@ -1052,20 +1333,15 @@
         function switchCategory(categoryKey, element) {
             currentCategoryKey = categoryKey;
             document.getElementById('productSearchInput').value = '';
-
-            document.querySelectorAll('#categoryList li').forEach(li => {
-                li.className = "hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition";
-            });
-            if (element) {
-                element.className = "bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition";
-            }
+            document.querySelectorAll('#categoryList li').forEach(li => li.className = "hover:bg-gray-50 p-2.5 rounded-lg cursor-pointer transition");
+            if (element) element.className = "bg-amber-50 text-amber-900 font-bold p-2.5 rounded-lg cursor-pointer transition";
 
             const grid = document.getElementById('productsGrid');
             const customBlendSec = document.getElementById('customBlendSection');
             const arabicaNotice = document.getElementById('arabicaNotice');
 
             if (categoryKey === 'customBlend') {
-                document.getElementById('categoryTitle').textContent = '🧪 مبتكر التوليفات الخاصة (بالأوزان والتحميص)';
+                document.getElementById('categoryTitle').textContent = translations[currentLang].cat_custom;
                 arabicaNotice.classList.add('hidden');
                 grid.innerHTML = '';
                 customBlendSec.classList.remove('hidden');
@@ -1076,15 +1352,10 @@
             customBlendSec.classList.add('hidden');
             const cat = categoriesData[categoryKey];
             document.getElementById('categoryTitle').textContent = cat.title;
-
-            if (categoryKey === 'arabica') {
-                arabicaNotice.classList.remove('hidden');
-            } else {
-                arabicaNotice.classList.add('hidden');
-            }
+            if (categoryKey === 'arabica') arabicaNotice.classList.remove('hidden');
+            else arabicaNotice.classList.add('hidden');
 
             grid.innerHTML = '';
-
             cat.items.forEach(prod => {
                 const card = document.createElement('div');
                 card.className = "bg-white border border-gray-200 rounded-2xl p-3 flex flex-col justify-between hover:shadow-lg transition relative overflow-hidden";
@@ -1096,7 +1367,7 @@
                     <div class="space-y-1.5">
                         <div class="flex justify-between items-center">
                             <h4 class="font-bold text-gray-900 text-sm">${prod.name}</h4>
-                            <span class="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md">سعر الكيلو: ${prod.kiloPrice} ج.م</span>
+                            <span class="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md">${prod.kiloPrice} ${translations[currentLang].currency}/Kg</span>
                         </div>
                         <p class="text-xs text-gray-500 line-clamp-2">${prod.desc}</p>
                     </div>
@@ -1107,17 +1378,13 @@
 
         function openCustomizer(itemName) {
             activeItemName = itemName;
-            document.getElementById('modalTitle').textContent = 'تخصيص: ' + itemName;
-            
+            document.getElementById('modalTitle').textContent = (currentLang === 'ar' ? 'تخصيص: ' : 'Customize: ') + itemName;
             const subtypeWrapper = document.getElementById('subtypeWrapper');
             const roastWrapper = document.getElementById('roastWrapper');
             const espressoWrapper = document.getElementById('espressoGrindWrapper');
             
-            if (itemName === 'اسبرسو') {
-                espressoWrapper.classList.remove('hidden');
-            } else {
-                espressoWrapper.classList.add('hidden');
-            }
+            if (itemName === 'اسبرسو') espressoWrapper.classList.remove('hidden');
+            else espressoWrapper.classList.add('hidden');
 
             if (basicItems.includes(itemName)) {
                 subtypeWrapper.classList.remove('hidden');
@@ -1129,11 +1396,8 @@
                 subtypeWrapper.classList.add('hidden');
                 roastWrapper.classList.add('hidden');
             }
-
             document.getElementById('modalWeight').value = 'ربعين (نصف كيلو / 500 جرام)';
             document.getElementById('customWeightWrapper').classList.add('hidden');
-            document.getElementById('modalCustomWeight').value = '';
-
             updateModalPricePreview();
             document.getElementById('customizerModal').classList.remove('hidden');
         }
@@ -1142,46 +1406,31 @@
             let subtype = document.getElementById('modalSubtype').value;
             let roast = document.getElementById('modalRoast').value;
             let weightSelection = document.getElementById('modalWeight').value;
-            
             if (weightSelection === 'أخرى') {
                 const customW = document.getElementById('modalCustomWeight').value.trim();
-                if (customW) {
-                    weightSelection = customW;
-                }
+                if (customW) weightSelection = customW;
             }
-
             const kiloPrice = getPricePerKilo(activeItemName, subtype, roast);
             const weightKg = parseWeightInKg(weightSelection);
             const itemTotal = kiloPrice * weightKg;
-
             document.getElementById('modalKiloPrice').textContent = kiloPrice.toLocaleString();
             document.getElementById('modalItemTotalPrice').textContent = itemTotal.toFixed(2);
         }
 
         function checkCustomWeight(select) {
             const customWrapper = document.getElementById('customWeightWrapper');
-            if (select.value === 'أخرى') {
-                customWrapper.classList.remove('hidden');
-            } else {
-                customWrapper.classList.add('hidden');
-            }
+            if (select.value === 'أخرى') customWrapper.classList.remove('hidden');
+            else customWrapper.classList.add('hidden');
         }
 
-        function closeCustomizer() {
-            document.getElementById('customizerModal').classList.add('hidden');
-        }
+        function closeCustomizer() { document.getElementById('customizerModal').classList.add('hidden'); }
 
         function addItemToCart() {
             let weight = document.getElementById('modalWeight').value;
             if (weight === 'أخرى') {
-                const customW = document.getElementById('modalCustomWeight').value.trim();
-                if (!customW) {
-                    alert('الرجاء كتابة الوزن المطلوب في خانة "أخرى"!');
-                    return;
-                }
-                weight = customW;
+                weight = document.getElementById('modalCustomWeight').value.trim();
+                if (!weight) return alert('الرجاء كتابة الوزن!');
             }
-
             let subtype = document.getElementById('modalSubtype').value;
             let roast = document.getElementById('modalRoast').value;
             let itemString = '';
@@ -1190,8 +1439,7 @@
             let itemTotal = kiloP * wKg;
 
             if (activeItemName === 'اسبرسو') {
-                let grindOption = document.getElementById('modalEspressoGrind').value;
-                itemString = `${weight} اسبرسو (${grindOption})`;
+                itemString = `${weight} اسبرسو (${document.getElementById('modalEspressoGrind').value})`;
             } else if (basicItems.includes(activeItemName)) {
                 itemString = `${weight} ${activeItemName} ${subtype} (${roast})`;
             } else if (arabicaItems.includes(activeItemName)) {
@@ -1200,28 +1448,10 @@
                 itemString = `${weight} ${activeItemName}`;
             }
 
-            cart.push({
-                text: itemString,
-                price: itemTotal
-            });
-
+            cart.push({ text: itemString, price: itemTotal });
             saveCartToLocalStorage();
             renderCart();
             closeCustomizer();
-
-            const cartContainer = document.getElementById('cartItemsContainer');
-            cartContainer.classList.add('bg-amber-200', 'scale-[1.02]');
-            setTimeout(() => {
-                cartContainer.classList.remove('bg-amber-200', 'scale-[1.02]');
-            }, 400);
-
-            const floatingBtn = document.getElementById('floatingCartBtn');
-            if (floatingBtn) {
-                floatingBtn.classList.add('scale-110');
-                setTimeout(() => {
-                    floatingBtn.classList.remove('scale-110');
-                }, 300);
-            }
         }
 
         function removeFromCart(index) {
@@ -1230,31 +1460,26 @@
             renderCart();
         }
 
-        function scrollToCart() {
-            document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' });
-        }
+        function scrollToCart() { document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' }); }
 
         function renderCart() {
             const container = document.getElementById('cartItemsContainer');
             const totalSummary = document.getElementById('cartTotalSummary');
             const totalAmountText = document.getElementById('totalAmountText');
-            
             const floatingBtn = document.getElementById('floatingCartBtn');
             const floatCount = document.getElementById('floatingCartCount');
             const floatTotal = document.getElementById('floatingCartTotal');
 
             if (cart.length === 0) {
                 container.className = "bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-center text-xs text-gray-500 transition-all duration-300";
-                container.textContent = "لم تقم بإضافة أي أصناف بعد. اضغط على (+) لإضافة طلبك.";
+                container.textContent = translations[currentLang].empty_cart_msg;
                 totalSummary.classList.add('hidden');
-                
                 if (floatingBtn) floatingBtn.classList.add('hidden');
                 return;
             }
 
             container.className = "bg-amber-100/70 p-3 rounded-lg border border-amber-300 text-right text-xs text-amber-900 space-y-2 transition-all duration-300";
             container.innerHTML = '';
-
             let grandTotal = 0;
 
             cart.forEach((cartItem, index) => {
@@ -1264,7 +1489,7 @@
                 div.innerHTML = `
                     <div class="space-y-0.5">
                         <span class="font-bold block">☕ ${cartItem.text}</span>
-                        <span class="text-[11px] text-amber-800 font-semibold">${cartItem.price.toFixed(2)} ج.م</span>
+                        <span class="text-[11px] text-amber-800 font-semibold">${cartItem.price.toFixed(2)} ${translations[currentLang].currency}</span>
                     </div>
                     <button type="button" onclick="removeFromCart(${index})" class="text-red-600 font-bold px-2 py-0.5 rounded hover:bg-red-50">✕</button>
                 `;
@@ -1272,20 +1497,16 @@
             });
 
             totalSummary.classList.remove('hidden');
-            totalAmountText.textContent = grandTotal.toFixed(2) + ' ج.م';
+            totalAmountText.textContent = grandTotal.toFixed(2) + ' ' + translations[currentLang].currency;
 
             if (floatingBtn) {
                 floatingBtn.classList.remove('hidden');
-                floatCount.textContent = cart.length + ' أصناف';
-                floatTotal.textContent = grandTotal.toFixed(2) + ' ج.م';
+                floatCount.textContent = cart.length + (currentLang === 'ar' ? ' أصناف' : ' items');
+                floatTotal.textContent = grandTotal.toFixed(2) + ' ' + translations[currentLang].currency;
             }
         }
 
-        // المصادقة (Google, Facebook, OTP)
-        async function openAuthModal() { 
-            document.getElementById('authModal').classList.remove('hidden'); 
-            checkUserSession(); 
-        }
+        async function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); checkUserSession(); }
         function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
 
         async function checkUserSession() {
@@ -1295,27 +1516,18 @@
         }
 
         async function loginWithGoogle() {
-            const { error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'google',
-                options: { redirectTo: window.location.origin }
-            });
-            if (error) alert('خطأ في تسجيل الدخول بـ Google: ' + error.message);
+            await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
         }
-
         async function loginWithFacebook() {
-            const { error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'facebook',
-                options: { redirectTo: window.location.origin }
-            });
-            if (error) alert('خطأ في تسجيل الدخول بـ Facebook: ' + error.message);
+            await supabaseClient.auth.signInWithOAuth({ provider: 'facebook', options: { redirectTo: window.location.origin } });
         }
 
         async function sendOtpCode() {
             const email = document.getElementById('userEmailInput').value.trim();
-            if (!email || !email.includes('@')) { alert('الرجاء إدخال بريد إلكتروني صحيح!'); return; }
+            if (!email || !email.includes('@')) return alert('Valid email required!');
             const { error } = await supabaseClient.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
-            if (error) { alert('خطأ: ' + error.message); return; }
-            alert('تم إرسال رمز التحقق إلى بريدك الإلكتروني بنجاح!');
+            if (error) return alert(error.message);
+            alert('OTP sent!');
             document.getElementById('authEmailStep').classList.add('hidden');
             document.getElementById('authOtpStep').classList.remove('hidden');
         }
@@ -1324,8 +1536,7 @@
             const email = document.getElementById('userEmailInput').value.trim();
             const token = document.getElementById('otpCodeInput').value.trim();
             const { data, error } = await supabaseClient.auth.verifyOtp({ email, token, type: 'email' });
-            if (error) { alert('الرمز غير صحيح: ' + error.message); return; }
-            alert('تم تسجيل الدخول بنجاح!');
+            if (error) return alert(error.message);
             showProfileView(data.user);
         }
 
@@ -1334,34 +1545,31 @@
             document.getElementById('authEmailStep').classList.add('hidden');
             document.getElementById('authOtpStep').classList.add('hidden');
             document.getElementById('userProfileStep').classList.remove('hidden');
-            
-            let displayName = user.email ? user.email.split('@')[0] : (user.user_metadata?.full_name || 'حسابي');
-            document.getElementById('profileEmailDisplay').textContent = user.email || user.user_metadata?.email || 'مستخدم فيسبوك/جوجل';
+            let displayName = user.email ? user.email.split('@')[0] : 'Account';
+            document.getElementById('profileEmailDisplay').textContent = user.email || 'User';
             document.getElementById('authNavBtn').innerHTML = `<span>👤 (${displayName})</span>`;
             loadUserProfileOrders();
         }
 
         async function loadUserProfileOrders() {
             const container = document.getElementById('profileOrdersContainer');
-            container.innerHTML = `<p class="text-gray-400 text-center py-2">جاري جلب الطلبات...</p>`;
             try {
                 let { data: orders } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false }).limit(5);
-                if (!orders || orders.length === 0) { container.innerHTML = `<p class="text-gray-400 text-center py-2">لا توجد طلبات سابقة مسجلة.</p>`; return; }
+                if (!orders || orders.length === 0) return container.innerHTML = `<p class="text-gray-400 text-center py-2">No orders.</p>`;
                 container.innerHTML = '';
                 orders.forEach(ord => {
                     const div = document.createElement('div');
                     div.className = "bg-white p-2.5 rounded-lg border border-amber-200 space-y-1";
-                    div.innerHTML = `<div class="flex justify-between font-bold text-amber-900"><span>طلب #${ord.id}</span><span class="text-emerald-700">${ord.status}</span></div><p>☕ ${ord.details}</p>`;
+                    div.innerHTML = `<div class="flex justify-between font-bold text-amber-900"><span>Order #${ord.id}</span><span class="text-emerald-700">${ord.status}</span></div><p>☕ ${ord.details}</p>`;
                     container.appendChild(div);
                 });
-            } catch (err) { container.innerHTML = `<p class="text-red-500 text-center">تعذر جلب الطلبات.</p>`; }
+            } catch (err) { console.error(err); }
         }
 
         async function logoutUser() {
             await supabaseClient.auth.signOut();
-            alert('تم تسجيل الخروج بنجاح.');
             resetAuthSteps();
-            document.getElementById('authNavBtn').innerHTML = `<span>👤 حسابي</span>`;
+            document.getElementById('authNavBtn').innerHTML = `<span>👤 ${translations[currentLang].my_account}</span>`;
         }
 
         function resetAuthSteps() {
@@ -1375,48 +1583,21 @@
             let phone = this.value.trim();
             if (phone.length >= 8) {
                 try {
-                    let { data, error } = await supabaseClient
-                        .from('customers')
-                        .select('*')
-                        .eq('phone1', phone)
-                        .maybeSingle();
-
+                    let { data } = await supabaseClient.from('customers').select('*').eq('phone1', phone).maybeSingle();
                     if (data) {
                         document.getElementById('customerName').value = data.name || '';
-                        if (data.phone2) {
-                            document.getElementById('phone2').value = data.phone2;
-                        }
+                        if (data.phone2) document.getElementById('phone2').value = data.phone2;
                         document.getElementById('customerAddress').value = data.address || '';
-                        
-                        let branchSelect = document.getElementById('region');
-                        for (let i = 0; i < branchSelect.options.length; i++) {
-                            if (branchSelect.options[i].value === data.region) {
-                                branchSelect.selectedIndex = i;
-                                break;
-                            }
-                        }
+                        document.getElementById('region').value = data.region;
                     }
-
-                    let { data: lastOrders } = await supabaseClient
-                        .from('orders')
-                        .select('*')
-                        .eq('phone1', phone)
-                        .order('created_at', { ascending: false })
-                        .limit(1);
-
+                    let { data: lastOrders } = await supabaseClient.from('orders').select('*').eq('phone1', phone).order('created_at', { ascending: false }).limit(1);
                     if (lastOrders && lastOrders.length > 0) {
                         cachedLastOrder = lastOrders[0];
-                        document.getElementById('quickReorderText').textContent = `${cachedLastOrder.details} (الإجمالي: ${cachedLastOrder.total_price || '0 ج.م'})`;
+                        document.getElementById('quickReorderText').textContent = `${cachedLastOrder.details} (${cachedLastOrder.total_price || ''})`;
                         document.getElementById('quickReorderBanner').classList.remove('hidden');
-                    } else {
-                        hideQuickReorderBanner();
-                    }
-                } catch (err) {
-                    console.error('خطأ في جلب بيانات العميل أو الطلبات:', err);
-                }
-            } else {
-                hideQuickReorderBanner();
-            }
+                    } else { hideQuickReorderBanner(); }
+                } catch (err) { console.error(err); }
+            } else { hideQuickReorderBanner(); }
         });
 
         function hideQuickReorderBanner() {
@@ -1426,254 +1607,44 @@
 
         function applyQuickReorder() {
             if (!cachedLastOrder) return;
-            let priceNum = parseFloat(cachedLastOrder.total_price) || 0;
-            cart.push({
-                text: cachedLastOrder.details,
-                price: priceNum
-            });
+            cart.push({ text: cachedLastOrder.details, price: parseFloat(cachedLastOrder.total_price) || 0 });
             saveCartToLocalStorage();
             renderCart();
             hideQuickReorderBanner();
-            alert('تمت إضافة تفاصيل آخر أوردر إلى سلة المشتريات بنجاح! ☕');
         }
 
-        function openTrackModal() {
-            document.getElementById('trackModal').classList.remove('hidden');
-        }
-        function closeTrackModal() {
-            document.getElementById('trackModal').classList.add('hidden');
-        }
-
-        function openEditModal(orderId, name, phone1, phone2, address, region, details) {
-            document.getElementById('editOriginalId').value = orderId;
-            document.getElementById('editOrderIdDisplay').textContent = orderId;
-            document.getElementById('editCustomerName').value = name;
-            document.getElementById('editPhone1').value = phone1;
-            document.getElementById('editPhone2').value = phone2 !== 'undefined' ? phone2 : '';
-            document.getElementById('editCustomerAddress').value = address;
-            document.getElementById('editOrderDetails').value = details;
-
-            let regionSelect = document.getElementById('editRegion');
-            for (let i = 0; i < regionSelect.options.length; i++) {
-                if (regionSelect.options[i].value === region) {
-                    regionSelect.selectedIndex = i;
-                    break;
-                }
-            }
-
-            document.getElementById('editOrderModal').classList.remove('hidden');
-        }
-
-        function closeEditModal() {
-            document.getElementById('editOrderModal').classList.add('hidden');
-        }
-
-        async function saveOrderChanges(e) {
-            e.preventDefault();
-            const orderId = document.getElementById('editOriginalId').value;
-            const details = document.getElementById('editOrderDetails').value.trim();
-            const phone1 = document.getElementById('editPhone1').value.trim();
-            const phone2 = document.getElementById('editPhone2').value.trim();
-            const name = document.getElementById('editCustomerName').value.trim();
-            const address = document.getElementById('editCustomerAddress').value.trim();
-            const region = document.getElementById('editRegion').value;
-
-            const phoneRegex = /^01[0125][0-9]{8}$/;
-            if (!phoneRegex.test(phone1)) {
-                alert('رقم الهاتف الأساسي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
-                return;
-            }
-
-            try {
-                let { error } = await supabaseClient
-                    .from('orders')
-                    .update({
-                        details: details,
-                        phone1: phone1,
-                        phone2: phone2,
-                        name: name,
-                        address: address,
-                        region: region
-                    })
-                    .eq('id', orderId);
-
-                if (error) {
-                    alert('حدث خطأ أثناء حفظ التعديلات: ' + error.message);
-                    return;
-                }
-
-                alert('تم تعديل الطلب وبياناتك بنجاح! ☕');
-                closeEditModal();
-                searchOrdersForTracking();
-            } catch (err) {
-                console.error('خطأ:', err);
-                alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
-            }
-        }
-
-        async function cancelOrder(orderId) {
-            if (!confirm('هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟')) {
-                return;
-            }
-
-            try {
-                let { error } = await supabaseClient
-                    .from('orders')
-                    .update({ status: 'ملغي بواسطة العميل' })
-                    .eq('id', orderId);
-
-                if (error) {
-                    alert('حدث خطأ أثناء إلغاء الطلب: ' + error.message);
-                    return;
-                }
-
-                alert('تم إلغاء الطلب بنجاح.');
-                searchOrdersForTracking();
-            } catch (err) {
-                console.error('خطأ:', err);
-                alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
-            }
-        }
+        function openTrackModal() { document.getElementById('trackModal').classList.remove('hidden'); }
+        function closeTrackModal() { document.getElementById('trackModal').classList.add('hidden'); }
 
         async function searchOrdersForTracking() {
             let phone = document.getElementById('trackPhoneInput').value.trim();
             const container = document.getElementById('trackResultsContainer');
-
-            if (!phone) {
-                alert('الرجاء إدخال رقم الهاتف للبحث');
-                return;
-            }
-
-            container.innerHTML = `<p class="text-center text-xs text-gray-500">جاري البحث في قاعدة البيانات...</p>`;
-
+            if (!phone) return alert('Enter phone');
             try {
-                let { data: orders, error } = await supabaseClient
-                    .from('orders')
-                    .select('*')
-                    .or(`phone1.eq.${phone},phone2.eq.${phone}`)
-                    .order('created_at', { ascending: false });
-
-                if (error || !orders || orders.length === 0) {
-                    container.innerHTML = `
-                        <div class="bg-gray-50 border p-4 rounded-xl text-center text-xs text-gray-500">
-                            لم يتم العثور على أوردرات مسجلة بهذا الرقم في قاعدة البيانات.
-                        </div>
-                    `;
-                    return;
-                }
-
+                let { data: orders } = await supabaseClient.from('orders').select('*').or(`phone1.eq.${phone},phone2.eq.${phone}`).order('created_at', { ascending: false });
+                if (!orders || orders.length === 0) return container.innerHTML = `<div class="bg-gray-50 border p-4 rounded-xl text-center text-xs text-gray-500">No orders found.</div>`;
                 container.innerHTML = '';
                 orders.forEach(order => {
-                    let statusText = order.status || '';
-                    let isDelivered = statusText.includes('تم التسليم');
-                    let isCancelled = statusText.includes('ملغي');
-                    let isOutForDelivery = statusText.includes('الطريق') || statusText.includes('توصيل') || statusText.includes('الدليفري') || statusText.includes('الدلفري') || statusText.includes('دلفري');
-                    
-                    let canEditOrCancel = !isOutForDelivery && !isDelivered && !isCancelled;
-
-                    let ratingHtml = '';
-                    if (isDelivered) {
-                        if (order.rating) {
-                            ratingHtml = `
-                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg space-y-1">
-                                    <p class="text-xs font-bold text-emerald-800">⭐ تقييمك المسجل:</p>
-                                    <div class="text-amber-600 text-xs font-bold">${'⭐'.repeat(order.rating)} (${order.rating}/5)</div>
-                                    ${order.feedback ? `<p class="text-xs text-gray-600">ملاحظتك: "${order.feedback}"</p>` : ''}
-                                </div>
-                            `;
-                        } else {
-                            ratingHtml = `
-                                <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg space-y-2">
-                                    <p class="text-xs font-bold text-amber-900">🎉 تم تسليم طلبك بنجاح! شاركنا رأيك:</p>
-                                    <select id="rate_${order.id}" class="w-full bg-white border text-xs p-1.5 rounded">
-                                        <option value="5">⭐⭐⭐⭐⭐ (ممتاز جداً)</option>
-                                        <option value="4">⭐⭐⭐⭐ (جيد جداً)</option>
-                                        <option value="3">⭐⭐⭐ (مقبول)</option>
-                                        <option value="2">⭐⭐ (ضعيف)</option>
-                                        <option value="1">⭐ (سيء)</option>
-                                    </select>
-                                    <input type="text" id="feedback_${order.id}" placeholder="اكتب ملاحظتك (اختياري)..." class="w-full bg-white border text-xs p-1.5 rounded">
-                                    <button onclick="submitClientRating('${order.id}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 rounded text-xs font-bold">إرسال التقييم للمحل</button>
-                                </div>
-                            `;
-                        }
-                    } else {
-                        ratingHtml = `
-                            <p class="text-xs text-gray-400 text-center bg-gray-50 p-2 rounded">⏳ ستتمكن من تقييم الطلب فور اكتمال التسليم.</p>
-                        `;
-                    }
-
-                    let actionButtonHtml = '';
-                    if (canEditOrCancel) {
-                        actionButtonHtml = `
-                            <div class="grid grid-cols-2 gap-2">
-                                <button onclick="openEditModal('${order.id}', '${order.name || ''}', '${order.phone1 || ''}', '${order.phone2 || ''}', \`${order.address || ''}\`, '${order.region || ''}', \`${order.details || ''}\`)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 border border-amber-300">
-                                    <span>✏️ تعديل الطلب</span>
-                                </button>
-                                <button onclick="cancelOrder('${order.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 border border-red-300">
-                                    <span>❌ إلغاء الطلب</span>
-                                </button>
-                            </div>
-                        `;
-                    } else {
-                        actionButtonHtml = `
-                            <p class="text-center text-[11px] text-gray-400 bg-gray-100 p-1.5 rounded">🔒 الطلب منتهي (تم تسليمه أو إلغاؤه مسبقاً).</p>
-                        `;
-                    }
-
                     const card = document.createElement('div');
                     card.className = "bg-gray-50 border border-gray-200 rounded-xl p-3 space-y-2 text-xs";
                     card.innerHTML = `
                         <div class="flex justify-between items-center border-b pb-2">
-                            <span class="font-bold text-amber-900">طلب رقم: ${order.id}</span>
-                            <span class="px-2 py-0.5 rounded font-bold ${
-                                statusText.includes('جديد') ? 'bg-blue-100 text-blue-800' :
-                                statusText.includes('تجهيز') ? 'bg-amber-100 text-amber-800' :
-                                statusText.includes('توصيل') || statusText.includes('الدلفري') || statusText.includes('دلفري') ? 'bg-purple-100 text-purple-800' :
-                                statusText.includes('ملغي') ? 'bg-red-100 text-red-800' :
-                                'bg-green-100 text-green-800'
-                            }">${order.status}</span>
+                            <span class="font-bold text-amber-900">Order #: ${order.id}</span>
+                            <span class="px-2 py-0.5 rounded font-bold bg-amber-100 text-amber-800">${order.status}</span>
                         </div>
-                        <p>👤 العميل: <b>${order.name}</b> | 📞 ${order.phone1}</p>
-                        <p>📍 الفرع: <b>${order.region}</b> - العنوان: ${order.address}</p>
-                        <p>☕ الطلبات: <b>${order.details}</b></p>
-                        ${order.total_price ? `<p class="font-bold text-amber-900">💰 إجمالي الفاتورة: ${order.total_price} ج.م</p>` : ''}
-                        ${actionButtonHtml}
-                        ${ratingHtml}
+                        <p>👤 ${order.name} | 📞 ${order.phone1}</p>
+                        <p>📍 ${order.region} - ${order.address}</p>
+                        <p>☕ ${order.details}</p>
+                        ${order.total_price ? `<p class="font-bold text-amber-900">💰 ${order.total_price}</p>` : ''}
                     `;
                     container.appendChild(card);
                 });
-
-            } catch (err) {
-                console.error('خطأ في جلب الطلبات:', err);
-                container.innerHTML = `<p class="text-center text-xs text-red-600">حدث خطأ أثناء الاتصال بقاعدة البيانات.</p>`;
-            }
-        }
-
-        async function submitClientRating(orderId) {
-            let ratingVal = parseInt(document.getElementById('rate_' + orderId).value);
-            let feedbackText = document.getElementById('feedback_' + orderId).value;
-
-            try {
-                let { error } = await supabaseClient
-                    .from('orders')
-                    .update({ rating: ratingVal, feedback: feedbackText })
-                    .eq('id', orderId);
-
-                if (error) {
-                    alert('حدث خطأ أثناء إرسال التقييم.');
-                    return;
-                }
-
-                alert('شكراً لك! تم إرسال تقييمك إلى لوحة فرع بن الغرباوي بنجاح 🌟');
-                searchOrdersForTracking();
-                fetchBestSellersRatings();
-            } catch (err) {
-                console.error('خطأ:', err);
-            }
+            } catch (err) { console.error(err); }
         }
 
         window.onload = function() {
+            applySavedTheme();
+            applyLanguage();
             updateBranchAddress();
             loadCartFromLocalStorage();
             renderCart();
@@ -1684,72 +1655,29 @@
 
         document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
-            if (cart.length === 0) {
-                alert('الرجاء إضافة منتج واحد على الأقل إلى السلة بالضغط على علامة (+) !');
-                return;
-            }
-
+            if (cart.length === 0) return alert('Cart is empty!');
             const phone1Val = document.getElementById('phone1').value.trim();
-            const phone2Val = document.getElementById('phone2').value.trim();
             const nameVal = document.getElementById('customerName').value.trim();
             const addressVal = document.getElementById('customerAddress').value.trim();
             const selectedBranch = document.getElementById('region').value;
 
-            const phoneRegex = /^01[0125][0-9]{8}$/;
-            if (!phoneRegex.test(phone1Val)) {
-                alert('رقم الهاتف الأساسي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
-                document.getElementById('phone1').focus();
-                return;
-            }
-
-            if (phone2Val && !phoneRegex.test(phone2Val)) {
-                alert('رقم الهاتف الإضافي غير صحيح! يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
-                document.getElementById('phone2').focus();
-                return;
-            }
-            
             const combinedDetails = cart.map(item => item.text).join(' + ');
             const grandTotal = cart.reduce((sum, item) => sum + item.price, 0);
             const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
 
             try {
-                await supabaseClient.from('customers').upsert({
-                    phone1: phone1Val,
-                    name: nameVal,
-                    phone2: phone2Val,
-                    address: addressVal,
-                    region: selectedBranch
-                }, { onConflict: 'phone1' });
-
-                const { error: orderError } = await supabaseClient.from('orders').insert({
-                    id: orderId,
-                    name: nameVal,
-                    phone1: phone1Val,
-                    phone2: phone2Val,
-                    details: combinedDetails,
-                    total_price: grandTotal.toFixed(2) + ' ج.م',
-                    address: addressVal,
-                    region: selectedBranch,
-                    status: 'جديد (في انتظار الاستلام)'
+                await supabaseClient.from('customers').upsert({ phone1: phone1Val, name: nameVal, address: addressVal, region: selectedBranch }, { onConflict: 'phone1' });
+                await supabaseClient.from('orders').insert({
+                    id: orderId, name: nameVal, phone1: phone1Val, details: combinedDetails,
+                    total_price: grandTotal.toFixed(2) + ' ' + translations[currentLang].currency,
+                    address: addressVal, region: selectedBranch, status: 'جديد (في انتظار الاستلام)'
                 });
-
-                if (orderError) {
-                    alert('حدث خطأ أثناء إرسال الطلب: ' + orderError.message);
-                    return;
-                }
-
                 cart = [];
                 localStorage.removeItem('gharbawee_cart');
                 renderCart();
-
                 document.getElementById('orderForm').style.display = 'none';
                 document.getElementById('successMsg').classList.remove('hidden');
-
-            } catch (err) {
-                console.error('خطأ في إرسال الأوردر:', err);
-                alert('حدث خطأ غير متوقع أثناء الاتصال بقاعدة البيانات.');
-            }
+            } catch (err) { console.error(err); }
         });
     </script>
 </body>
